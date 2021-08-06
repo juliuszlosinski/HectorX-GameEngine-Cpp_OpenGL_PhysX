@@ -12,3 +12,8 @@ GLFW for creating the context and handling windows and user inputs.
 GLEW for manipulating the context in a modern way and handling platform depended extensions.
 2. Implement physics system by using PhysX from Nvidia.
 3. Support audio.
+
+Current progress:
+Date: 6.08.2021
+Creating the window with context using GLFW and initializing GLEW for using modern OpenGL.
+![image](https://user-images.githubusercontent.com/72278818/128518718-a335ae07-2b2d-4770-9e0a-4e2502b1af6c.png)
