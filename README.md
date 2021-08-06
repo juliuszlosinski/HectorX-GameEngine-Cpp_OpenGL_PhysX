@@ -15,7 +15,7 @@ GLEW for manipulating the context in a modern way and handling platform depended
 2. Implement physics system by using PhysX from Nvidia.
 3. Support audio.
 
-**Current progress:**
+# Current progress:
 
 1. Date: 6.08.2021
 
