@@ -9,7 +9,7 @@ This folder contains everything about my game engine that is during the process 
 * Versions_And_Notes ~ contains all notes written by me and latest versions of game engine.
 
 **Goals:**
-1. Implement rendering system by using OpenGL: 
+1. Implement rendering system by using OpenGL: ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `#f03c15`
 GLFW for creating the context and handling windows and user inputs. 
 GLEW for manipulating the context in a modern way and handling platform depended extensions.
 2. Implement physics system by using PhysX from Nvidia.
