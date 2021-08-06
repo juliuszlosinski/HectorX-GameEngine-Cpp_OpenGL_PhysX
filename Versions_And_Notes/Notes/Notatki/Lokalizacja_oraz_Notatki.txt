@@ -1,0 +1,9 @@
+
+1. Folder External Libs znajduje sie w tym samym folderze co source.
+
+2. Zeby dolaczyc GLEW lub GLFW nalezy:
+	1. Pokazac gdzie są pliki nagłówke.
+	2. Pokazac gdzie sa biblioteki.
+
+3. opengl32.lib -> zawiera wszystkie funkcje do uzywania opengl
+
