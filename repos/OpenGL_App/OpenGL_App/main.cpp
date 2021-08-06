@@ -37,7 +37,7 @@ int main(void)
 
 	/// 3. Utworzenie okna.
 	GLFWwindow* mainWindow = glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL);
-	
+
 	/// 3.1 Sprawdzenie czy utworzenie okna sie powiodlo.
 	if (!mainWindow)
 	{
