@@ -75,5 +75,6 @@ Steps:
 3.6 Triangle is drawn.
 
 **Effect: **
+
 ![image](https://user-images.githubusercontent.com/72278818/128777097-bc424d23-56b7-4c5d-b0ab-b6aa6b4274f2.png)
 
