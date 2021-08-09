@@ -28,30 +28,48 @@ Steps:
 
 -- 1. Setting up the VAO (The thing that we are going to draw) ---
 1.1 Creating the VAO (Vertex Array Objects).
+
 1.2 Binding the VAO.
+
 1.3 Creating the VBO (Vertex Buffer Objects).
+
 1.4 Binding the VBO.
+
 1.5 Inserting the data filled with vertices to VBO.
+
 1.6 Set up the attrib pointers.
+
 1.7 Done VAO.
 ---------------------------------------------------------------
 
 -------------- 2. Setting up the program with shaders -----------
 2.1 Creatng empty program.
+
 2.2 Creating empty shaders.
+
 2.3 Filling the shaders with source code.
+
 2.4 Compiling the shaders.
+
 2.5 Linking the shaders to one program.
+
 2.6 Validing the program.
+
 2.7 Shader program is done.
+
 ----------------------------------------------------------------
 
 --------------- 3. Drawing the triangle -------------------------
 3.1 Binding the Shader Program.
+
 3.2 Binding the VAO.
+
 3.3 Calling the function glDrawArrays to draw the triangle.
+
 3.4 Unbinding the Shader Program.
+
 3.5 Unbinding the VAO.
+
 3.6 Triangle is drawn.
 
 **Effect: **
