@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+// Za³¹czenie pliku nag³ówkowego z ³añcuchami znaków.
+#include <string.h>
+
 // Za³¹czenie pliku nag³ówkowego z GLEW.
 #include <GL/glew.h>
 
@@ -8,6 +11,152 @@
 
 // Ustawienie szerokoœci oraz wysokoœci okna.
 const GLint WIDTH = 800, HEIGHT = 600;
+
+// Deklaracja zmiennych.
+GLuint VAO, VBO, shader;
+
+// Vertex Shader
+static const char* vShader = "														\n\
+#version 330																		\n\
+																					\n\
+layout (location = 0) in vec3 pos;													\n\
+																					\n\
+void main()																			\n\
+{																					\n\
+		gl_Position = vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);				    \n\
+}																					\n\
+";
+
+// Fragment Shader
+static const char* fShader =  "														\n\
+#version 330																		\n\
+																					\n\
+out vec4 colour;																	\n\																					\n\
+																					\n\
+void main()																			\n\
+{																					\n\
+		colour = vec4(1.0, 0.0, 0.0, 1.0);										    \n\
+}																					\n\
+";
+
+void CreateTriangle()
+{
+	// 0. Utworzenie wierzcho³ków trójk¹ta.
+	GLfloat vertices[] = {
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f
+	};
+
+	// 1. Utworzenie VAO.
+	glGenVertexArrays(1, &VAO);
+
+	// 2. Ustawienie VAO jako roboczego (binding).
+	glBindVertexArray(VAO);
+
+	// 3. Utworzenie VBO (tworzy VBO wewn¹trz VAO).
+	glGenBuffers(1, &VBO);
+
+	/// 4. Ustawienie VBO jako roboczego (binding).
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	// 5. Wlozenie danych wierzcho³ków do buffora VBO.
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	// 6. Okreœlenie atrybutów wierzcho³ka.
+	// [0] -> Id atrybutu.
+	// [1] -> Ile wartosci ma wierzcho³ek (u nas s¹ 3).
+	// [2] -> Jakiego typu s¹ wartoœci (u nas jest to float).
+	// [3] -> Czy nale¿y jes normalizowaæ (u nas nie nale¿y).
+	// [4] -> Co ile wartosci skakaæ (u nas jest to 0, bo nie skaczemy).
+	// [5] -> Od którego wierzcho³ka zacz¹c (u nas jest to wierzcho³ek pierwszy).
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	// 7. Aktywowanie atrybutu.
+	glEnableVertexAttribArray(0);
+	
+	/// 8. Zdjecie VBO z pozycji roboczej (unbinding).
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// 9. Zdjecie VAO z pozycji roboczej (unbinding).
+	glBindVertexArray(0);
+}
+
+void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
+{
+	// 1. Utworzenie pustego shader'a o okreœlonym typie oraz uzyskanie jego identyfikatora.
+	GLuint theShader = glCreateShader(shaderType);
+
+	// 2. Przypisanie kodu.
+	const GLchar* theCode[1];
+	theCode[0] = shaderCode;
+
+	GLint codeLength[1];
+	codeLength[0] = strlen(shaderCode);
+
+	// 3. Za³¹czenie kodu.
+	glShaderSource(theShader, 1, theCode, codeLength);
+
+	// 4. Kompilacja shadera.
+	glCompileShader(theShader);
+
+	// 5. Sprawdzanie b³êdów.
+	GLint result = 0;
+	GLchar eLog[1024] = { 0 };
+	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
+	if (!result)
+	{
+		glGetShaderInfoLog(shader, sizeof(eLog), NULL, eLog);
+		printf("Error compiling the %d shader: '%s' \n", shaderType, eLog);
+		return;
+	}
+
+	// 5. Za³¹czenie shadera do programu.
+	glAttachShader(theProgram, theShader);
+}
+
+void CompileShaders()
+{
+	// 1. Utworzenie pustego programu.
+	shader = glCreateProgram();
+
+	// 1.1 Sprawdzenie czy zosta³ dobrze stworzony.
+	if (!shader)
+	{
+		printf("Error creating shader program!\n");
+		return;
+	}
+
+	// 2. Za³¹czenie Vertex Shader do programu.
+	AddShader(shader, vShader, GL_VERTEX_SHADER);
+
+	// 3. Za³¹czenie Fragment Shader do programu.
+	AddShader(shader, fShader, GL_FRAGMENT_SHADER);
+
+	// 4. Powi¹zanie ze sob¹ wszystkich shaderów oraz stworzenie z nich pliku wykonywalnego dla karty graficznej (poniewa¿ programy s¹ na karcie a my tylko zmieniamy ich treœæ).
+	glLinkProgram(shader);
+
+	// 5. Sprawdzaczenie czy proces powi¹zywania shaderów siê powiód³.
+	GLchar eLog[1024] = { 0 };
+	GLint result = 0;
+	glGetProgramiv(shader, GL_LINK_STATUS, &result);
+	if (!result)
+	{
+		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
+		printf("Error linking program: '%s' \n", eLog);
+		return;
+	}
+
+	// 6. Walidacja programu czyli sprawdzanie czy utworzony program jest zgodny z wczesniej utworznym kontekstem.
+	glValidateProgram(shader);
+	glGetProgramiv(shader, GL_VALIDATE_STATUS, &result);
+	if (!result)
+	{
+		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
+		printf("Error validating program: '%s' \n", eLog);
+		return;
+	}
+}
 
 int main(void)
 {
@@ -80,6 +229,12 @@ int main(void)
 	// 8. Ustawienie rozmiaru portu widoku (Viewport).
 	glViewport(0, 0, bufferWidth, bufferHeight);
 
+	/// * Utworzenie trojk¹ta.
+	CreateTriangle();
+
+	/// * Kompilacja shaderow ~ utworzenie programu.
+	CompileShaders();
+
 	// 9. Pêtla dzia³ania okna.
 	while (!glfwWindowShouldClose(mainWindow))
 	{
@@ -87,8 +242,26 @@ int main(void)
 		glfwPollEvents();
 
 		// 9.2 Czyszczenie okna.
-		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		/// ---------- Rysowanie ---------
+		/// 1. Wybranie u¿ywanego programu (Shader programu) czyli kaze znalezc karcie graficznej, zeby znalazla program o tym identyfikatorze oraz zeby go u¿y³a.
+		glUseProgram(shader);
+
+			/// 2. Wybranie VAO (to co chcemy narysowac).
+			glBindVertexArray(VAO);
+
+				/// 3. Rysowanie trojkata.
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+
+			/// 4. Zwolnienie VAO.
+			glBindVertexArray(0);
+
+		/// 5. Zwolnienie programu.
+		glUseProgram(0);
+
+		/// ------------------------------
 
 		// 9.3 Zamiana buforów (oryginalny na ten, na który widzi u¿ytkownik).
 		glfwSwapBuffers(mainWindow);
