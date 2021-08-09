@@ -26,7 +26,7 @@ Creating the window with context using GLFW and initializing GLEW for using mode
 Drawing first triangle:
 Steps:
 
--- 1. Setting up the VAO (The thing that we are going to draw) ---
+**1. Setting up the VAO (The thing that we are going to draw):** 
 
 1.1 Creating the VAO (Vertex Array Objects).
 
@@ -41,9 +41,9 @@ Steps:
 1.6 Set up the attrib pointers.
 
 1.7 Done VAO.
----------------------------------------------------------------
 
--------------- 2. Setting up the program with shaders -----------
+
+**2. Setting up the program with shaders:**
 
 2.1 Creatng empty program.
 
@@ -59,9 +59,8 @@ Steps:
 
 2.7 Shader program is done.
 
-----------------------------------------------------------------
 
---------------- 3. Drawing the triangle -------------------------
+**3. Drawing the triangle:**
 
 3.1 Binding the Shader Program.
 
