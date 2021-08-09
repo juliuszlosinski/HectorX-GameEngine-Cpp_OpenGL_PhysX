@@ -27,6 +27,7 @@ Drawing first triangle:
 Steps:
 
 -- 1. Setting up the VAO (The thing that we are going to draw) ---
+
 1.1 Creating the VAO (Vertex Array Objects).
 
 1.2 Binding the VAO.
@@ -43,6 +44,7 @@ Steps:
 ---------------------------------------------------------------
 
 -------------- 2. Setting up the program with shaders -----------
+
 2.1 Creatng empty program.
 
 2.2 Creating empty shaders.
@@ -60,6 +62,7 @@ Steps:
 ----------------------------------------------------------------
 
 --------------- 3. Drawing the triangle -------------------------
+
 3.1 Binding the Shader Program.
 
 3.2 Binding the VAO.
