@@ -38,7 +38,7 @@ Drawing first triangle:
 
 1.5 Inserting the data filled with vertices to VBO.
 
-1.6 Set up the attrib pointers.
+1.6 Set up the attribute pointers.
 
 1.7 Done VAO.
 
