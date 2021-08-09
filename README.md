@@ -23,8 +23,8 @@ Creating the window with context using GLFW and initializing GLEW for using mode
 ![image](https://user-images.githubusercontent.com/72278818/128518820-7ddc77f0-a302-4de6-8367-76a57da42c92.png)
 
 **2. Date: 9.08.2021**
+
 Drawing first triangle:
-Steps:
 
 **1. Setting up the VAO (The thing that we are going to draw):** 
 
