@@ -78,7 +78,7 @@ Drawing first triangle:
 
 ![image](https://user-images.githubusercontent.com/72278818/128777097-bc424d23-56b7-4c5d-b0ab-b6aa6b4274f2.png)
 
-**2. Date: 10.08.2021**
+**3. Date: 10.08.2021**
 
 Moving window by using uniforms (the easiest way -> without model matrixes):
 
