@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+// Za³¹czenie pliku nag³ówkowego z matematyk¹.
+#include <cmath>
+
 // Za³¹czenie pliku nag³ówkowego z ³añcuchami znaków.
 #include <string.h>
 
@@ -9,11 +12,19 @@
 /// Za³¹czenie pliku nag³ówkowego z GLFW.
 #include <GLFW/glfw3.h>
 
+// Za³¹czenie GLM.
+#include <glm/mat4x4.hpp>
+
 // Ustawienie szerokoœci oraz wysokoœci okna.
 const GLint WIDTH = 800, HEIGHT = 600;
 
 // Deklaracja zmiennych.
-GLuint VAO, VBO, shader;
+GLuint VAO, VBO, shader, uniformXMove;
+
+bool direction = true;
+float triOffSet = 0.0f;
+float triMaxOffSet = 0.7f;
+float triIncrement = 0.005f;
 
 // Vertex Shader
 static const char* vShader = "														\n\
@@ -21,9 +32,11 @@ static const char* vShader = "														\n\
 																					\n\
 layout (location = 0) in vec3 pos;													\n\
 																					\n\
+uniform float xMove;																\n\
+																					\n\
 void main()																			\n\
 {																					\n\
-		gl_Position = vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);				    \n\
+		gl_Position = vec4(0.4 * pos.x + xMove, 0.4 * pos.y, pos.z, 1.0);		    \n\
 }																					\n\
 ";
 
@@ -156,6 +169,9 @@ void CompileShaders()
 		printf("Error validating program: '%s' \n", eLog);
 		return;
 	}
+
+	/// * Uzyskanie lokalizacji uniformu zmiennej.
+	uniformXMove = glGetUniformLocation(shader, "xMove");
 }
 
 int main(void)
@@ -241,6 +257,20 @@ int main(void)
 		// 9.1 Zdab¹dz oraz obs³uz zdarzenia wykonywane przez u¿ytkownika. (User Input Events)
 		glfwPollEvents();
 
+		/// Dodatek.
+		if (direction)
+		{
+			triOffSet += triIncrement;
+		}
+		else
+		{
+			triOffSet -= triIncrement;
+		}
+		if (abs(triOffSet) >= triMaxOffSet)
+		{
+			direction = !direction;
+		}
+
 		// 9.2 Czyszczenie okna.
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -248,6 +278,8 @@ int main(void)
 		/// ---------- Rysowanie ---------
 		/// 1. Wybranie u¿ywanego programu (Shader programu) czyli kaze znalezc karcie graficznej, zeby znalazla program o tym identyfikatorze oraz zeby go u¿y³a.
 		glUseProgram(shader);
+
+		glUniform1f(uniformXMove, triOffSet);
 
 			/// 2. Wybranie VAO (to co chcemy narysowac).
 			glBindVertexArray(VAO);
