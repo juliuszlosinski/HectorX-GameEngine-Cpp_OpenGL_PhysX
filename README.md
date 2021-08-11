@@ -86,10 +86,17 @@ Moving window by using uniforms (the easiest way -> without model matrixes):
 
 **4. Date: 11.08.2021**
 
-Moving window by using uniforms and _**model matrices:**_
+Appling operations to the triangle by using uniforms and _**model matrices:**_
 
-a) Translation:
+a) **Translation:**
 
 ![window_moving_translation_model_matrices](https://user-images.githubusercontent.com/72278818/129083963-c3e6e636-8b54-4472-bbc7-8a3d4bb4aac3.gif)
+
+b) **Rotation:**
+
+
+
+https://user-images.githubusercontent.com/72278818/129088471-dfe11707-98d9-4e2a-b929-c45cebc3ad06.mp4
+
 
 
