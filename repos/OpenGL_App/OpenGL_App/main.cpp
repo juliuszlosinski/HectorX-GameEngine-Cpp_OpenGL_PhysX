@@ -32,6 +32,11 @@ float triIncrement = 0.005f;
 
 float curAngle = 0.0f;
 
+bool sizeDirection = true;
+float curSize = 0.4f;
+float maxSize = 0.8f;
+float minSize = 0.1f;
+
 // Vertex Shader
 static const char* vShader = "														\n\
 #version 330																		\n\
@@ -42,12 +47,12 @@ uniform mat4 model;																	\n\
 																					\n\
 void main()																			\n\
 {																					\n\
-		gl_Position = model * vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);		    \n\
+		gl_Position = model * vec4(pos, 1.0);									    \n\
 }																					\n\
 ";
 
 // Fragment Shader
-static const char* fShader =  "														\n\
+static const char* fShader = "														\n\
 #version 330																		\n\
 																					\n\
 out vec4 colour;																	\n\																					\n\
@@ -95,7 +100,7 @@ void CreateTriangle()
 
 	// 7. Aktywowanie atrybutu.
 	glEnableVertexAttribArray(0);
-	
+
 	/// 8. Zdjecie VBO z pozycji roboczej (unbinding).
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -285,6 +290,20 @@ int main(void)
 			curAngle -= 360;
 		}
 
+		if (direction)
+		{
+			curSize += 0.005f;
+		}
+		else
+		{
+			curSize -= 0.005f;
+		}
+
+		if (curSize >= maxSize || curSize <= minSize)
+		{
+			sizeDirection = !sizeDirection;
+		}
+
 		// 9.2 Czyszczenie okna.
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -294,19 +313,20 @@ int main(void)
 		glUseProgram(shader);
 
 		glm::mat4 model(1.0f);
-		//model = glm::translate(model, glm::vec3(triOffSet, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(triOffSet, 0.0f, 0.0f));
 		model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(curSize, curSize, 1.0f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
-			/// 2. Wybranie VAO (to co chcemy narysowac).
-			glBindVertexArray(VAO);
+		/// 2. Wybranie VAO (to co chcemy narysowac).
+		glBindVertexArray(VAO);
 
-				/// 3. Rysowanie trojkata.
-				glDrawArrays(GL_TRIANGLES, 0, 3);
+		/// 3. Rysowanie trojkata.
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-			/// 4. Zwolnienie VAO.
-			glBindVertexArray(0);
+		/// 4. Zwolnienie VAO.
+		glBindVertexArray(0);
 
 		/// 5. Zwolnienie programu.
 		glUseProgram(0);
