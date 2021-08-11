@@ -24,7 +24,7 @@ Creating the window with context using GLFW and initializing GLEW for using mode
 
 **2. Date: 9.08.2021**
 
-Drawing first triangle:
+**Drawing first triangle:**
 
 **1. Setting up the VAO (The thing that we are going to draw):** 
 
@@ -80,8 +80,18 @@ Drawing first triangle:
 
 **3. Date: 10.08.2021**
 
-Moving window by using uniforms (the easiest way -> without model matrixes):
+Moving window by using uniforms (the easiest way -> without model matrices):
 
 ![window_moving](https://user-images.githubusercontent.com/72278818/128925107-7e71ac97-a1b1-48f2-a3f9-dc1ac24f1a77.gif)
 
+**4. Date: 11.08.2021**
 
+Appling operations to the triangle by using uniforms and _**model matrices:**_
+
+a) **Translation:**
+
+![window_moving_translation_model_matrices](https://user-images.githubusercontent.com/72278818/129083963-c3e6e636-8b54-4472-bbc7-8a3d4bb4aac3.gif)
+
+b) **Rotation:**
+
+![rotation_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129088692-66de82a2-ada7-4d30-9888-f5951a89c0cf.gif)
