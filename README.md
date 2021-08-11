@@ -94,9 +94,4 @@ a) **Translation:**
 
 b) **Rotation:**
 
-
-
-https://user-images.githubusercontent.com/72278818/129088471-dfe11707-98d9-4e2a-b929-c45cebc3ad06.mp4
-
-
-
+![rotation_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129088692-66de82a2-ada7-4d30-9888-f5951a89c0cf.gif)
