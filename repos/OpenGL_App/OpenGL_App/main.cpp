@@ -14,12 +14,15 @@
 
 // Za³¹czenie GLM.
 #include <glm/mat4x4.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
 
 // Ustawienie szerokoœci oraz wysokoœci okna.
 const GLint WIDTH = 800, HEIGHT = 600;
 
 // Deklaracja zmiennych.
-GLuint VAO, VBO, shader, uniformXMove;
+GLuint VAO, VBO, shader, uniformModel;
 
 bool direction = true;
 float triOffSet = 0.0f;
@@ -32,11 +35,11 @@ static const char* vShader = "														\n\
 																					\n\
 layout (location = 0) in vec3 pos;													\n\
 																					\n\
-uniform float xMove;																\n\
+uniform mat4 model;																	\n\
 																					\n\
 void main()																			\n\
 {																					\n\
-		gl_Position = vec4(0.4 * pos.x + xMove, 0.4 * pos.y, pos.z, 1.0);		    \n\
+		gl_Position = model * vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);		    \n\
 }																					\n\
 ";
 
@@ -51,6 +54,8 @@ void main()																			\n\
 		colour = vec4(1.0, 0.0, 0.0, 1.0);										    \n\
 }																					\n\
 ";
+
+glm::mat4 model(1.0f);
 
 void CreateTriangle()
 {
@@ -171,7 +176,7 @@ void CompileShaders()
 	}
 
 	/// * Uzyskanie lokalizacji uniformu zmiennej.
-	uniformXMove = glGetUniformLocation(shader, "xMove");
+	uniformModel = glGetUniformLocation(shader, "model");
 }
 
 int main(void)
@@ -279,7 +284,9 @@ int main(void)
 		/// 1. Wybranie u¿ywanego programu (Shader programu) czyli kaze znalezc karcie graficznej, zeby znalazla program o tym identyfikatorze oraz zeby go u¿y³a.
 		glUseProgram(shader);
 
-		glUniform1f(uniformXMove, triOffSet);
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, glm::vec3(triOffSet, triOffSet, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
 			/// 2. Wybranie VAO (to co chcemy narysowac).
 			glBindVertexArray(VAO);
