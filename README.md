@@ -24,7 +24,7 @@ Creating the window with context using GLFW and initializing GLEW for using mode
 
 **2. Date: 9.08.2021**
 
-Drawing first triangle:
+**Drawing first triangle:**
 
 **1. Setting up the VAO (The thing that we are going to draw):** 
 
