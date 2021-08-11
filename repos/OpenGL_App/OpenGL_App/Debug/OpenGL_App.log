@@ -1,3 +1,3 @@
 ﻿  main.cpp
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(50,1): warning C4129: '	': unrecognized character escape sequence
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(53,1): warning C4129: '	': unrecognized character escape sequence
   OpenGL_App.vcxproj -> C:\Users\PC\source\repos\OpenGL_App\Debug\OpenGL_App.exe
