@@ -100,6 +100,6 @@ c) **Scaling:**
 
 ![scaling_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129107390-50e9ee26-5106-4b69-9f04-474c6faaf7f9.gif)
 
-d) **Together: Translation, rotation and scaling **
+d) **Together: Translation, rotation and scaling**
 
 ![All_model_matrices_operations_translation_rotation_scaling](https://user-images.githubusercontent.com/72278818/129107905-5b436671-7f1e-4c3d-bb81-80bf45792892.gif)
