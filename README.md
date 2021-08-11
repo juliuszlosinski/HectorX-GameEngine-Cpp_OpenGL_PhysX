@@ -86,7 +86,7 @@ Moving window by using uniforms (the easiest way -> without model matrixes):
 
 **4. Date: 11.08.2021**
 
-Moving window by using _**model matrixes:**_
+Moving window by using uniforms and _**model matrixes:**_
 
 a) Translation:
 
