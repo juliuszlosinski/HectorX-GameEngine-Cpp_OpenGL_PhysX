@@ -87,6 +87,9 @@ Moving window by using uniforms (the easiest way -> without model matrices):
 **4. Date: 11.08.2021**
 
 Appling operations to the triangle by using uniforms and _**model matrices:**_
+1. Creating uniform variable in the vertex shader ex.: with name _"model"_.
+2. Storing information about location of uniform variable in the appliacation variable. -> _uniformModel = glGetUniformLocation(shader, "model")_
+3. Passing the data do program shader that will be stored in the uniform variable. -> _glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model))_
 
 a) **Translation:**
 
