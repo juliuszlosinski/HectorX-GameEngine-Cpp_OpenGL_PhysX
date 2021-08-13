@@ -92,6 +92,7 @@ Appling operations to the triangle by using uniforms and _**model matrices:**_
 3. Passing the data do program shader that will be stored in the uniform variable. -> _glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model))_
 
 **To remember:**
+
 Rotation is always applied about the pivot point which is [0, 0, 0] (center of the screen).
 So if we first move the object and then rotate, we will have diffrent result than first rotate and then move.
 
