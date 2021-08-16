@@ -45,6 +45,8 @@ GLEW for manipulating the context in a modern way and handling platform depended
 
 1.7 Window with the context is created.
 
+**Effect: **
+
 ![image](https://user-images.githubusercontent.com/72278818/128518820-7ddc77f0-a302-4de6-8367-76a57da42c92.png)
 
 **2. Date: 9.08.2021**
