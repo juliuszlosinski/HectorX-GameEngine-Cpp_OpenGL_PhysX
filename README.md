@@ -19,7 +19,7 @@ GLEW for manipulating the context in a modern way and handling platform depended
 
 **1. Date: 6.08.2021**
 
-Creating the window with context using GLFW and initializing GLEW for using modern OpenGL. 
+Creating the window with context using GLFW and initializing GLEW for using modern OpenGL: 
 
 1. Initialization library with GLFW (for creating a window and the context).
 
