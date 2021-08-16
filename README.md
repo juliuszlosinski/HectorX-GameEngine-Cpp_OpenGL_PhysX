@@ -27,19 +27,19 @@ Creating the window with context using GLFW and initializing GLEW for using mode
 
 3. Creating the window ~ getting the pointer to this.
 
-4. 
+4. Setting up the current context to be our window.
 
-5. Setting up the current context to be our window.
+5. Initialization library with GLEW (for handling OpenGL context in a modern way and using the platform dependend extensions).
 
-6. Initialization library with GLEW (for handling OpenGL context in a modern way and using the platform dependend extensions).
+6. Looping the running window.
 
-7. Looping the running window.
+6.1 Polling the events (like user input).
 
-7.1 Polling the events (like user input).
+6.2 Clearing the screen with red color.
 
-7.2 Clearing the screen with red color.
+6.3 Swaping buffers.
 
-7.3 Swaping buffers.
+7. Window with the context is created.
 
 ![image](https://user-images.githubusercontent.com/72278818/128518820-7ddc77f0-a302-4de6-8367-76a57da42c92.png)
 
