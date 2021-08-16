@@ -35,15 +35,17 @@ GLEW for manipulating the context in a modern way and handling platform depended
 
 1.7 Setting the view port with the size of frame buffer (width and height). -> **_glViewport(0, 0, bufferWidth, bufferHeight)_**
 
-1.6 Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
+1.8 Activating the platform depended extensions. -> **_glwExperimental=GL_TRUE_**
 
-1.6.1 Polling the events (like user input). -> **_glfwPollEvents()_**
+1.9 Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
 
-1.6.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
+1.9.1 Polling the events (like user input). -> **_glfwPollEvents()_**
 
-1.6.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
+1.9.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
 
-1.7 Window with the context is created.
+1.9.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
+
+1.10 Window with the context is created!
 
 **Effect: **
 
