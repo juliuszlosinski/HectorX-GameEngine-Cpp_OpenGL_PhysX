@@ -25,7 +25,7 @@ GLEW for manipulating the context in a modern way and handling platform depended
 
 1.2 Setting up the window hints ~ window configuration.
 
-1.3 Creating the window ~ getting the pointer to this.
+1.3 Creating the window ~ getting the pointer to this. -> **_glfwCreateWindow(...)_**
 
 1.4 Setting up the current context to be our window.
 
