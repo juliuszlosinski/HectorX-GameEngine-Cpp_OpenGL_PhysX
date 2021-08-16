@@ -45,9 +45,9 @@ GLEW for manipulating the context in a modern way and handling platform depended
 
 1.9.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
 
-1.10 Window with the context is created!
+1.10 Window with the context is created.
 
-**Effect: **
+**Effect:**
 
 ![image](https://user-images.githubusercontent.com/72278818/128518820-7ddc77f0-a302-4de6-8367-76a57da42c92.png)
 
