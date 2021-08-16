@@ -19,31 +19,31 @@ GLEW for manipulating the context in a modern way and handling platform depended
 
 **1. Date: 6.08.2021**
 
-**Creating the window with context using GLFW and initializing GLEW for using modern OpenGL:**
+**1. Creating the window with context using GLFW and initializing GLEW for using modern OpenGL:**
 
-1. Initialization library with GLFW (for creating a window and the context). -> **_glfwInit()_**
+1.1 Initialization library with GLFW (for creating a window and the context). -> **_glfwInit()_**
 
-2. Setting up the window hints ~ window configuration.
+1.2 Setting up the window hints ~ window configuration.
 
-3. Creating the window ~ getting the pointer to this.
+1.3 Creating the window ~ getting the pointer to this.
 
-4. Setting up the current context to be our window.
+1.4 Setting up the current context to be our window.
 
-5. Initialization library with GLEW (for handling OpenGL context in a modern way and using the platform dependend extensions). -> **_glewInit()_**
+1.5 Initialization library with GLEW (for handling OpenGL context in a modern way and using the platform dependend extensions). -> **_glewInit()_**
 
-6. Getting the size of frame buffer.
+1.6 Getting the size of frame buffer.
 
-7. Setting the view port with the size of frame buffer (width and height). -> **_glViewport(0, 0, bufferWidth, bufferHeight)_**
+1.7 Setting the view port with the size of frame buffer (width and height). -> **_glViewport(0, 0, bufferWidth, bufferHeight)_**
 
-6.Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
+1.6 Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
 
-6.1 Polling the events (like user input). -> **_glfwPollEvents()_**
+1.6.1 Polling the events (like user input). -> **_glfwPollEvents()_**
 
-6.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
+1.6.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
 
-6.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
+1.6.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
 
-7. Window with the context is created.
+1.7 Window with the context is created.
 
 ![image](https://user-images.githubusercontent.com/72278818/128518820-7ddc77f0-a302-4de6-8367-76a57da42c92.png)
 
