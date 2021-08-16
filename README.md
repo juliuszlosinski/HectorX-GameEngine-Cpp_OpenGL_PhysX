@@ -20,6 +20,27 @@ GLEW for manipulating the context in a modern way and handling platform depended
 **1. Date: 6.08.2021**
 
 Creating the window with context using GLFW and initializing GLEW for using modern OpenGL.
+
+1. Initialization library with GLFW (for creating a window and the context).
+
+2. Setting up the window hints ~ window configuration.
+
+3. Creating the window ~ getting the pointer to this.
+
+4. 
+
+5. Setting up the current context to be our window.
+
+6. Initialization library with GLEW (for handling OpenGL context in a modern way and using the platform dependend extensions).
+
+7. Looping the running window.
+
+7.1 Polling the events (like user input).
+
+7.2 Clearing the screen with red color.
+
+7.3 Swaping buffers.
+
 ![image](https://user-images.githubusercontent.com/72278818/128518820-7ddc77f0-a302-4de6-8367-76a57da42c92.png)
 
 **2. Date: 9.08.2021**
