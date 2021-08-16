@@ -35,13 +35,13 @@ Creating the window with context using GLFW and initializing GLEW for using mode
 
 7. Setting the view port with the size of frame buffer (width and height). -> **_glViewport(0, 0, bufferWidth, bufferHeight)_**
 
-6.Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
+  6.Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
 
-6.1 Polling the events (like user input). -> **_glfwPollEvents()_**
+  6.1 Polling the events (like user input). -> **_glfwPollEvents()_**
 
-6.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
+  6.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
 
-6.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
+  6.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
 
 7. Window with the context is created.
 
