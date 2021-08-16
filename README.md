@@ -22,26 +22,22 @@ GLEW for manipulating the context in a modern way and handling platform depended
 Creating the window with context using GLFW and initializing GLEW for using modern OpenGL: 
 
 1. Initialization library with GLFW (for creating a window and the context). -> **_glfwInit()_**
-
 2. Setting up the window hints ~ window configuration.
-
 3. Creating the window ~ getting the pointer to this.
-
 4. Setting up the current context to be our window.
-
 5. Initialization library with GLEW (for handling OpenGL context in a modern way and using the platform dependend extensions). -> **_glewInit()_**
 
 6. Getting the size of frame buffer.
 
 7. Setting the view port with the size of frame buffer (width and height). -> **_glViewport(0, 0, bufferWidth, bufferHeight)_**
 
-  6.Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
+6.Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
 
-  6.1 Polling the events (like user input). -> **_glfwPollEvents()_**
+6.1 Polling the events (like user input). -> **_glfwPollEvents()_**
 
-  6.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
+6.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
 
-  6.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
+6.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
 
 7. Window with the context is created.
 
