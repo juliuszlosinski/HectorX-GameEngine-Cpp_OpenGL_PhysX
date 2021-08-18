@@ -19,7 +19,36 @@ GLEW for manipulating the context in a modern way and handling platform depended
 
 **1. Date: 6.08.2021**
 
-Creating the window with context using GLFW and initializing GLEW for using modern OpenGL.
+**1. Creating the window with context using GLFW and initializing GLEW for using modern OpenGL:**
+
+1.1 Initialization library with GLFW (for creating a window and the context). -> **_glfwInit()_**
+
+1.2 Setting up the window hints ~ window configuration.
+
+1.3 Creating the window ~ getting the pointer to this. -> **_glfwCreateWindow(...)_**
+
+1.4 Setting up the current context to be our window.
+
+1.5 Initialization library with GLEW (for handling OpenGL context in a modern way and using the platform dependend extensions). -> **_glewInit()_**
+
+1.6 Getting the size of frame buffer.
+
+1.7 Setting the view port with the size of frame buffer (width and height). -> **_glViewport(0, 0, bufferWidth, bufferHeight)_**
+
+1.8 Activating the platform depended extensions. -> **_glwExperimental=GL_TRUE_**
+
+1.9 Looping the running window. -> **_glfwWindowShouldClose(mainWindow)_**
+
+1.9.1 Polling the events (like user input). -> **_glfwPollEvents()_**
+
+1.9.2 Clearing the screen with red color. -> **_glClearColor(...) and then glClear(GL_COLOR_BUFFER_BIT)_**
+
+1.9.3 Swaping buffers. -> **_glfwSwapBuffers(mainWindow)_**
+
+1.10 Window with the context is created.
+
+**Effect:**
+
 ![image](https://user-images.githubusercontent.com/72278818/128518820-7ddc77f0-a302-4de6-8367-76a57da42c92.png)
 
 **2. Date: 9.08.2021**
@@ -87,6 +116,14 @@ Moving window by using uniforms (the easiest way -> without model matrices):
 **4. Date: 11.08.2021**
 
 Appling operations to the triangle by using uniforms and _**model matrices:**_
+1. Creating uniform variable in the vertex shader ex.: with name _"model"_.
+2. Storing information about location of uniform variable in the appliacation variable. -> _uniformModel = glGetUniformLocation(shader, "model")_
+3. Passing the data do program shader that will be stored in the uniform variable. -> _glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model))_
+
+**To remember:**
+
+Rotation is always applied about the pivot point which is [0, 0, 0] (center of the screen).
+So if we first move the object and then rotate, we will have diffrent result than first rotate and then move.
 
 a) **Translation:**
 
@@ -95,3 +132,11 @@ a) **Translation:**
 b) **Rotation:**
 
 ![rotation_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129088692-66de82a2-ada7-4d30-9888-f5951a89c0cf.gif)
+
+c) **Scaling:**
+
+![scaling_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129107390-50e9ee26-5106-4b69-9f04-474c6faaf7f9.gif)
+
+d) **Together: Translation, rotation and scaling**
+
+![All_model_matrices_operations_translation_rotation_scaling](https://user-images.githubusercontent.com/72278818/129107905-5b436671-7f1e-4c3d-bb81-80bf45792892.gif)
