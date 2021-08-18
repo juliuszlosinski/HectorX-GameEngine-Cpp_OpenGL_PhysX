@@ -148,4 +148,4 @@ d) **Together: Translation, rotation and scaling**
 
 **To remember:**
 
-gl_Position = projection_matrix (ortogonal or perspective (setting the way of looking from the camera) * view_matrix (see from the point of camera) * model_matrix (move object in the world space) * vec4(pos, 1.0) (local position)
+gl_Position = **projection_matrix** (ortogonal or perspective (setting the way of looking from the camera) * **view_matrix** (see from the point of camera) * **model_matrix** (move object in the world space) * **vec4(pos, 1.0)** (local position)
