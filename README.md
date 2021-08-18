@@ -154,6 +154,6 @@ Theory about coordinate systems and how to move from to another:
 
 **Screen Space** <-(Part of rendering Pipeline)- **Clipping Space** <-(Projection Matrix)- **View Space** <-(View Matrix)- **World Space** <-(Model Matrix)- **Local Space** 
 
-**Setting the position of the vertex according to the camera: (in the shader we are using uniform matrices)**
+**Setting the position of the vertex according to the camera: (in the vertex shader we are using uniform matrices)**
 
 gl_Position = **projection_matrix** (ortogonal or perspective (setting the way of looking from the camera) * **view_matrix** (see from the point of camera) * **model_matrix** (move object in the world space) * **vec4(pos, 1.0)** (local position)
