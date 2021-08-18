@@ -143,3 +143,9 @@ c) **Scaling:**
 d) **Together: Translation, rotation and scaling**
 
 ![All_model_matrices_operations_translation_rotation_scaling](https://user-images.githubusercontent.com/72278818/129107905-5b436671-7f1e-4c3d-bb81-80bf45792892.gif)
+
+**5. Date: 18.08.2021**
+
+**To remember:**
+
+gl_Position = projection_matrix (ortogonal or perspective (setting the way of looking from the camera) * view_matrix (see from the point of camera) * model_matrix (move object in the world space) * vec4(pos, 1.0) (local position)
