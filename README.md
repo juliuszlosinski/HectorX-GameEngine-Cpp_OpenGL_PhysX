@@ -148,6 +148,8 @@ d) **Together: Translation, rotation and scaling**
 
 **To remember:**
 
+Theory about coordinate systems and how to move from to another:
+
 **Screen Space** <-(Part of rendering Pipeline)- **Clipping Space** <-(Projection Matrix)- **View Space** <-(View Matrix)- **World Space** <-(Model Matrix)- **Local Space** 
 
 gl_Position = **projection_matrix** (ortogonal or perspective (setting the way of looking from the camera) * **view_matrix** (see from the point of camera) * **model_matrix** (move object in the world space) * **vec4(pos, 1.0)** (local position)
