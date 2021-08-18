@@ -315,7 +315,7 @@ int main(void)
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(triOffSet, 0.0f, 0.0f));
 		model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(curSize, curSize, 1.0f));
+		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
