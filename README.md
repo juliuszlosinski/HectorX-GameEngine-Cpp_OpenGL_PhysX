@@ -200,3 +200,15 @@ Steps to achive it:
 2. When we are clearing the colour buffer, we have to clear the depth buffer. -> **_glClear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);_**
 
 ![pyramid_with_depth_test](https://user-images.githubusercontent.com/72278818/130055414-7c25cfd3-e55a-498b-a923-77e34b18d7cd.gif)
+
+**3. Using projection matrix (how camera would see things ortogonal/ perspective): **
+We are using perspective to achive 3D depth.
+
+To create perspective projection matrix, we have to do:
+**glm::mat4 projection = _glm::perspective("angle of looking (usually 45 deg)", "aspect ratio (bufferWidth/ bufferHeight)", "distance near plane (start looking), "far plane(end looking)");_**
+
+We can use projection matrix without using model matrix !
+
+**Effect:**
+
+![projection_matrix](https://user-images.githubusercontent.com/72278818/130062290-6f92d9e4-6790-4df5-b250-4a766310488b.gif)
