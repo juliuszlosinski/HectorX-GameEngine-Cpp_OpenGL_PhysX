@@ -215,7 +215,7 @@ We can use projection matrix without using model matrix !
 
 **4. Abstracting the code and moving it to classes.**
 
-**Effect: **
+**Effect:**
 
 ![image](https://user-images.githubusercontent.com/72278818/130121520-ae2eda3e-e1ee-441c-a587-75e40ccaccfc.png)
 
