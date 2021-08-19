@@ -160,10 +160,29 @@ gl_Position = **projection_matrix** (ortogonal or perspective (setting the way o
 
 **6. Date: 19.08.2021**
 
-**Interpolation** between three points is made during the process of rasterization and fragment shader.
+**1. Interpolation** between three points is made during the process of rasterization and fragment shader.
 Fragment shader interpolate between values to get a specific one for example if you have red and blue vertex, fragment shader will interpolate between them and the center will be some mix blue and red. You won't notice the interpolation if you have vertecies with the same colour!
 
 **Effect:**
 
 ![image](https://user-images.githubusercontent.com/72278818/130041157-e59acef9-8d0e-44f5-aebc-e1efdf8d6168.png)
 
+**2. Indexed Draws**
+
+Steps:
+
+**AFTER BINDING VAO:**
+
+1. Put indices in the array.
+2. Generate IBO id -> **_glGenBuffers(1, &IBO);_**
+3. Bind the IBO with selected id. -> **_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);_**
+4. Put the data to this buffer (GL_ELEMENT_ARRAY_BUFFER). -> **_glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);_**
+5. DONE.
+
+**AFTER THIS BIND VBO**
+
+When we want do draw:
+
+**AFTER BINDING VAO:**
+1. Bind the IBO -> **_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, "ID of IBO");_**
+2. Draw the elements -> **_gLDrawElements(GL_TRIANGLES, "Number of vertices", "Type of indices", 0);_**
