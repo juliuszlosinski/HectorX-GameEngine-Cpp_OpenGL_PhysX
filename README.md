@@ -157,3 +157,13 @@ Theory about coordinate systems and how to move from to another:
 **Setting the position of the vertex according to the camera (in the vertex shader we are using uniform matrices):**
 
 gl_Position = **projection_matrix** (ortogonal or perspective (setting the way of looking from the camera) * **view_matrix** (see from the point of camera) * **model_matrix** (move object in the world space) * **vec4(pos, 1.0)** (local position)
+
+**6. Date: 19.08.2021**
+
+Interpolation between three points is made during the process of rasterization and fragment shader.
+Fragment shader interpolate between values to get a specific one for example if you have red and blue vertex, fragment shader will interpolate between them and center will be some mix blue and red.
+
+**Effect:**
+
+![image](https://user-images.githubusercontent.com/72278818/130041157-e59acef9-8d0e-44f5-aebc-e1efdf8d6168.png)
+
