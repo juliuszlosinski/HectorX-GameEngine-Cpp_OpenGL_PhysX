@@ -10,10 +10,13 @@ This folder contains everything about my game engine that is during the process 
 
 **Goals:**
 1. Implement rendering system by using OpenGL: 
-GLFW for creating the context and handling windows and user inputs. 
-GLEW for manipulating the context in a modern way and handling platform depended extensions.
-2. Implement physics system by using PhysX from Nvidia.
-3. Support audio.
+* GLFW for creating the context and handling windows and user inputs. 
+* GLEW for manipulating the context in a modern way and handling platform depended extensions.
+* GLM for supporting math operations (matrices, vectors).
+2. Implement Collision and Physics system by using PhysX from Nvidia.
+3. Implement audio system.
+4. Implement animation system.
+5. Implement AI system.
 
 # Current progress:
 
@@ -140,3 +143,79 @@ c) **Scaling:**
 d) **Together: Translation, rotation and scaling**
 
 ![All_model_matrices_operations_translation_rotation_scaling](https://user-images.githubusercontent.com/72278818/129107905-5b436671-7f1e-4c3d-bb81-80bf45792892.gif)
+
+**5. Date: 18.08.2021**
+
+**To remember:**
+
+Theory about coordinate systems and how to move from to another:
+
+**Moving between spaces using matrices:**
+
+**Screen Space** <-(Part of rendering Pipeline)- **Clipping Space** <-(Projection Matrix)- **View Space** <-(View Matrix)- **World Space** <-(Model Matrix)- **Local Space** 
+
+**Setting the position of the vertex according to the camera (in the vertex shader we are using uniform matrices):**
+
+gl_Position = **projection_matrix** (ortogonal or perspective (setting the way of looking from the camera) * **view_matrix** (see from the point of camera) * **model_matrix** (move object in the world space) * **vec4(pos, 1.0)** (local position)
+
+**6. Date: 19.08.2021**
+
+**1. Interpolation** between three points is made during the process of rasterization and fragment shader.
+Fragment shader interpolate between values to get a specific one for example if you have red and blue vertex, fragment shader will interpolate between them and the center will be some mix blue and red. You won't notice the interpolation if you have vertecies with the same colour!
+
+**Effect:**
+
+![image](https://user-images.githubusercontent.com/72278818/130041157-e59acef9-8d0e-44f5-aebc-e1efdf8d6168.png)
+
+**2. Indexed Draws**
+
+**Steps:**
+
+**AFTER BINDING VAO:**
+
+1. Put indices in the array.
+2. Generate IBO id -> **_glGenBuffers(1, &IBO);_**
+3. Bind the IBO with selected id. -> **_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);_**
+4. Put the data to this buffer (GL_ELEMENT_ARRAY_BUFFER). -> **_glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);_**
+5. Done.
+
+**AFTER THIS BIND VBO**
+
+When we want do draw:
+
+**AFTER BINDING VAO:**
+1. Bind the IBO -> **_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, "ID of IBO");_**
+2. Draw the elements -> **_gLDrawElements(GL_TRIANGLES, "Number of vertices", "Type of indices", 0);_**
+
+**Effect:**
+
+**a) Without Depth Test:**
+
+![pyramid](https://user-images.githubusercontent.com/72278818/130054273-f91f6823-477c-4239-b92a-6b5599f2adba.gif)
+
+**b) With Depth Test:**
+
+Steps to achive it:
+1. Enable the Depth test before setting the viewport. -> **_glEnable(DEPTH_TEST);_**
+2. When we are clearing the colour buffer, we have to clear the depth buffer. -> **_glClear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);_**
+
+![pyramid_with_depth_test](https://user-images.githubusercontent.com/72278818/130055414-7c25cfd3-e55a-498b-a923-77e34b18d7cd.gif)
+
+**3. Using projection matrix (how camera would see (not relative, because we are not using view matrix!) things ortogonal/ perspective):**
+We are using perspective to achive 3D depth.
+
+To create perspective projection matrix, we have to do:
+**glm::mat4 projection = _glm::perspective("angle of looking (usually 45 deg)", "aspect ratio (bufferWidth/ bufferHeight)", "distance near plane (start looking), "far plane(end looking)");_**
+
+We can use projection matrix without using model matrix !
+
+**Effect:**
+
+![projection_matrix](https://user-images.githubusercontent.com/72278818/130062290-6f92d9e4-6790-4df5-b250-4a766310488b.gif)
+
+**4. Abstracting the code and moving it to classes.**
+
+**Effect:**
+
+![image](https://user-images.githubusercontent.com/72278818/130121520-ae2eda3e-e1ee-441c-a587-75e40ccaccfc.png)
+
