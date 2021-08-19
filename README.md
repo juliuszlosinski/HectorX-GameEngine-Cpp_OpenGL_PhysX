@@ -160,7 +160,7 @@ gl_Position = **projection_matrix** (ortogonal or perspective (setting the way o
 
 **6. Date: 19.08.2021**
 
-Interpolation between three points is made during the process of rasterization and fragment shader.
+**Interpolation** between three points is made during the process of rasterization and fragment shader.
 Fragment shader interpolate between values to get a specific one for example if you have red and blue vertex, fragment shader will interpolate between them and center will be some mix blue and red.
 
 **Effect:**
