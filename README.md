@@ -201,7 +201,7 @@ Steps to achive it:
 
 ![pyramid_with_depth_test](https://user-images.githubusercontent.com/72278818/130055414-7c25cfd3-e55a-498b-a923-77e34b18d7cd.gif)
 
-**3. Using projection matrix (how camera would see things ortogonal/ perspective): **
+**3. Using projection matrix (how camera would see things ortogonal/ perspective):**
 We are using perspective to achive 3D depth.
 
 To create perspective projection matrix, we have to do:
