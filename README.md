@@ -169,7 +169,7 @@ Fragment shader interpolate between values to get a specific one for example if 
 
 **2. Indexed Draws**
 
-Steps:
+**Steps:**
 
 **AFTER BINDING VAO:**
 
@@ -177,7 +177,7 @@ Steps:
 2. Generate IBO id -> **_glGenBuffers(1, &IBO);_**
 3. Bind the IBO with selected id. -> **_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);_**
 4. Put the data to this buffer (GL_ELEMENT_ARRAY_BUFFER). -> **_glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);_**
-5. DONE.
+5. Done.
 
 **AFTER THIS BIND VBO**
 
@@ -186,3 +186,17 @@ When we want do draw:
 **AFTER BINDING VAO:**
 1. Bind the IBO -> **_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, "ID of IBO");_**
 2. Draw the elements -> **_gLDrawElements(GL_TRIANGLES, "Number of vertices", "Type of indices", 0);_**
+
+**Effect:**
+
+**a) Without Depth Test:**
+
+![pyramid](https://user-images.githubusercontent.com/72278818/130054273-f91f6823-477c-4239-b92a-6b5599f2adba.gif)
+
+**b) With Depth Test:**
+
+Steps to achive it:
+1. Enable the Depth test before setting the viewport. -> **_glEnable(DEPTH_TEST);_**
+2. When we are clearing the colour buffer, we have to clear the depth buffer. -> **_glClear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);_**
+
+![pyramid_with_depth_test](https://user-images.githubusercontent.com/72278818/130055414-7c25cfd3-e55a-498b-a923-77e34b18d7cd.gif)
