@@ -217,5 +217,7 @@ We can use projection matrix without using model matrix !
 
 **Effect:**
 
+![image](https://user-images.githubusercontent.com/72278818/130243312-18dde069-6ce8-4306-9787-ebb5a74b6a1b.png)
+
 ![image](https://user-images.githubusercontent.com/72278818/130121520-ae2eda3e-e1ee-441c-a587-75e40ccaccfc.png)
 
