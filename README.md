@@ -216,7 +216,7 @@ We can use projection matrix without using model matrix !
 **4. Abstracting the code and moving it to classes.**
 
 **UML and code:**
-![image](https://user-images.githubusercontent.com/72278818/130243829-a4c01b39-60a8-48d7-89ea-65329df12f66.png)
+![image](https://user-images.githubusercontent.com/72278818/130244276-c08a32da-499c-4224-9df3-2652dbc33d47.png)
 
 **Effect:**
 
