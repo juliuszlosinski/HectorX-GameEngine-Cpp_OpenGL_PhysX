@@ -1,10 +1,33 @@
 #include "Shader.h"
 
+// CreateFromString(...) -> CompileShader(...) -> 2x AddShader(...) -> Mamy program z shader'ami oraz lokalizacje uniform'ow (projekcji oraz modelu). 
+// CreateFromFiles(...) -> 2 x ReadFile(...) -> CompileShader(...) -> 2x AddShader(...) -> Mamy program z shader'ami oraz lokalizacje uniform'ow (projekcji oraz modelu).
+
 /// Konstruktor
 Shader::Shader()
 {
 	// 1. Inicjalizacja wszystkich pol do zera.
 	shaderID = 0;
+	uniformModel = 0;
+	uniformProjection = 0;
+}
+
+/// Uzywaj shader'a.
+void Shader::UseShader()
+{
+	glUseProgram(shaderID);
+}
+
+/// Wyczyœæ shader.
+void Shader::ClearShader()
+{
+	// 1. Usuwanie programu.
+	if (shaderID != 0)
+	{
+		glDeleteProgram(shaderID);
+	}
+
+	// 2. Czyszczenie zmiennych z lokalizacjami uniformow w shaderze.
 	uniformModel = 0;
 	uniformProjection = 0;
 }
@@ -109,26 +132,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 	/// * Uzyskanie lokalizacji uniformu zmiennych.
 	uniformModel = glGetUniformLocation(shaderID, "model");
 	uniformProjection = glGetUniformLocation(shaderID, "projection");
-}
-
-/// Uzywaj shader'a.
-void Shader::UseShader()
-{
-	glUseProgram(shaderID);
-}
-
-/// Wyczyœæ shader.
-void Shader::ClearShader()
-{
-	// 1. Usuwanie programu.
-	if (shaderID != 0)
-	{
-		glDeleteProgram(shaderID);
-	}
-
-	// 2. Czyszczenie zmiennych z lokalizacjami uniformow w shaderze.
-	uniformModel = 0;
-	uniformProjection = 0;
+	uniformView = glGetUniformLocation(shaderID, "view");
 }
 
 /// Dodanie shader'a do programu z shader'ami.
@@ -165,13 +169,19 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
 	glAttachShader(theProgram, theShader);
 }
 
-/// Zwrocenie lokalizacji uniformu modelu.
+/// Zwrocenie lokalizacji uniformu macierzy modelu.
 GLuint Shader::GetModelLocation() // Uzyskaj lokalizacje modelu.
 {
 	return uniformModel;
 }
 
-/// Zwrocenie lokalizacji uniformu projekcji.
+/// Zwrocenie lokalizacji uniformu macierzy widoku.
+GLuint Shader::GetViewLocation() // Uzyskaj lokalizacje macierzy widoku.
+{
+	return uniformView;
+}
+
+/// Zwrocenie lokalizacji uniformu macierzy projekcji.
 GLuint Shader::GetProjectionLocation() // Uzyskaj lokalizacje projekcji.
 {
 	return uniformProjection;

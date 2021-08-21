@@ -1,5 +1,5 @@
-﻿  Window.cpp
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(19,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(24,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(91): warning C4715: 'Window::Initialise': not all control paths return a value
+﻿  main.cpp
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(26,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(32,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(113,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
   OpenGL_App.vcxproj -> C:\Users\PC\source\repos\OpenGL_App\Debug\OpenGL_App.exe

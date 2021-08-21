@@ -6,13 +6,34 @@ Window::Window()
 	// 1. Ustawienie parametrow wielkosci okna.
 	width = 800;
 	height = 600;
+	
+	// 2. Ustawienie klawiszy na nie wcisniete.
+	for (size_t i = 0; i < 1024; i++)
+	{
+		keys[i] = 0;
+	}
+
+	// 3. Ustawienie poczatkowej zmiany.
+	xChange = 0.0f;
+	yChange = 0.0f;
 }
 
 /// Przeci¹zanie konstruktora.
 Window::Window(GLint windowWidth, GLint windowHeight)
 {
+	// 1. Ustawienie parametrow wielkosci okna.
 	width = windowWidth;
 	height = windowHeight;
+
+	// 2. Ustawienie klawiszy na nie wcisniete.
+	for (size_t i = 0; i < 1024; i++)
+	{
+		keys[i] = 0;
+	}
+
+	// 3. Ustawienie poczatkowej zmiany.
+	xChange = 0.0f;
+	yChange = 0.0f;
 }
 
 /// Inicjalizacja okna.
@@ -64,30 +85,124 @@ int Window::Initialise()
 	/// 5. Ustawienie kontekstu do u¿ycia dla GLEW, zwiazanie kontekstu z tym utworznym oknem.
 	glfwMakeContextCurrent(mainWindow);
 
-	// 6. Pozwolenie na u¿ycie nowoczesnych rozszerzeñ.
+	/// 6. Obs³ugiwanie klawiatury oraz myszki.
+	createCallbacks();
+
+	/// 7. Wymazanie kurosora z ekranu.
+	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// 8. Pozwolenie na u¿ycie nowoczesnych rozszerzeñ.
 	glewExperimental = GL_TRUE;
 
-	// 7. Inicjalizacja GLEW (biblioteki oraz wszystkich funkcji, które tam s¹).
+	// 9. Inicjalizacja GLEW (biblioteki oraz wszystkich funkcji, które tam s¹).
 	if (glewInit() != GLEW_OK)
 	{
-		// 7.1 Wypisanie komunikatu o niepowodzeniu.
+		// 8.1 Wypisanie komunikatu o niepowodzeniu.
 		printf("GLEW initialization failed!");
 
-		/// 7.2 Zniszczenie obecnego utworzonego wczesniej okna.
+		/// 8.2 Zniszczenie obecnego utworzonego wczesniej okna.
 		glfwDestroyWindow(mainWindow);
 
-		/// 7.3 Zwrocenie zainicjalizowanych wczesniej zasobow przez GLFW.
+		/// 8.3 Zwrocenie zainicjalizowanych wczesniej zasobow przez GLFW.
 		glfwTerminate();
 
-		/// 7.4 Zgloszenie bledu.
+		/// 8.4 Zgloszenie bledu.
 		return 1;
 	}
 
-	// 8. Aktywowanie bufora glebokosci, zeby moc pozniej mowic, ktore sciany sa dalej.
+	// 10. Aktywowanie bufora glebokosci, zeby moc pozniej mowic, ktore sciany sa dalej.
 	glEnable(GL_DEPTH_TEST);
 
-	// 8. Ustawienie rozmiaru portu widoku (Viewport).
+	// 11. Ustawienie rozmiaru portu widoku (Viewport).
 	glViewport(0, 0, bufferWidth, bufferHeight);
+
+	// 12. Ustawienie uzytkownika dla okna.
+	glfwSetWindowUserPointer(mainWindow, this);
+}
+
+/// Inicjalizacja obslugi klawiatury ~ ustawienie call back'ow na odpowiednia funkcje, ze by ja wywolywala.
+void Window::createCallbacks()
+{
+	// 1. Kiedy klawisz jest nacisniety na tym oknie to wywolaj funkcje obslugujaca klawiature.
+	glfwSetKeyCallback(mainWindow, handleKeys);
+
+	// 2. Kiedy bedziemy poruszac myszka to odpowiednia funkcja (handleMouse) zostanie wywolana.
+	glfwSetCursorPosCallback(mainWindow, handleMouse);
+}
+
+/// Obslugiwanie klawiatury ~ ona zostanie wywolana przez call back.
+void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int mode) // Obs³uga klawiszy ~ Na tym bedzie call back od GLFW.
+{
+	// 1. Uzyskanie okna.
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+	// 2. Zamknij okna jezeli uzytkownik nacisnal escape.
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+
+	// 3. Sprawdzenie czy jakis klawisz zostal nacisniety.
+	if (key >= 0 && key < 1024)
+	{
+		if (action == GLFW_PRESS)
+		{
+			theWindow->keys[key] = true;
+			//printf("Pressed: %d\n", key);
+		}
+		else if(action==GLFW_RELEASE)
+		{
+			theWindow->keys[key] = false;
+			//printf("Released: %d\n", key);
+		}
+	}
+}
+
+/// Obs³ugiwanie myszki.
+void Window::handleMouse(GLFWwindow* window, double xPos, double yPos)
+{
+	// 1. Uzyskanie okna.
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+	// 2. Sprawdzenie czy je pierwsze poruszenie myszk¹.
+	if (theWindow->mousedFirstMoved)
+	{
+		theWindow->lastX = xPos;
+		theWindow->lastY = yPos;
+		theWindow->mousedFirstMoved = false;
+	}
+
+	// 3. Uzyskanie roznicy miedzy ostatnia wartoscia x a terazniejsza.
+	theWindow->xChange = xPos - theWindow->lastX;
+
+	// 4. Uzyskanie roznicy miedzy ostatnia wartoscia y a terazniejsza.
+	theWindow->yChange = theWindow->lastY - yPos;
+
+	// 5. Ustawienie ostatniej pozycji x.
+	theWindow->lastX = xPos;
+
+	// 6. Ustawienie ostatniej pozycji y.
+	theWindow->lastY = yPos;
+
+	//printf("x: %.6f, y: %.6f\n", theWindow->xChange, theWindow->yChange);
+}
+
+/// Uzyskanie wartosci x.
+GLfloat Window::getXChange()
+{
+	// 1. Uzyskanie wartosci zamiany oraz jej wyzerowanie.
+	GLfloat theChange = xChange;
+	xChange = 0.0f;
+	return theChange;
+}
+
+/// Uzyskanie wartosci y.
+GLfloat Window::getYChange()
+{
+	// 1. Uzyskanie wartosci zamiany oraz jej wyzerowanie.
+	GLfloat theChange = yChange;
+	yChange = 0.0f;
+	return theChange;
 }
 
 /// Destruktor.

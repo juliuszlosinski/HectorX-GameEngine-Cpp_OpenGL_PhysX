@@ -14,22 +14,38 @@ public:
 
 	int Initialise(); // Inicjalizacja okna.
 
-	GLfloat getBufferWidth() // Dlugosc bufora.
+	// Zwrocenie nacisnietych badz nie, klawiszy (numery).
+	bool* getKeys()
+	{
+		return keys;
+	}
+
+	// Dlugosc bufora.
+	GLfloat getBufferWidth() 
 	{
 		return bufferWidth;
 	}
 
-	GLfloat getBufferHeight() // Wysokosc bufora.
+	// Wysokosc bufora.
+	GLfloat getBufferHeight()
 	{
 		return bufferHeight;
 	}
 
-	bool getShouldClose() // Czy okna powinno sie zamknac.
+	// Uzyskanie wartosci x.
+	GLfloat getXChange();
+
+	// Uzyskanie wartosci y.
+	GLfloat getYChange();
+
+	// Czy okna powinno sie zamknac.
+	bool getShouldClose() 
 	{
 		return glfwWindowShouldClose(mainWindow);
 	}
 
-	void SwapBuffers() // Zamiana buforow.
+	// Zamiana buforow.
+	void SwapBuffers() 
 	{
 		glfwSwapBuffers(mainWindow);
 	}
@@ -41,5 +57,20 @@ private:
 	GLint height; // Wysokosc okna.
 	GLint bufferWidth; // Dlugosc bufora.
 	GLint bufferHeight; // Szerokosc bufora.
+
+	GLfloat lastX;	 // Ostatnia wartosc x.
+	GLfloat lastY;	 // Ostatnia wartosc y.
+	GLfloat xChange; // Roznica miedzy ostatnia wartoscia x a terazniejsza.
+	GLfloat yChange; // Roznica miedzy ostatnia wartoscia y a terazniejsza.
+	bool mousedFirstMoved; // Pierwsze poruszenie myszka ~ inicjalizacja (ustawienie pocz¹tkowej konfiguracji).
+
+	bool keys[1024]; // Klawiatura.
+
+	void createCallbacks(); // Inicjalizacja obslugi klawiatury oraz jaka funkcja bedzie wywolywana (ta ponizej bedzie).
+
+	static void handleKeys(GLFWwindow* window, int key, int code, int action, int mode); // Obs³uga klawiszy ~ Na tym bedzie call back od GLFW.
+										// Id klawisza  ___  Nacisniete czy zwolnione __
+
+	static void handleMouse(GLFWwindow* window, double xPos, double yPos); // Obs³uga myszki.
 };
 

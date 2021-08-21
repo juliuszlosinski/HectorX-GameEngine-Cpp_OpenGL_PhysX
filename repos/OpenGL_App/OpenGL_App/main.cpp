@@ -17,6 +17,7 @@
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Camera.h"
 
 // Za³¹czenie GLM.
 #include <glm/mat4x4.hpp>
@@ -27,6 +28,10 @@
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader>shaderList;
+Camera camera;
+
+GLfloat deltaTime = 0.0f;
+GLfloat lastTime = 0.0f;
 
 // Deklaracja zmiennych.
 const float toRadians = 3.14159265f / 180.0f;
@@ -92,17 +97,28 @@ int main(void)
 	/// * Kompilacja shaderow ~ utworzenie programu.
 	CreateShaders();
 
-	GLuint uniformProjection = 0, uniformModel = 0;
+	/// * Inicjalizacja kamery.
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.5f);
+
+	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
 
 	/// * Ustawianie projekcji kamery (sposobu widzenia).
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / (GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
-										// kat widzenia,		wspó³czynnik proporcji,		z k¹d widzimy,  do k¹d
+	// kat widzenia,		wspó³czynnik proporcji,		z k¹d widzimy,  do k¹d
 
 	// 9. Pêtla dzia³ania okna.
 	while (!mainWindow.getShouldClose())
 	{
+		// 9.0 Uzyskanie czasu.
+		GLfloat now = glfwGetTime(); // SDL_GetPerformanceCounter();
+		deltaTime = now - lastTime;  // (now - lastTime)*1000/SDL_GetPerformanceFrequency();
+		lastTime = now; 
+
 		// 9.1 Zdab¹dz oraz obs³uz zdarzenia wykonywane przez u¿ytkownika. (User Input Events)
 		glfwPollEvents();
+
+		camera.keyControl(mainWindow.getKeys(), deltaTime);
+		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
 		// 9.2 Czyszczenie okna (bufora z kolorami oraz bufora z g³êbi¹).
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -113,6 +129,7 @@ int main(void)
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
+		uniformView = shaderList[0].GetViewLocation();
 
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
@@ -120,6 +137,7 @@ int main(void)
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 
 		meshList[0]->RenderMesh();
 
