@@ -204,6 +204,9 @@ Steps to achive it:
 **3. Using projection matrix (how camera would see (not relative, because we are not using view matrix!) things ortogonal/ perspective):**
 We are using perspective to achive 3D depth.
 
+![image](https://user-images.githubusercontent.com/72278818/130354262-3966eb04-063c-44f1-a08e-dab70073aabe.png)
+
+
 To create perspective projection matrix, we have to do:
 **glm::mat4 projection = _glm::perspective("angle of looking (usually 45 deg)", "aspect ratio (bufferWidth/ bufferHeight)", "distance near plane (start looking), "far plane(end looking)");_**
 
@@ -231,6 +234,10 @@ We can use projection matrix without using model matrix !
 **Getting the view matrix:**
 
 1. Creating Camera class with fields: position, worldUp, yaw, pitch, front, right, up, moveSpeed, turnSpeed.
+
+![image](https://user-images.githubusercontent.com/72278818/130354179-e819d2d2-e33a-4e57-ac31-0d8d72489069.png)
+
+
 2. Calculating new front vector based on pitch and yaw:
 
 ![image](https://user-images.githubusercontent.com/72278818/130353137-9fed9375-d4eb-495b-a68f-3d12c71acc45.png)
@@ -257,4 +264,5 @@ We can use projection matrix without using model matrix !
 
 **Effect:**
 
-![Moving_Around_Camera](https://user-images.githubusercontent.com/72278818/130353990-ff69d648-0605-47c7-bc3f-dc13e72d2f9f.gif)
+![Moving_Around_Camera](https://user-images.githubusercontent.com/72278818/130354188-0449bcf2-0c8e-4b71-9f4a-33f7c9f119ef.gif)
+
