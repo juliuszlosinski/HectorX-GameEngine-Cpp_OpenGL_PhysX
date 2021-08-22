@@ -224,11 +224,11 @@ We can use projection matrix without using model matrix !
 
 **7. Date: 22.08.2021**
 
-**1. Getting the user input and handling mouse and keyboard by using callbacks and setting user pointer.**
+***Getting the user input and handling mouse and keyboard by using callbacks and setting user pointer.***
 
 ![image](https://user-images.githubusercontent.com/72278818/130353044-1fe1e508-aaf0-45e6-8cd8-c9744c3175ab.png)
 
-**Getting the view matrix:**
+***Getting the view matrix:***
 
 1. Creating Camera class with fields: position, worldUp, yaw, pitch, front, right, up, moveSpeed, turnSpeed.
 2. Calculating new front vector based on pitch and yaw:
