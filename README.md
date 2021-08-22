@@ -222,3 +222,21 @@ We can use projection matrix without using model matrix !
 
 ![image](https://user-images.githubusercontent.com/72278818/130121520-ae2eda3e-e1ee-441c-a587-75e40ccaccfc.png)
 
+**7. Date: 22.08.2021**
+
+**1. Getting the user input and handling mouse and keyboard by using callbacks and setting user pointer.**
+
+![image](https://user-images.githubusercontent.com/72278818/130353044-1fe1e508-aaf0-45e6-8cd8-c9744c3175ab.png)
+
+2. Creating view matrix by creating Camera class with fields: position, worldUp, yaw, pitch, front, right, up, moveSpeed, turnSpeed.
+3. Caculating the view matrix:
+3.1 Calculating new front vector based on pitch and yaw:
+![image](https://user-images.githubusercontent.com/72278818/130353137-9fed9375-d4eb-495b-a68f-3d12c71acc45.png)
+![image](https://user-images.githubusercontent.com/72278818/130353179-ecc351c1-9153-4508-94ed-79f794b49a55.png)
+3.2 Calculating new camera's right vector by using cross product on camera's front vector and world up (sky, standard up).
+![image](https://user-images.githubusercontent.com/72278818/130353185-b0268b7c-a616-41dc-a8ef-9d0da6c4408a.png)
+3.3 Calculating new camera's up vector by using cross product on camera's front vector and camera's right vector.
+![image](https://user-images.githubusercontent.com/72278818/130353217-39170dd7-55ec-4451-a519-16ccddb3c705.png)
+3.4 Calucating view matrix based on camera's vectors (direction (front), right and up).
+![image](https://user-images.githubusercontent.com/72278818/130353236-1837ad5e-ad7c-4877-99a3-996a2946613a.png)
+
