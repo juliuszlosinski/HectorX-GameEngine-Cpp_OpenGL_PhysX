@@ -249,3 +249,5 @@ We can use projection matrix without using model matrix !
 
 ![image](https://user-images.githubusercontent.com/72278818/130353236-1837ad5e-ad7c-4877-99a3-996a2946613a.png)
 
+***In the shader we are aplying this view matrix to every vertex (easy).**
+
