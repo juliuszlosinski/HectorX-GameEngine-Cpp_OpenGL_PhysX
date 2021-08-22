@@ -254,3 +254,7 @@ We can use projection matrix without using model matrix !
 **The newest class diagram with code:**
 
 ![Diagram_Game_Engine](https://user-images.githubusercontent.com/72278818/130353489-aa2451df-8cc4-4c46-ae95-c3d5b5d799ad.jpg)
+
+**Effect:**
+
+![Moving_Around_Camera](https://user-images.githubusercontent.com/72278818/130353990-ff69d648-0605-47c7-bc3f-dc13e72d2f9f.gif)
