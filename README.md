@@ -106,7 +106,7 @@ This folder contains everything about my game engine that is during the process 
 
 3.6 Triangle is drawn.
 
-**General idea is: First set/ bind the shader program and the render object!**
+**General idea is: First bind the shader program, then send/set data to uniforms in the shader program and then render object!**
 
 **Effect:**
 
