@@ -106,6 +106,8 @@ This folder contains everything about my game engine that is during the process 
 
 3.6 Triangle is drawn.
 
+**General idea is: First bind the shader program, then send/set data to uniforms in the shader program and then render object!**
+
 **Effect:**
 
 ![image](https://user-images.githubusercontent.com/72278818/128777097-bc424d23-56b7-4c5d-b0ab-b6aa6b4274f2.png)
@@ -119,9 +121,9 @@ Moving window by using uniforms (the easiest way -> without model matrices):
 **4. Date: 11.08.2021**
 
 Appling operations to the triangle by using uniforms and _**model matrices:**_
-1. Creating uniform variable in the vertex shader ex.: with name _"model"_.
-2. Storing information about location of uniform variable in the appliacation variable. -> _uniformModel = glGetUniformLocation(shader, "model")_
-3. Passing the data do program shader that will be stored in the uniform variable. -> _glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model))_
+1. Creating uniform variable in the vertex shader ex.: with name **_"model"_**.
+2. Storing information about location of uniform variable in the appliacation variable. -> **_uniformModel = glGetUniformLocation(shader, "model")_**
+3. Passing the data do program shader that will be stored in the uniform variable. -> **_glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model))_**
 
 **To remember:**
 
@@ -204,6 +206,9 @@ Steps to achive it:
 **3. Using projection matrix (how camera would see (not relative, because we are not using view matrix!) things ortogonal/ perspective):**
 We are using perspective to achive 3D depth.
 
+![image](https://user-images.githubusercontent.com/72278818/130354262-3966eb04-063c-44f1-a08e-dab70073aabe.png)
+
+
 To create perspective projection matrix, we have to do:
 **glm::mat4 projection = _glm::perspective("angle of looking (usually 45 deg)", "aspect ratio (bufferWidth/ bufferHeight)", "distance near plane (start looking), "far plane(end looking)");_**
 
@@ -221,4 +226,45 @@ We can use projection matrix without using model matrix !
 **Effect:**
 
 ![image](https://user-images.githubusercontent.com/72278818/130121520-ae2eda3e-e1ee-441c-a587-75e40ccaccfc.png)
+
+**7. Date: 22.08.2021**
+
+**Getting the user input and handling mouse and keyboard by using callbacks and setting user pointer.**
+
+![image](https://user-images.githubusercontent.com/72278818/130353044-1fe1e508-aaf0-45e6-8cd8-c9744c3175ab.png)
+
+**Getting the view matrix:**
+
+1. Creating Camera class with fields: position, worldUp, yaw, pitch, front, right, up, moveSpeed, turnSpeed.
+
+![image](https://user-images.githubusercontent.com/72278818/130354179-e819d2d2-e33a-4e57-ac31-0d8d72489069.png)
+
+
+2. Calculating new front vector based on pitch and yaw:
+
+![image](https://user-images.githubusercontent.com/72278818/130353137-9fed9375-d4eb-495b-a68f-3d12c71acc45.png)
+
+![image](https://user-images.githubusercontent.com/72278818/130353179-ecc351c1-9153-4508-94ed-79f794b49a55.png)
+
+3. Calculating new camera's right vector by using cross product on camera's front vector and world up (sky, standard up).
+
+![image](https://user-images.githubusercontent.com/72278818/130353185-b0268b7c-a616-41dc-a8ef-9d0da6c4408a.png)
+
+4. Calculating new camera's up vector by using cross product on camera's front vector and camera's right vector.
+
+![image](https://user-images.githubusercontent.com/72278818/130353217-39170dd7-55ec-4451-a519-16ccddb3c705.png)
+
+5. Calucating view matrix based on camera's vectors (direction (front), right and up).
+
+![image](https://user-images.githubusercontent.com/72278818/130353236-1837ad5e-ad7c-4877-99a3-996a2946613a.png)
+
+**In the shader we are aplying this view matrix to every vertex (easy).**
+
+**The newest class diagram with code:**
+
+![Diagram_Game_Engine](https://user-images.githubusercontent.com/72278818/130353489-aa2451df-8cc4-4c46-ae95-c3d5b5d799ad.jpg)
+
+**Effect:**
+
+![Moving_Around_Camera](https://user-images.githubusercontent.com/72278818/130354188-0449bcf2-0c8e-4b71-9f4a-33f7c9f119ef.gif)
 
