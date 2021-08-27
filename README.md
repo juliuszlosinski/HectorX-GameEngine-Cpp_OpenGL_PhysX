@@ -279,7 +279,8 @@ We can use projection matrix without using model matrix !
 3. Generate texture (similar to VBO/VAO/IBO). -> **_glGenTextures(1, &textureID);_**.
 4. Bind the the texture with this id. -> **_glBindTexture(GL_TEXTURE_2D, textureID);_**
 5. Set attributes/ params of texture (filters and wrapping). -> **_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T and S, GL_REPEAT);, glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG and Min_FILTER, GL_LINEAR);_**
-6. Load the image to texture. -> **glTexImage(...)**.
+6. Load the image to texture. -> **glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+	glGenerateMipmap(GL_TEXTURE_2D);**.
 7. Generate Mimap. -> **glBindTexture(GL_TEXTURE_2D);**.
 8. Unbind texture. -> **_glBindTexture(GL_TEXTURE_2D, 0);_**.
 9. Texture is associated with this id :)
