@@ -268,3 +268,36 @@ We can use projection matrix without using model matrix !
 
 ![Moving_Around_Camera](https://user-images.githubusercontent.com/72278818/130354188-0449bcf2-0c8e-4b71-9f4a-33f7c9f119ef.gif)
 
+**8. Date: 27.08.2021**
+
+**Implementing textures to the vertices:**
+
+**Loading the image and setting the texture:**
+
+1. Create variables for storing data: textureID, width, height, bitDepth and file location.
+2. Load file and get data with image (unsigned char*) and other params (width, height, bitDepth).
+3. Generate texture (similar to VBO/VAO/IBO). -> **_glGenTextures(1, &textureID);_**.
+4. Bind the the texture with this id. -> **_glBindTexture(GL_TEXTURE_2D, textureID);_**
+5. Set attributes/ params of texture (filters and wrapping). -> **_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T and S, GL_REPEAT);, glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG and Min_FILTER, GL_LINEAR);_**
+6. Load the image to texture. -> **glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+	glGenerateMipmap(GL_TEXTURE_2D);**.
+7. Generate Mimap. -> **glBindTexture(GL_TEXTURE_2D);**.
+8. Unbind texture. -> **_glBindTexture(GL_TEXTURE_2D, 0);_**.
+9. Texture is associated with this id :)
+
+**Using the texture:**
+
+1. Activating texture (sampler). -> **_glActiveTexture(GL_TEXTURE0);_**
+2. Binding the texture with selected id. -> **_glBindTexture(GL_TEXTURE_2D, textureID);_**
+3. Done.
+
+**Setting the texture in fragment shader to fragments:**
+
+1. Getting the the texture via sampler2D.
+2. Getting the position of tex coord via in variables from vertex shader (Setting this via attrib pointers and layout locations).
+3. Using method: **_color = texture(theTexture, TexCoord);_**
+4. Done.
+
+**Effect:**
+
+![textures_gif](https://user-images.githubusercontent.com/72278818/131195688-679c9b52-dcc0-47eb-8056-6dbde155b582.gif)
