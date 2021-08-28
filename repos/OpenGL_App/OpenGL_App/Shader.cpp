@@ -79,9 +79,9 @@ void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLoc
 	/// 2. Uzyskanie kodu zrodlowego shader fragmentow.
 	std::string fragmentString = ReadFile(fragmentLocation);
 	const char* fragmentCode = fragmentString.c_str();
-	
+
 	//std::cout << vertexString << "\n" << fragmentString;
-		
+
 	/// 3. Utworzenie programu z Shaderami.
 	CompileShader(vertexCode, fragmentCode);
 }

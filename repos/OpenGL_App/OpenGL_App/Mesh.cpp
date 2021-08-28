@@ -29,7 +29,7 @@ void Mesh::CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int num
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 
 	/// 6. W³o¿enie danych do powi¹zanego bufora IBO.
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0])*numOfIndices, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * numOfIndices, indices, GL_STATIC_DRAW);
 
 	// 7.. Utworzenie VBO (tworzy VBO wewn¹trz VAO).
 	glGenBuffers(1, &VBO);
@@ -38,7 +38,7 @@ void Mesh::CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int num
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 	// 9. Wlozenie danych wierzcho³ków do buffora VBO, który jest powi¹zany.
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)*numOfVertices, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * numOfVertices, vertices, GL_STATIC_DRAW);
 
 	// 10. Okreœlenie atrybutów wierzcho³ka.
 	// [0] -> Id atrybutu.
@@ -47,19 +47,21 @@ void Mesh::CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int num
 	// [3] -> Czy nale¿y jes normalizowaæ (u nas nie nale¿y).
 	// [4] -> Co ile wartosci skakaæ (u nas jest to 0, bo nie skaczemy).
 	// [5] -> Od którego wierzcho³ka zacz¹c (u nas jest to wierzcho³ek pierwszy).
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// 11. Aktywowanie atrybutu.
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, (void*)(sizeof(vertices[0]) * 3));
+	glEnableVertexAttribArray(1);
 
-	// 12. Zdjecie VAO z pozycji roboczej (unbinding)!!
-	glBindVertexArray(0);
+
 
 	/// 13. Zdjecie VBO z pozycji roboczej (unbinding)!!
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	/// 14. Zdjecie IBO z pozycji roboczej (unbinding)!!
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	// 12. Zdjecie VAO z pozycji roboczej (unbinding)!!
+	glBindVertexArray(0);
 }
 
 // Rysowanie siatki.

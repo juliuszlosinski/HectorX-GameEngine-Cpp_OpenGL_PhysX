@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <stdio.h>
 
 // Za³¹czenie pliku nag³ówkowego z wektorem.
@@ -14,10 +16,6 @@
 
 /// Za³¹czenie pliku nag³ówkowego z GLFW.
 #include <GLFW/glfw3.h>
-#include "Window.h"
-#include "Mesh.h"
-#include "Shader.h"
-#include "Camera.h"
 
 // Za³¹czenie GLM.
 #include <glm/mat4x4.hpp>
@@ -25,10 +23,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
+#include "Window.h"
+#include "Mesh.h"
+#include "Shader.h"
+#include "Camera.h"
+#include "Texture.h"
+
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader>shaderList;
 Camera camera;
+
+Texture brickTexture;
+Texture dirtTexture;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -54,17 +61,18 @@ void CreateObjects()
 
 	// 1. Utworzenie wierzcho³ków trójk¹ta.
 	GLfloat vertices[] = {
-		-1.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
+		//   x      y      z		  u	   v
+			-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,
+			0.0f, -1.0f, 1.0f,		0.5f, 0.0f,
+			1.0f, -1.0f, 0.0f,		1.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,		0.5f, 1.0f
 	};
 
 	// 2. Utworzenie siatki.
 	Mesh* obj1 = new Mesh();
 
 	// 3. Utworzenie siatki.
-	obj1->CreateMesh(vertices, indices, 12, 12);
+	obj1->CreateMesh(vertices, indices, 20, 12);
 
 	// 4. Dodanie do listy.
 	meshList.push_back(obj1);
@@ -73,7 +81,7 @@ void CreateObjects()
 	Mesh* obj2 = new Mesh();
 
 	// 3. Utworzenie siatki.
-	obj2->CreateMesh(vertices, indices, 12, 12);
+	obj2->CreateMesh(vertices, indices, 20, 12);
 
 	// 4. Dodanie do listy.
 	meshList.push_back(obj2);
@@ -98,7 +106,13 @@ int main(void)
 	CreateShaders();
 
 	/// * Inicjalizacja kamery.
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.25f);
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.5f);
+
+	brickTexture = Texture((char*)("Textures/brick.png"));
+	brickTexture.LoadTexture();
+
+	dirtTexture = Texture((char*)("Textures/dirt.png"));
+	dirtTexture.LoadTexture();
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
 
@@ -112,7 +126,7 @@ int main(void)
 		// 9.0 Uzyskanie czasu.
 		GLfloat now = glfwGetTime(); // SDL_GetPerformanceCounter();
 		deltaTime = now - lastTime;  // (now - lastTime)*1000/SDL_GetPerformanceFrequency();
-		lastTime = now; 
+		lastTime = now;
 
 		// 9.1 Zdab¹dz oraz obs³uz zdarzenia wykonywane przez u¿ytkownika. (User Input Events)
 		glfwPollEvents();
@@ -138,14 +152,14 @@ int main(void)
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-
+		brickTexture.UseTexture();
 		meshList[0]->RenderMesh();
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
 		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-
+		dirtTexture.UseTexture();
 		meshList[1]->RenderMesh();
 
 		/// 7. Zwolnienie programu.

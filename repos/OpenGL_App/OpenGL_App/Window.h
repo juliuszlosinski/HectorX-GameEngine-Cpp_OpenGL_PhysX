@@ -21,7 +21,7 @@ public:
 	}
 
 	// Dlugosc bufora.
-	GLfloat getBufferWidth() 
+	GLfloat getBufferWidth()
 	{
 		return bufferWidth;
 	}
@@ -39,13 +39,13 @@ public:
 	GLfloat getYChange();
 
 	// Czy okna powinno sie zamknac.
-	bool getShouldClose() 
+	bool getShouldClose()
 	{
 		return glfwWindowShouldClose(mainWindow);
 	}
 
 	// Zamiana buforow.
-	void SwapBuffers() 
+	void SwapBuffers()
 	{
 		glfwSwapBuffers(mainWindow);
 	}

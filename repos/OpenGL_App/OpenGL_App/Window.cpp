@@ -6,7 +6,7 @@ Window::Window()
 	// 1. Ustawienie parametrow wielkosci okna.
 	width = 800;
 	height = 600;
-	
+
 	// 2. Ustawienie klawiszy na nie wcisniete.
 	for (size_t i = 0; i < 1024; i++)
 	{
@@ -150,7 +150,7 @@ void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int m
 			theWindow->keys[key] = true;
 			//printf("Pressed: %d\n", key);
 		}
-		else if(action==GLFW_RELEASE)
+		else if (action == GLFW_RELEASE)
 		{
 			theWindow->keys[key] = false;
 			//printf("Released: %d\n", key);

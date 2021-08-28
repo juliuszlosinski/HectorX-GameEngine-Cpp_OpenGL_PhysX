@@ -7,7 +7,7 @@ class Mesh
 public:
 	Mesh(); // Konstruktor siatki.
 
-	void CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int numOfVertices, unsigned int numOfIndices); // Tworzenie siatki (przesy³amy dane).
+	void CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices); // Tworzenie siatki (przesy³amy dane).
 	void RenderMesh(); // Rysowanie siatki.
 	void ClearMesh();  // Usuwanie z karty graficznej.
 
