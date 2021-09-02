@@ -298,6 +298,10 @@ We can use projection matrix without using model matrix !
 3. Using method: **_color = texture(theTexture, TexCoord);_**
 4. Done.
 
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 2](https://user-images.githubusercontent.com/72278818/131906374-f76f0552-4b5a-419c-81c6-ccd3e18a4b46.jpg)
+
 **Effect:**
 
 ![textures_gif](https://user-images.githubusercontent.com/72278818/131195688-679c9b52-dcc0-47eb-8056-6dbde155b582.gif)
