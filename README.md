@@ -18,7 +18,7 @@ This folder contains everything about my game engine that is during the process 
 * GLM for supporting math operations (matrices, vectors).
 3. Implement Collision and Physics system by using PhysX from Nvidia.
 
-![20130308_physx](https://user-images.githubusercontent.com/72278818/132967470-f9aa743e-030f-46e3-8eed-2a3e292b3a7d.jpg)
+![880-8804857_physx](https://user-images.githubusercontent.com/72278818/132967485-2e35a61e-7ab7-4424-8c48-9eeb488e2ae5.png)
 
 
 4. Implement audio system.
