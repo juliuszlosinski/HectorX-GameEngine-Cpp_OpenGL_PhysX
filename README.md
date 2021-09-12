@@ -10,13 +10,16 @@ This folder contains everything about my game engine that is during the process 
 
 **Goals:**
 1. Implement rendering system by using OpenGL: 
+
+![image](https://user-images.githubusercontent.com/72278818/132967368-a4ef0bd4-057b-41a3-ab0c-2edf7fbef2a7.png)
+
 * GLFW for creating the context and handling windows and user inputs. 
 * GLEW for manipulating the context in a modern way and handling platform depended extensions.
 * GLM for supporting math operations (matrices, vectors).
-2. Implement Collision and Physics system by using PhysX from Nvidia.
-3. Implement audio system.
-4. Implement animation system.
-5. Implement AI system.
+3. Implement Collision and Physics system by using PhysX from Nvidia.
+4. Implement audio system.
+5. Implement animation system.
+6. Implement AI system.
 
 # Current progress:
 
