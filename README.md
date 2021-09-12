@@ -349,4 +349,6 @@ Else if ambient is 0 (zero light) the fragment is black.
 
 ![image](https://user-images.githubusercontent.com/72278818/132967297-90ff0745-dc4e-464b-bec7-6b1979d04c87.png)
 
+**Class diagram with code:**
 
+![Diagram_Game_Engine_v0 3](https://user-images.githubusercontent.com/72278818/132983280-8374b25c-49ad-41d6-b9cf-fb1ee3d83ea8.jpg)
