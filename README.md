@@ -361,7 +361,4 @@ Lighting that is part of phong lighting model that simulate the angle of inciden
 
 In order to get the angle, we are using dot product on the normalized normal vector from the surface and light source. 
 
-![image](https://user-images.githubusercontent.com/72278818/132994825-e7da398a-e51d-4a21-aed8-a2f5e939b608.png)
-
-![image](https://user-images.githubusercontent.com/72278818/132994809-0a095508-aa79-49f9-9dfb-d82e4587ab11.png)
-
+![image](https://user-images.githubusercontent.com/72278818/132994894-e4ec3b42-5bcf-4069-988b-7b30c9f4d7da.png)
