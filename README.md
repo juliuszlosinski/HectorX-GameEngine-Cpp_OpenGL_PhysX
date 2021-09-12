@@ -10,13 +10,19 @@ This folder contains everything about my game engine that is during the process 
 
 **Goals:**
 1. Implement rendering system by using OpenGL: 
+
+![image](https://user-images.githubusercontent.com/72278818/132967531-90064a08-7c76-4446-8647-a42ddb85d93b.png)
+
 * GLFW for creating the context and handling windows and user inputs. 
 * GLEW for manipulating the context in a modern way and handling platform depended extensions.
 * GLM for supporting math operations (matrices, vectors).
-2. Implement Collision and Physics system by using PhysX from Nvidia.
-3. Implement audio system.
-4. Implement animation system.
-5. Implement AI system.
+3. Implement Collision and Physics system by using PhysX from Nvidia.
+
+![20130308_physx](https://user-images.githubusercontent.com/72278818/132967499-428c2fd5-fbd7-4e26-98aa-c15a98157c6c.jpg)
+
+4. Implement audio system.
+5. Implement animation system.
+6. Implement AI system.
 
 # Current progress:
 
@@ -305,3 +311,42 @@ We can use projection matrix without using model matrix !
 **Effect:**
 
 ![textures_gif](https://user-images.githubusercontent.com/72278818/131195688-679c9b52-dcc0-47eb-8056-6dbde155b582.gif)
+
+**9. Date: 12.09.2021**
+
+**Lighting Model:**
+
+![image](https://user-images.githubusercontent.com/72278818/132967201-c8249708-70f7-4f89-910f-d8c892588392.png)
+
+**Phong Lighting Model**- lighting model that is used to create an ilusion of light's reflection. We can achive it by adding three components of lighting together: 
+
+**1. Ambient lighting:**
+
+![image](https://user-images.githubusercontent.com/72278818/132967208-33eb9f9d-edf1-4c2d-9a4b-f402d5e7949c.png)
+
+- Lighting that is always present for example like a sun.
+- The easiest one.
+
+In order to get the factor of ambient lighting, we have to get the light of colour and strength of ambient.
+
+****Factor of ambient lighting:****
+
+**_ambient = lightColour * ambientStrength_**
+
+****Final colour of fragment:****
+
+**_fragColour = objectColour * ambient_**
+
+Cases:
+
+If ambient is 1 (full light) then all fragment is lit.
+
+Else if ambient is 0.5 (half light) then fragment is in the half of his colour lit.
+
+Else if ambient is 0 (zero light) the fragment is black.
+
+**Effect:**
+
+![image](https://user-images.githubusercontent.com/72278818/132967297-90ff0745-dc4e-464b-bec7-6b1979d04c87.png)
+
+
