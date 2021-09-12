@@ -378,7 +378,7 @@ Final form:
 
 **_fragColour = objectColour * (ambient + diffuse)_**
 
-**Creating the diffuse lighting: **
+**Creating the diffuse lighting:**
 1. Setting up the direction of light (like a sun).
 2. Setting up the diffuse intensity (power of the sun).
 3. Setting up the color of the light that sun crates (white).
@@ -395,4 +395,5 @@ Final form:
 8. Calculating the diffuse colour with multiplying colour of the light times intensity of the light times diffuse factor.
 9. Summing up this diffuse colour with ambient colour multiplying with texture colour.
 
-![image](https://user-images.githubusercontent.com/72278818/132995809-9f21e27a-b14c-46b6-b12d-a350282de19d.png)
+**Shaders: **
+![image](https://user-images.githubusercontent.com/72278818/132996029-d0b8f6eb-f354-41d4-b436-814620f5d6b4.png)
