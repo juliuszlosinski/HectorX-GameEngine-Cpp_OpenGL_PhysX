@@ -363,3 +363,14 @@ Else if ambient is 0 (zero light) the fragment is black.
 In order to get the angle, we are using dot product on the normalized normal vector from the surface and light source. 
 
 ![image](https://user-images.githubusercontent.com/72278818/132994894-e4ec3b42-5bcf-4069-988b-7b30c9f4d7da.png)
+
+**Final equation: ** 
+v1*v2 = |v1|*|v2| cos(alfa)
+
+v1 and v2 are normalized so diffuse factor is:
+
+v1*v2 = cos(alfa)
+
+Final form:
+
+**_fragColour = objectColour * (ambient + diffuse)_**
