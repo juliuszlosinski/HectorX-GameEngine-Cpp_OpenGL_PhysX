@@ -311,7 +311,7 @@ We can use projection matrix without using model matrix !
 **Lighting Model:**
 
 **Phong Lighting Model**- lighting model that is used to create an ilusion of light's reflection. We can achive it by adding three components of lighting together: 
-1. Ambient lighting:
+#1. Ambient lighting:
 - Lighting that is always present for example like a sun.
 - The easiest one.
 
