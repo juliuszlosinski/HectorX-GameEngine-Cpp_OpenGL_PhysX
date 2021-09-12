@@ -355,7 +355,8 @@ Else if ambient is 0 (zero light) the fragment is black.
 
 **2. Diffuse Lighting**
 
-Lighting that is part of phong lighting model that simulate the angle of incidence of light. The light is determinted by the direction of the light source. Bigger angel of the ray from the light source, makes object more dark.
+- Lighting that is part of phong lighting model that simulate the angle of incidence of light. 
+- The light is determinted by the direction of the light source. Bigger angel of the ray from the light source, makes object more dark.
 
 ![image](https://user-images.githubusercontent.com/72278818/132994750-e465f5e3-f5c7-4740-b4f4-412cb20a1f41.png)
 
