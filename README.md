@@ -326,8 +326,11 @@ In order to get the factor of ambient lighting, we have to get the light of colo
 **fragColour = objectColour * ambient**
 
 Cases:
+
 If ambient is 1 (full light) then all fragment is lit.
+
 Else if ambient is 0.5 (half light) then fragment is in the half of his colour lit.
+
 Else if ambient is 0 (zero light) the fragment is black.
 
 
