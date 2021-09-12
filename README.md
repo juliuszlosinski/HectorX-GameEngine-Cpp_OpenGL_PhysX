@@ -341,5 +341,6 @@ Else if ambient is 0 (zero light) the fragment is black.
 
 **Effect:**
 
-![image](https://user-images.githubusercontent.com/72278818/132967277-ebfd1303-7f83-43d0-b393-0ad037203369.png)
+![image](https://user-images.githubusercontent.com/72278818/132967297-90ff0745-dc4e-464b-bec7-6b1979d04c87.png)
+
 
