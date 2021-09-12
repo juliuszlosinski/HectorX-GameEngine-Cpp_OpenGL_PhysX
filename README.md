@@ -395,5 +395,5 @@ Final form:
 8. Calculating the diffuse colour with multiplying colour of the light times intensity of the light times diffuse factor.
 9. Summing up this diffuse colour with ambient colour multiplying with texture colour.
 
-**Shaders: **
+**Shaders:**
 ![image](https://user-images.githubusercontent.com/72278818/132996029-d0b8f6eb-f354-41d4-b436-814620f5d6b4.png)
