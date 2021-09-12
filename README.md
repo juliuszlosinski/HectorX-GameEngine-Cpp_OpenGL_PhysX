@@ -320,6 +320,8 @@ We can use projection matrix without using model matrix !
 
 **Phong Lighting Model**- lighting model that is used to create an ilusion of light's reflection. We can achive it by adding three components of lighting together: 
 
+**TARGET: Create the Directional Light (like a sun).**
+
 **1. Ambient lighting:**
 
 ![image](https://user-images.githubusercontent.com/72278818/132967208-33eb9f9d-edf1-4c2d-9a4b-f402d5e7949c.png)
@@ -349,4 +351,55 @@ Else if ambient is 0 (zero light) the fragment is black.
 
 ![image](https://user-images.githubusercontent.com/72278818/132967297-90ff0745-dc4e-464b-bec7-6b1979d04c87.png)
 
+**Class diagram with code:**
 
+![Diagram_Game_Engine_v0 3](https://user-images.githubusercontent.com/72278818/132983280-8374b25c-49ad-41d6-b9cf-fb1ee3d83ea8.jpg)
+
+**2. Diffuse Lighting/ Phong Interpolation**
+
+![image](https://user-images.githubusercontent.com/72278818/132994750-e465f5e3-f5c7-4740-b4f4-412cb20a1f41.png)
+
+- Lighting that is part of phong lighting model that simulate the angle of incidence of light. 
+- The light is determinted by the direction of the light source. Bigger angel of the ray from the light source, makes object more dark.
+
+In order to get the angle, we are using dot product on the normalized normal vector from the surface and light source. 
+
+![image](https://user-images.githubusercontent.com/72278818/132994894-e4ec3b42-5bcf-4069-988b-7b30c9f4d7da.png)
+
+**Final equation:**
+
+_v1*v2 = |v1|*|v2| cos(alfa)_
+
+v1 and v2 are normalized so diffuse factor is:
+
+_v1*v2 = cos(alfa)_
+
+Final form:
+
+**_fragColour = objectColour * (ambient + diffuse)_**
+
+**Creating the diffuse lighting:**
+1. Setting up the direction of light (like a sun).
+2. Setting up the diffuse intensity (power of the sun).
+3. Setting up the color of the light that sun crates (white).
+4. Getting the uniforms location for these things from the shader program.
+5. Setting up the normals in the buffer data for the each vertex. In this case I'm going to use Phong Shading to create the ilusion of the smooth that is opposite to the flat shading.
+
+![image](https://user-images.githubusercontent.com/72278818/132996457-bff0334d-6724-426e-8897-ad0f8b4fa90b.png)
+
+![image](https://user-images.githubusercontent.com/72278818/132995960-bfdb7ef1-44af-460a-83be-0b2d289d5535.png)
+
+6. Calculating the normals by using average normals from the surface. One triangle with three vertices will have calcaluted the average normal vector values for each vertex. After this Phong Interpolation will happen during the rendering pipeline.
+
+![image](https://user-images.githubusercontent.com/72278818/132995832-cd112047-edd2-4dc1-8ba3-24aeeea1779f.png)
+
+7. Calculating the diffuse factor in the shader by using the dot product on the normal and the direction of the light.
+8. Calculating the diffuse colour with multiplying colour of the light times intensity of the light times diffuse factor.
+9. Summing up this diffuse colour with ambient colour multiplying with texture colour.
+
+**Shaders:**
+![image](https://user-images.githubusercontent.com/72278818/132996029-d0b8f6eb-f354-41d4-b436-814620f5d6b4.png)
+
+**Diagram UML:**
+
+![Diagram_Game_Engine_v0 3](https://user-images.githubusercontent.com/72278818/132996450-87731e3b-ef1b-4c03-a432-c5643aceff49.jpg)
