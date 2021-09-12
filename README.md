@@ -314,11 +314,15 @@ We can use projection matrix without using model matrix !
 1. Ambient lighting:
 - Lighting that is always present for example like a sun.
 - The easiest one.
+
 In order to get the factor of ambient lighting, we have to get the light of colour and strength of ambient.
+
 Factor of ambient lighting:
 **_ambient = lightColour * ambientStrength_**
+
 Final colour of fragment:
 **fragColour = objectColour * ambient**
+
 Cases:
 If ambient is 1 (full light) then all fragment is lit.
 Else if ambient is 0.5 (half light) then fragment is in the half of his colour lit.
