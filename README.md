@@ -305,3 +305,23 @@ We can use projection matrix without using model matrix !
 **Effect:**
 
 ![textures_gif](https://user-images.githubusercontent.com/72278818/131195688-679c9b52-dcc0-47eb-8056-6dbde155b582.gif)
+
+**9. Date: 12.09.2021**
+
+**Lighting Model:**
+
+**Phong Lighting Model**- lighting model that is used to create an ilusion of light's reflection. We can achive it by adding three components of lighting together: 
+1. Ambient lighting:
+- Lighting that is always present for example like a sun.
+- The easiest one.
+In order to get the factor of ambient lighting, we have to get the light of colour and strength of ambient.
+Factor of ambient lighting:
+**_ambient = lightColour * ambientStrength_**
+Final colour of fragment:
+**fragColour = objectColour * ambient**
+Cases:
+If ambient is 1 (full light) then all fragment is lit.
+Else if ambient is 0.5 (half light) then fragment is in the half of his colour lit.
+Else if ambient is 0 (zero light) the fragment is black.
+
+
