@@ -317,10 +317,12 @@ We can use projection matrix without using model matrix !
 
 In order to get the factor of ambient lighting, we have to get the light of colour and strength of ambient.
 
-Factor of ambient lighting:
+****Factor of ambient lighting:****
+
 **_ambient = lightColour * ambientStrength_**
 
-Final colour of fragment:
+****Final colour of fragment:****
+
 **fragColour = objectColour * ambient**
 
 Cases:
