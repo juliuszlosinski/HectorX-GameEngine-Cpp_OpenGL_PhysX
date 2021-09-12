@@ -23,8 +23,12 @@ public:
 	GLuint GetProjectionLocation(); // Uzyskaj lokalizacje macierzy projekcji.
 	GLuint GetModelLocation(); // Uzyskaj lokalizacje macierzy modelu.
 	GLuint GetViewLocation(); // Uzyskaj lokalizacje macierzy widoku.
+	
 	GLuint GetAmbientIntensityLocation(); // Uzyskaj lokalizacje moc oswietlenia otoczenia.
 	GLuint GetAmbientColourLocation(); // Uzyskaj lokalizacje koloru otoczenia.
+
+	GLuint GetDiffuseIntensityLocation(); // Uzyskaj lokalizacje mocy oswietlenia rozproszonego.
+	GLuint GetDirectionLocation(); // Uzykaj lokalizacje kierunku swiatla rozproszonego.
 
 	void UseShader(); // U¿yj shader'a.
 	void ClearShader(); // Wyczyœæ shader.
@@ -35,8 +39,12 @@ private:
 	GLuint uniformProjection; // Identyfikator uniformu projekcji.
 	GLuint uniformModel; // Identyfikator uniformu modelu.
 	GLuint uniformView; // Identyfikator macierzy widoku.
+	
 	GLuint uniformAmbientIntensity; // Identyfikator uniformu wspolczynnika oswietlenia otoczenia.
 	GLuint uniformAmbientColour; // Identyfikator koloru otoczenia.
+
+	GLuint uniformDiffuseIntensity; // Identyfikator uniformu mocy oswietlenia rozproszonego.
+	GLuint uniformDirection; // Kierunek swiatla rozproszonego.
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode); // Kompiluj shader.
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType); // Za³¹cz shader do programu.

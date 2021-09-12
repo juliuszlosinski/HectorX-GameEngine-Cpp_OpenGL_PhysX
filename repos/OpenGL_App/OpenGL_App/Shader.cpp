@@ -135,6 +135,8 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 	uniformView = glGetUniformLocation(shaderID, "view");
 	uniformAmbientColour = glGetUniformLocation(shaderID, "directionalLight.colour");
 	uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
+	uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
+	uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
 }
 
 /// Dodanie shader'a do programu z shader'ami.
@@ -199,6 +201,18 @@ GLuint Shader::GetAmbientColourLocation() // Uzyskaj lokalizacje.
 GLuint Shader::GetAmbientIntensityLocation() // Uzyskaj lokalizacje.
 {
 	return uniformAmbientIntensity;
+}
+
+/// Zwrocenie lokalizacji mocy oswietlenia rozproszonego.
+GLuint Shader::GetDiffuseIntensityLocation() // Uzyskaj lokalizacje mocy oswietlenia rozproszonego.
+{
+	return uniformDiffuseIntensity;
+}
+
+/// Zwrocenie lokalizacji kierunku.
+GLuint Shader::GetDirectionLocation() // Uzykaj lokalizacje kierunku swiatla rozproszonego.
+{
+	return uniformDirection;
 }
 
 /// Destruktor.
