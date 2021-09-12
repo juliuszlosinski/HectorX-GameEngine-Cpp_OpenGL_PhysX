@@ -353,12 +353,12 @@ Else if ambient is 0 (zero light) the fragment is black.
 
 ![Diagram_Game_Engine_v0 3](https://user-images.githubusercontent.com/72278818/132983280-8374b25c-49ad-41d6-b9cf-fb1ee3d83ea8.jpg)
 
-**2. Diffuse Lighting**
+**2. Diffuse Lighting/ Phong Interpolation**
+
+![image](https://user-images.githubusercontent.com/72278818/132994750-e465f5e3-f5c7-4740-b4f4-412cb20a1f41.png)
 
 - Lighting that is part of phong lighting model that simulate the angle of incidence of light. 
 - The light is determinted by the direction of the light source. Bigger angel of the ray from the light source, makes object more dark.
-
-![image](https://user-images.githubusercontent.com/72278818/132994750-e465f5e3-f5c7-4740-b4f4-412cb20a1f41.png)
 
 In order to get the angle, we are using dot product on the normalized normal vector from the surface and light source. 
 
