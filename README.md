@@ -385,6 +385,8 @@ Final form:
 4. Getting the uniforms location for these things from the shader program.
 5. Setting up the normals in the buffer data for the each vertex. In this case I'm going to use Phong Shading to create the ilusion of the smooth that is opposite to the flat shading.
 
+![image](https://user-images.githubusercontent.com/72278818/132996457-bff0334d-6724-426e-8897-ad0f8b4fa90b.png)
+
 ![image](https://user-images.githubusercontent.com/72278818/132995960-bfdb7ef1-44af-460a-83be-0b2d289d5535.png)
 
 6. Calculating the normals by using average normals from the surface. One triangle with three vertices will have calcaluted the average normal vector values for each vertex. After this Phong Interpolation will happen during the rendering pipeline.
@@ -397,3 +399,7 @@ Final form:
 
 **Shaders:**
 ![image](https://user-images.githubusercontent.com/72278818/132996029-d0b8f6eb-f354-41d4-b436-814620f5d6b4.png)
+
+**Diagram UML:**
+
+![Diagram_Game_Engine_v0 3](https://user-images.githubusercontent.com/72278818/132996450-87731e3b-ef1b-4c03-a432-c5643aceff49.jpg)
