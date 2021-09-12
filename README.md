@@ -11,7 +11,7 @@ This folder contains everything about my game engine that is during the process 
 **Goals:**
 1. Implement rendering system by using OpenGL: 
 
-![png-transparent-opengl-es-khronos-group-webgl-opengl-shading-language-others-blue-3d-computer-graphics-text-thumbnail](https://user-images.githubusercontent.com/72278818/132967508-f37b337f-b762-4088-a016-9d292fc35627.png)
+![image](https://user-images.githubusercontent.com/72278818/132967531-90064a08-7c76-4446-8647-a42ddb85d93b.png)
 
 * GLFW for creating the context and handling windows and user inputs. 
 * GLEW for manipulating the context in a modern way and handling platform depended extensions.
