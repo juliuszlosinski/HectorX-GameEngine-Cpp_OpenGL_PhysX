@@ -430,7 +430,7 @@ To get the angle we need the view/ camera vector and reflected light vector.
 We can achive the reflected light vector by reflecting light source around the normal vector.
 We use **dot product** on these vectors (reflected_light and viewer) to get specular factor.
 
-**_specularFactor = view dot_product reflection_**
+![image](https://user-images.githubusercontent.com/72278818/133167583-ea21022e-d70f-42d2-aaa1-d61c9f94463a.png)
 
 The next step is to apply the material to the object with shininees property. 
 If shininess is bigger then object has more metalic material like metalic ball or knife.
