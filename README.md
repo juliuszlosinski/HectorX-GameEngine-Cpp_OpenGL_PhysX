@@ -414,5 +414,4 @@ Final form:
 
 **Flat Shading:**
 
-![Flat_Shading](https://user-images.githubusercontent.com/72278818/133099183-44ee6e75-aeac-4c1e-865f-6668b7ce7688.gif)
-
+![Flat_Shading](https://user-images.githubusercontent.com/72278818/133099647-200a8c0a-8a97-4686-bd93-6391ce410819.gif)
