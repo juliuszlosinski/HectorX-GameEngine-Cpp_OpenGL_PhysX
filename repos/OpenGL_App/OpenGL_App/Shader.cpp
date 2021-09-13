@@ -137,6 +137,8 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 	uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
 	uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
 	uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
+	uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
+	uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
 }
 
 /// Dodanie shader'a do programu z shader'ami.
@@ -213,6 +215,24 @@ GLuint Shader::GetDiffuseIntensityLocation() // Uzyskaj lokalizacje mocy oswietl
 GLuint Shader::GetDirectionLocation() // Uzykaj lokalizacje kierunku swiatla rozproszonego.
 {
 	return uniformDirection;
+}
+
+/// Zwrocenie lokalizacji mocy swiatla.
+GLuint Shader::GetSpecularIntensityLocation() // Uzyskaj lokalizacje mocy oswietlenia.
+{
+	return uniformSpecularIntensity;
+}
+
+/// Zwrocenie lokalizacji wspolczynnika skupienia mocy.
+GLuint Shader::GetShininessLocation() // Uzyskaj lokalizacje wspolczynnika skupienia mocy.
+{
+	return uniformShininess;
+}
+
+/// Zwrocenie lokalizacji uniformu dla pozycji oka.
+GLuint Shader::GetEyePosition() // Uzyskaj lokalizacje uniformu dla polozenia kamery.
+{
+	return uniformEyePosition;
 }
 
 /// Destruktor.

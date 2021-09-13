@@ -23,6 +23,9 @@ public:
 	/// Kontrola za pomoca myszki (obrot).
 	void mouseControl(GLfloat xChange, GLfloat yChange);
 
+	/// Uzyskanie pozycji kamery.
+	glm::vec3 getCameraPosition();
+
 	/// Obliczanie macierzy widoku, ¿ebyœmy mogli widzieæ rzeczy z perspektywy kamery.
 	glm::mat4 calculateViewMatrix();
 

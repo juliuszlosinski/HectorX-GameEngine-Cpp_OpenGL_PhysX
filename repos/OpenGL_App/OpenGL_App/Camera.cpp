@@ -50,6 +50,12 @@ glm::mat4 Camera::calculateViewMatrix()
 	return glm::lookAt(position, position + front, up);
 }
 
+/// Uzyskanie lokalizacji kamery.
+glm::vec3 Camera::getCameraPosition()
+{
+	return position;
+}
+
 /// Aktualizowanie parametrow kamery (jest wykonywane tylko wtedy kiedy poruszymy myszka).
 void Camera::update()
 {
