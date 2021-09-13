@@ -415,3 +415,39 @@ Final form:
 **Flat Shading:**
 
 ![Flat_Shading](https://user-images.githubusercontent.com/72278818/133099647-200a8c0a-8a97-4686-bd93-6391ce410819.gif)
+
+**3. Specular Lighting**
+
+![image](https://user-images.githubusercontent.com/72278818/133165573-54857584-9ae8-44eb-9f78-18fe8e02481f.png)
+
+- It's directed reflected light source.
+- Position of the viewer/ camera is needed.
+- Makes the mirror effect.
+- Combined with ambient lighting and diffuse lighting, gives us Phong Lighting Model.
+- Needed Vectors: light source, normal, light reflection and viewer.
+- To calculate factor, we need angle between the viewer/ camera and the reflected light source around the normal. If angle is bigger then we have smaller light, and if the angle is smaller then we have more light.
+To get the angle we need the view/ camera vector and reflected light vector. 
+We can achive the reflected light vector by reflecting light source around the normal vector.
+We use **dot product** on these vectors (reflected_light and viewer) to get specular factor.
+
+**_specularFactor = view dot_product reflection_**
+
+The next step is to apply the material to the object with shininees property. 
+If shininess is bigger then object has more metalic material like metalic ball or knife.
+If shininess is smaller then object has more soft/mate material like wood oraz skin.
+
+![image](https://user-images.githubusercontent.com/72278818/133166908-62ccad29-83f1-46ed-94a7-0e5ea66f7bdf.png)
+
+**Equation of specular factor:**
+
+**_specularFactor = (view dot_product)^shininess_**
+
+**Final equation of Phong Lighting model:**
+
+**_fragColour = objectColour * (ambient + diffuse + specular)_**
+
+**Shaders:**
+
+![image](https://user-images.githubusercontent.com/72278818/133167315-e694e54c-654c-4440-b1a8-b3f0f108d0b0.png)
+
+
