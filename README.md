@@ -452,7 +452,7 @@ Final form:
 - light reflection,
 - viewer/ camera,
 
-To calculate factor, we need **angle**** between the viewer/ camera and the reflected light source around the normal. If angle is bigger then we have smaller light, and if the angle is smaller then we have more light.
+To calculate factor, we need **angle** between the viewer/ camera and the reflected light source around the normal. If angle is bigger then we have smaller light, and if the angle is smaller then we have more light.
 To get the angle we need the view/ camera vector and reflected light vector. 
 We can achive the reflected light vector by reflecting light source around the normal vector.
 
