@@ -408,3 +408,11 @@ Final form:
 
 **Effect:**
 
+**Phong Shading:**
+
+![Phong_Shading](https://user-images.githubusercontent.com/72278818/133098527-6c7bd684-c0da-485b-87fa-c3a636da1594.gif)
+
+**Flat Shading:**
+
+![Flat_Shading](https://user-images.githubusercontent.com/72278818/133099183-44ee6e75-aeac-4c1e-865f-6668b7ce7688.gif)
+
