@@ -389,6 +389,8 @@ Final form:
 
 ![image](https://user-images.githubusercontent.com/72278818/132995960-bfdb7ef1-44af-460a-83be-0b2d289d5535.png)
 
+![Wazne_Normals](https://user-images.githubusercontent.com/72278818/133085567-2b563e11-6a56-4e95-ad6e-421b458be855.png)
+
 6. Calculating the normals by using average normals from the surface. One triangle with three vertices will have calcaluted the average normal vector values for each vertex. After this Phong Interpolation will happen during the rendering pipeline.
 
 ![image](https://user-images.githubusercontent.com/72278818/132995832-cd112047-edd2-4dc1-8ba3-24aeeea1779f.png)
@@ -403,3 +405,13 @@ Final form:
 **Diagram UML:**
 
 ![Diagram_Game_Engine_v0 3](https://user-images.githubusercontent.com/72278818/132996450-87731e3b-ef1b-4c03-a432-c5643aceff49.jpg)
+
+**Effect:**
+
+**Phong Shading:**
+
+![Phong_Shading](https://user-images.githubusercontent.com/72278818/133098527-6c7bd684-c0da-485b-87fa-c3a636da1594.gif)
+
+**Flat Shading:**
+
+![Flat_Shading](https://user-images.githubusercontent.com/72278818/133099647-200a8c0a-8a97-4686-bd93-6391ce410819.gif)
