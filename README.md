@@ -138,21 +138,33 @@ So if we first move the object and then rotate, we will have diffrent result tha
 
 a) **Translation:**
 
+**Theory:**
+
 ![image](https://user-images.githubusercontent.com/72278818/133167777-45677134-3cdb-4441-af32-d68981f37ff8.png)
+
+**Effect:**
 
 ![window_moving_translation_model_matrices](https://user-images.githubusercontent.com/72278818/129083963-c3e6e636-8b54-4472-bbc7-8a3d4bb4aac3.gif)
 
 b) **Rotation:**
 
+**Theory:**
+
 ![image](https://user-images.githubusercontent.com/72278818/133167921-c6e905f3-0a9c-46c8-a773-1e63de517ff6.png)
 
 **Angle must be in radians.**
+
+**Effect:**
 
 ![rotation_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129088692-66de82a2-ada7-4d30-9888-f5951a89c0cf.gif)
 
 c) **Scaling:**
 
+**Theory:**
+
 ![image](https://user-images.githubusercontent.com/72278818/133167801-25e1d691-6e91-4abd-9f84-5332a17fd1e1.png)
+
+**Effect:**
 
 ![scaling_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129107390-50e9ee26-5106-4b69-9f04-474c6faaf7f9.gif)
 
