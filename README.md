@@ -440,18 +440,19 @@ Final form:
 
 ![image](https://user-images.githubusercontent.com/72278818/133165573-54857584-9ae8-44eb-9f78-18fe8e02481f.png)
 
+**Description:**
 - It's directed reflected light source.
 - Position of the viewer/ camera is needed.
 - Makes the mirror effect.
 - Combined with ambient lighting and diffuse lighting, gives us Phong Lighting Model.
 
-**Needed Vectors**: 
+**Needed Vectors:** 
 - light source, 
 - normal, 
 - light reflection,
 - viewer/ camera,
 
-To calculate factor, we need angle between the viewer/ camera and the reflected light source around the normal. If angle is bigger then we have smaller light, and if the angle is smaller then we have more light.
+To calculate factor, we need **angle**** between the viewer/ camera and the reflected light source around the normal. If angle is bigger then we have smaller light, and if the angle is smaller then we have more light.
 To get the angle we need the view/ camera vector and reflected light vector. 
 We can achive the reflected light vector by reflecting light source around the normal vector.
 
