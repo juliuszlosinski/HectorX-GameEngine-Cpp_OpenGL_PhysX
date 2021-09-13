@@ -440,11 +440,11 @@ If shininess is smaller then object has more soft/mate material like wood oraz s
 
 **Equation of specular factor:**
 
-**_specularFactor = (view dot_product)^shininess_**
+![image](https://user-images.githubusercontent.com/72278818/133167446-3bf50bd6-8ea9-43d3-b381-3cfba53a0b89.png)
 
 **Final equation of Phong Lighting model:**
 
-**_fragColour = objectColour * (ambient + diffuse + specular)_**
+![image](https://user-images.githubusercontent.com/72278818/133167470-ad091165-e576-4a3e-9adf-9785b38eb9b1.png)
 
 **Shaders:**
 
