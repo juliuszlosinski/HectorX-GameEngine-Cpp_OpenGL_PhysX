@@ -478,4 +478,7 @@ If shininess is smaller then object has more soft/mate material like wood oraz s
 
 ![image](https://user-images.githubusercontent.com/72278818/133167315-e694e54c-654c-4440-b1a8-b3f0f108d0b0.png)
 
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 4](https://user-images.githubusercontent.com/72278818/133243186-971b207c-e751-411d-a823-3b9426aa47b9.jpg)
 
