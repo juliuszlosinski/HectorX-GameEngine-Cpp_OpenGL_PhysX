@@ -1,5 +1,4 @@
 #version 330
-
 in vec4 vCol;
 in vec2 TexCoord;
 in vec3 Normal;
@@ -51,3 +50,4 @@ void main()
 	
 	colour = texture(theTexture, TexCoord) * (ambientColour + diffuseColour + specularColour);
 }
+

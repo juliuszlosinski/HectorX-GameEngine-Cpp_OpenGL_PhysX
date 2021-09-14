@@ -143,7 +143,8 @@ void CreateShaders()
 
 int main(void)
 {
-	mainWindow = Window(1366, 768);
+	//mainWindow = Window(1366, 768);
+	mainWindow = Window(800, 600);
 	mainWindow.Initialise();
 
 	/// * Utworzenie trojk¹ta.
@@ -164,7 +165,7 @@ int main(void)
 	shinyMaterial = Material(1.0f, 32);
 	dullMaterial = Material(0.3f, 4);
 
-	mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, 2.0f, -1.0f, -2.0f, 0.3f);
+	mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, 2.0f, -1.0f, -2.0f, 0.8f);
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformAmbientIntensity = 0, uniformAmbientColour = 0,

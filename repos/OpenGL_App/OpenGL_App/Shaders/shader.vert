@@ -24,3 +24,6 @@ void main()
 	
 	FragPos = (model * vec4(pos, 1.0)).xyz; 
 }
+
+
+ 

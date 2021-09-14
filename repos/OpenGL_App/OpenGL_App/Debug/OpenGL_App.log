@@ -1,9 +1,9 @@
 ﻿  main.cpp
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(26,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(32,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(182,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(210,94): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(210,69): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(210,47): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(210,22): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(183,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(211,94): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(211,69): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(211,47): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(211,22): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
   OpenGL_App.vcxproj -> C:\Users\PC\source\repos\OpenGL_App\Debug\OpenGL_App.exe
