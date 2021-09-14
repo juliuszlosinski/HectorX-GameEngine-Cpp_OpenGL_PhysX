@@ -138,13 +138,33 @@ So if we first move the object and then rotate, we will have diffrent result tha
 
 a) **Translation:**
 
+**Theory:**
+
+![image](https://user-images.githubusercontent.com/72278818/133167777-45677134-3cdb-4441-af32-d68981f37ff8.png)
+
+**Effect:**
+
 ![window_moving_translation_model_matrices](https://user-images.githubusercontent.com/72278818/129083963-c3e6e636-8b54-4472-bbc7-8a3d4bb4aac3.gif)
 
 b) **Rotation:**
 
+**Theory:**
+
+![image](https://user-images.githubusercontent.com/72278818/133167921-c6e905f3-0a9c-46c8-a773-1e63de517ff6.png)
+
+**Angle must be in radians.**
+
+**Effect:**
+
 ![rotation_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129088692-66de82a2-ada7-4d30-9888-f5951a89c0cf.gif)
 
 c) **Scaling:**
+
+**Theory:**
+
+![image](https://user-images.githubusercontent.com/72278818/133167801-25e1d691-6e91-4abd-9f84-5332a17fd1e1.png)
+
+**Effect:**
 
 ![scaling_by_using_uniforms_model_matrices](https://user-images.githubusercontent.com/72278818/129107390-50e9ee26-5106-4b69-9f04-474c6faaf7f9.gif)
 
@@ -415,3 +435,53 @@ Final form:
 **Flat Shading:**
 
 ![Flat_Shading](https://user-images.githubusercontent.com/72278818/133099647-200a8c0a-8a97-4686-bd93-6391ce410819.gif)
+
+**3. Specular Lighting**
+
+![image](https://user-images.githubusercontent.com/72278818/133165573-54857584-9ae8-44eb-9f78-18fe8e02481f.png)
+
+**Description:**
+- It's directed reflected light source.
+- Position of the viewer/ camera is needed.
+- Makes the mirror effect.
+- Combined with ambient lighting and diffuse lighting, gives us Phong Lighting Model.
+
+**Needed Vectors:** 
+- light source, 
+- normal, 
+- light reflection,
+- viewer/ camera,
+
+To calculate factor, we need **angle** between the viewer/ camera and the reflected light source around the normal. If angle is bigger then we have smaller light, and if the angle is smaller then we have more light.
+To get the angle we need the view/ camera vector and reflected light vector. 
+We can achive the reflected light vector by reflecting light source around the normal vector.
+
+We use **dot product** on these vectors (reflected_light and viewer) to get specular factor.
+
+![image](https://user-images.githubusercontent.com/72278818/133167583-ea21022e-d70f-42d2-aaa1-d61c9f94463a.png)
+
+The next step is to apply the material to the object with shininees property. 
+If shininess is bigger then object has more metalic material like metalic ball or knife.
+If shininess is smaller then object has more soft/mate material like wood oraz skin.
+
+![image](https://user-images.githubusercontent.com/72278818/133166908-62ccad29-83f1-46ed-94a7-0e5ea66f7bdf.png)
+
+**Equation of specular factor:**
+
+![image](https://user-images.githubusercontent.com/72278818/133167446-3bf50bd6-8ea9-43d3-b381-3cfba53a0b89.png)
+
+**Final equation of Phong Lighting model:**
+
+![image](https://user-images.githubusercontent.com/72278818/133167470-ad091165-e576-4a3e-9adf-9785b38eb9b1.png)
+
+**Shaders:**
+
+![image](https://user-images.githubusercontent.com/72278818/133167315-e694e54c-654c-4440-b1a8-b3f0f108d0b0.png)
+
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 4](https://user-images.githubusercontent.com/72278818/133243186-971b207c-e751-411d-a823-3b9426aa47b9.jpg)
+
+**Effect:**
+
+![Specular_lighting](https://user-images.githubusercontent.com/72278818/133249685-8231219a-3165-47ae-942d-a16d57680f8c.gif)
