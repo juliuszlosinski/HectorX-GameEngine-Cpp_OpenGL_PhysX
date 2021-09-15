@@ -7,6 +7,11 @@
 
 #include <GL\glew.h>
 
+#include "CommonValues.h"
+
+#include "DirectionalLight.h"
+#include "PointLight.h"
+
 class Shader
 {
 public:
@@ -38,22 +43,46 @@ public:
 	void UseShader(); // U¿yj shader'a.
 	void ClearShader(); // Wyczyœæ shader.
 
+	void SetDirectionalLight(DirectionalLight* dLight); // Ustawienie swiatla kierunkowego.
+	void SetPointLights(PointLight* pLight, unsigned int lightCount); // Ustawienie swiatel miejscowych.
+
 	~Shader(); // Destruktor.
 private:
+	int pointLightCount;
+
 	GLuint shaderID; // Identyfikator shader'a.
 	GLuint uniformProjection; // Identyfikator uniformu projekcji.
 	GLuint uniformModel; // Identyfikator uniformu modelu.
 	GLuint uniformView; // Identyfikator macierzy widoku.
 	GLuint uniformEyePosition; // Identyfikator uniformu pozycji kamery.
 
-	GLuint uniformAmbientIntensity; // Identyfikator uniformu wspolczynnika oswietlenia otoczenia.
-	GLuint uniformAmbientColour; // Identyfikator koloru otoczenia.
-
-	GLuint uniformDiffuseIntensity; // Identyfikator uniformu mocy oswietlenia rozproszonego.
-	GLuint uniformDirection; // Kierunek swiatla rozproszonego.
-
 	GLuint uniformSpecularIntensity; // Identyfikator polozenia mocy oswietlenia.
 	GLuint uniformShininess; // Identyfikator uniformu mocy skupienia swiatla.
+
+	struct
+	{
+		GLuint uniformColour; // Kolor swiatla.
+		GLuint uniformAmbientIntensity; // Intensywnosc otoczenia.
+		GLuint uniformDiffuseIntensity; // Intensywnosc rozproszenia.
+
+		GLuint uniformDirection; // Kierunek swiatla.
+	} uniformDirectionalLight;
+
+	GLuint uniformPointLightCount; // Identyfikator ilosc swiatel punktowych.
+
+	struct
+	{
+		GLuint uniformColour; // Kolor swiatla.
+		GLuint uniformAmbientIntensity; // Intensywnosc otoczenia.
+		GLuint uniformDiffuseIntensity; // Intensywnosc rozproszenia.
+
+		// 1/(ax^2+bx+c)
+		GLuint uniformPosition; // Pozycja swiatla.
+		GLuint uniformConstant; // Stala ~ c.
+		GLuint uniformLinear;	// Liniowy ~ b.
+		GLuint uniformExponent; // Exponent ~ a.
+	} uniformPointLight[MAX_POINT_LIGHTS];
+
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode); // Kompiluj shader.
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType); // Za³¹cz shader do programu.

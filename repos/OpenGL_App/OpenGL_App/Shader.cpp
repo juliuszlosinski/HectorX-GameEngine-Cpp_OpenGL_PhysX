@@ -10,6 +10,37 @@ Shader::Shader()
 	shaderID = 0;
 	uniformModel = 0;
 	uniformProjection = 0;
+	pointLightCount = 0;
+}
+
+/// Ustawienie swiatla kierunkowego.
+void Shader::SetDirectionalLight(DirectionalLight* dLight)
+{
+	// 1. Przeslanie lokalizacji uniformow.
+	dLight->UseLight(uniformDirectionalLight.uniformAmbientIntensity, uniformDirectionalLight.uniformColour,
+		uniformDirectionalLight.uniformDiffuseIntensity, uniformDirectionalLight.uniformDirection);
+}
+
+/// Ustawienie swiatla punktowego.
+void Shader::SetPointLights(PointLight* pLight, unsigned int lightCount)
+{
+	// 1. Sprawdzenie ilosci przeslanych swiatel miejscowych czy miesci sie w przedziale.
+	if (lightCount > MAX_POINT_LIGHTS)
+	{
+		// 1.1 Ustawienie jako maksymalnej ilosci.
+		lightCount = MAX_POINT_LIGHTS;
+	}
+
+	// 2. Wlozenie wartosci ilosci swiatel do wskazanej pozycji uniformu.
+	glUniform1i(uniformPointLightCount, lightCount);
+
+	// 3.
+	for (size_t i = 0; i < lightCount; i++)
+	{
+		pLight[i].UseLight(uniformPointLight[i].uniformAmbientIntensity, uniformPointLight[i].uniformColour,
+			uniformPointLight[i].uniformDiffuseIntensity, uniformPointLight[i].uniformPosition,
+			uniformPointLight[i].uniformConstant, uniformPointLight[i].uniformLinear, uniformPointLight[i].uniformExponent);
+	}
 }
 
 /// Uzywaj shader'a.
@@ -133,12 +164,40 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 	uniformModel = glGetUniformLocation(shaderID, "model");
 	uniformProjection = glGetUniformLocation(shaderID, "projection");
 	uniformView = glGetUniformLocation(shaderID, "view");
-	uniformAmbientColour = glGetUniformLocation(shaderID, "directionalLight.colour");
-	uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
-	uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
-	uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
+	uniformDirectionalLight.uniformColour = glGetUniformLocation(shaderID, "directionalLight.base.colour");
+	uniformDirectionalLight.uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.base.ambientIntensity");
+	uniformDirectionalLight.uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
+	uniformDirectionalLight.uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.base.diffuseIntensity");
 	uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
 	uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
+	uniformEyePosition = glGetUniformLocation(shaderID, "eyePosition");
+	uniformPointLightCount = glGetUniformLocation(shaderID, "pointLightCount");
+
+	// 7. Przeslanie danych.
+	for (size_t i=0; i< MAX_POINT_LIGHTS;i++)
+	{
+		char locBuff[100] = { '\0' };
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.colour", i);
+		uniformPointLight[i].uniformColour = glGetUniformLocation(shaderID, locBuff);
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.ambientIntensity", i);
+		uniformPointLight[i].uniformAmbientIntensity = glGetUniformLocation(shaderID, locBuff);
+	
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.diffuseIntensity", i);
+		uniformPointLight[i].uniformDiffuseIntensity= glGetUniformLocation(shaderID, locBuff);
+	
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].position", i);
+		uniformPointLight[i].uniformPosition = glGetUniformLocation(shaderID, locBuff);
+	
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].constant", i);
+		uniformPointLight[i].uniformConstant = glGetUniformLocation(shaderID, locBuff);
+	
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].linear", i);
+		uniformPointLight[i].uniformLinear = glGetUniformLocation(shaderID, locBuff);
+	
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].exponent", i);
+		uniformPointLight[i].uniformExponent = glGetUniformLocation(shaderID, locBuff);
+	}
 }
 
 /// Dodanie shader'a do programu z shader'ami.
@@ -196,25 +255,25 @@ GLuint Shader::GetProjectionLocation() // Uzyskaj lokalizacje projekcji.
 /// Zwrocenie lokalizacji uniformu koloru.
 GLuint Shader::GetAmbientColourLocation() // Uzyskaj lokalizacje.
 {
-	return uniformAmbientColour;
+	return uniformDirectionalLight.uniformColour;
 }
 
 /// Zwrocenie lokalizacji moc oswietlenia otoczenia.
 GLuint Shader::GetAmbientIntensityLocation() // Uzyskaj lokalizacje.
 {
-	return uniformAmbientIntensity;
+	return uniformDirectionalLight.uniformAmbientIntensity;
 }
 
 /// Zwrocenie lokalizacji mocy oswietlenia rozproszonego.
 GLuint Shader::GetDiffuseIntensityLocation() // Uzyskaj lokalizacje mocy oswietlenia rozproszonego.
 {
-	return uniformDiffuseIntensity;
+	return uniformDirectionalLight.uniformDiffuseIntensity;
 }
 
 /// Zwrocenie lokalizacji kierunku.
 GLuint Shader::GetDirectionLocation() // Uzykaj lokalizacje kierunku swiatla rozproszonego.
 {
-	return uniformDirection;
+	return uniformDirectionalLight.uniformDirection;
 }
 
 /// Zwrocenie lokalizacji mocy swiatla.
