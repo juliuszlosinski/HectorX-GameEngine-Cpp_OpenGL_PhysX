@@ -114,6 +114,10 @@ This folder contains everything about my game engine that is during the process 
 
 **General idea is: First bind the shader program, then send/set data to uniforms in the shader program and then render object!**
 
+**Rendering pipeline:**
+
+![image](https://user-images.githubusercontent.com/72278818/133353650-dfd49ff2-d827-497f-8b6a-7f2b1ae6c564.png)
+
 **Effect:**
 
 ![image](https://user-images.githubusercontent.com/72278818/128777097-bc424d23-56b7-4c5d-b0ab-b6aa6b4274f2.png)
@@ -230,6 +234,9 @@ Steps to achive it:
 ![pyramid_with_depth_test](https://user-images.githubusercontent.com/72278818/130055414-7c25cfd3-e55a-498b-a923-77e34b18d7cd.gif)
 
 **3. Using projection matrix (how camera would see (not relative, because we are not using view matrix!) things ortogonal/ perspective):**
+
+![image](https://user-images.githubusercontent.com/72278818/133353702-00c80186-d988-416b-943b-b7d0a2fe1092.png)
+
 We are using perspective to achive 3D depth.
 
 ![image](https://user-images.githubusercontent.com/72278818/130354262-3966eb04-063c-44f1-a08e-dab70073aabe.png)
@@ -264,7 +271,6 @@ We can use projection matrix without using model matrix !
 1. Creating Camera class with fields: position, worldUp, yaw, pitch, front, right, up, moveSpeed, turnSpeed.
 
 ![image](https://user-images.githubusercontent.com/72278818/130354179-e819d2d2-e33a-4e57-ac31-0d8d72489069.png)
-
 
 2. Calculating new front vector based on pitch and yaw:
 
@@ -410,6 +416,8 @@ Final form:
 ![image](https://user-images.githubusercontent.com/72278818/132995960-bfdb7ef1-44af-460a-83be-0b2d289d5535.png)
 
 ![Wazne_Normals](https://user-images.githubusercontent.com/72278818/133085567-2b563e11-6a56-4e95-ad6e-421b458be855.png)
+
+![image](https://user-images.githubusercontent.com/72278818/133353494-cfc80348-9584-4a52-ac45-d4eee4dfe51a.png)
 
 6. Calculating the normals by using average normals from the surface. One triangle with three vertices will have calcaluted the average normal vector values for each vertex. After this Phong Interpolation will happen during the rendering pipeline.
 
