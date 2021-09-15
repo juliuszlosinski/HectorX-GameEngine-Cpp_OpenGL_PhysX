@@ -411,6 +411,8 @@ Final form:
 
 ![Wazne_Normals](https://user-images.githubusercontent.com/72278818/133085567-2b563e11-6a56-4e95-ad6e-421b458be855.png)
 
+![image](https://user-images.githubusercontent.com/72278818/133353494-cfc80348-9584-4a52-ac45-d4eee4dfe51a.png)
+
 6. Calculating the normals by using average normals from the surface. One triangle with three vertices will have calcaluted the average normal vector values for each vertex. After this Phong Interpolation will happen during the rendering pipeline.
 
 ![image](https://user-images.githubusercontent.com/72278818/132995832-cd112047-edd2-4dc1-8ba3-24aeeea1779f.png)
