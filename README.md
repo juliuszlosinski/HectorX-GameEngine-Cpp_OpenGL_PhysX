@@ -508,11 +508,11 @@ If shininess is smaller then object has more soft/mate material like wood oraz s
 
 We can achive it by using reciprocal of quadratic function, where the **x** is the distance between the light source and the position of the fragment. 
 
-![image](https://user-images.githubusercontent.com/72278818/133519709-7c4222d2-0d4f-4c9f-8dc7-c9fe93e6c9f4.png)
+![image](https://user-images.githubusercontent.com/72278818/133520311-b9dc72b6-9e1f-4c5f-af57-31804b29d0cf.png)
 
 **Equation:**
 
-![image](https://user-images.githubusercontent.com/72278818/133520311-b9dc72b6-9e1f-4c5f-af57-31804b29d0cf.png)
+![image](https://user-images.githubusercontent.com/72278818/133521184-c54ce98b-ec5b-487b-b1b1-37b0d6d856bf.png)
 
 **Where:**
 
