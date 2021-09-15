@@ -348,6 +348,19 @@ We can use projection matrix without using model matrix !
 
 **TARGET: Create the Directional Light (like a sun).**
 
+![image](https://user-images.githubusercontent.com/72278818/133522959-9e4a4529-f537-495a-81e2-be0e75a22a8a.png)
+
+**Light without position and light source.**
+
+All the light coming in parallel together from the infinite distance.
+
+**Needed:**
+- colour,
+- ambient factor,
+- diffuse factor,
+- specular factor,
+- directon,
+
 **1. Ambient lighting:**
 
 ![image](https://user-images.githubusercontent.com/72278818/132967208-33eb9f9d-edf1-4c2d-9a4b-f402d5e7949c.png)
