@@ -517,6 +517,9 @@ We can achive it by using reciprocal of quadratic function, where the **x** is t
 **Where:**
 
 **Distance**- distance between the fragment and the light source.
+
 **Quadratic**- user defined value, usually the lowest one.
+
 **Linear**- user defined value, usually lower than constant.
+
 **Constant**- usually 1.0, because denumerical must be always greater or equal 1.0.
