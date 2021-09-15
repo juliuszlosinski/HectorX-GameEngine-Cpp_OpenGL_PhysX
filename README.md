@@ -493,3 +493,33 @@ If shininess is smaller then object has more soft/mate material like wood oraz s
 **Effect:**
 
 ![Specular_lighting](https://user-images.githubusercontent.com/72278818/133249685-8231219a-3165-47ae-942d-a16d57680f8c.gif)
+
+**Kind of lights:**
+
+**1. Spot Lights**
+
+![image](https://user-images.githubusercontent.com/72278818/133519162-8a2b24ee-c406-464a-ac34-4caae8cdd56a.png)
+
+- Light with **position** and emits in every direction.
+- Direction is automatically calculated by using fragment position and the lights source. We can get the fragment position by using the idea of the OpenGL interpolation in the shader. Every fragment has a colour and position.
+- We can use math for direcational light to calculate the direction vector.
+
+**Attenuation: **
+
+We can achive it by using reciprocal of quadratic function, where the **x** is the distance between the light source and the position of the fragment. 
+
+![image](https://user-images.githubusercontent.com/72278818/133519709-7c4222d2-0d4f-4c9f-8dc7-c9fe93e6c9f4.png)
+
+**Equation:**
+
+![image](https://user-images.githubusercontent.com/72278818/133519816-77d4d9bf-540b-46c2-8295-d852dc218b67.png)
+
+**Where: **
+
+**Distance**- distance between the fragment and the light source.
+**Quadratic**- user defined value, usually the lowest one.
+**Linear**- user defined value, usually lower than constant.
+**Constant**- usually 1.0, because denumerical must be always greater or equal 1.0.
+
+
+
