@@ -504,7 +504,7 @@ If shininess is smaller then object has more soft/mate material like wood oraz s
 - Direction is automatically calculated by using fragment position and the lights source. We can get the fragment position by using the idea of the OpenGL interpolation in the shader. Every fragment has a colour and position.
 - We can use math for direcational light to calculate the direction vector.
 
-**Attenuation: **
+**Attenuation:**
 
 We can achive it by using reciprocal of quadratic function, where the **x** is the distance between the light source and the position of the fragment. 
 
@@ -512,14 +512,11 @@ We can achive it by using reciprocal of quadratic function, where the **x** is t
 
 **Equation:**
 
-![image](https://user-images.githubusercontent.com/72278818/133519816-77d4d9bf-540b-46c2-8295-d852dc218b67.png)
+![image](https://user-images.githubusercontent.com/72278818/133520311-b9dc72b6-9e1f-4c5f-af57-31804b29d0cf.png)
 
-**Where: **
+**Where:**
 
 **Distance**- distance between the fragment and the light source.
 **Quadratic**- user defined value, usually the lowest one.
 **Linear**- user defined value, usually lower than constant.
 **Constant**- usually 1.0, because denumerical must be always greater or equal 1.0.
-
-
-
