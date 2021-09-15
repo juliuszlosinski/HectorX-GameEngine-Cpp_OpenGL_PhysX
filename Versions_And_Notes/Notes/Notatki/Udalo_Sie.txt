@@ -1,0 +1,11 @@
+Vertex Shader jest uzywany zawsze 3 razy.
+Fragment Shader jest uzywany dla kazdego fragmentu.
+Na poczatku Vertex Shader (a w nim pozycje) jest przesylany 3 razy, potem wszystkie te pozycje zostaja zapisane.
+Po czym zachodzi zjawisko interpolacji pomiedzy 3 wierzchołkami za pomocą odpowiednich wzorów. 
+Fragment po fragmencie jest interpolowany przy pomocy koordynatow Barycentrica.
+Kazdy kolor fragmentu jest po kolei obliczany przy pomocy interpolacji a w tym koordynatow Barycentrica oraz wzorow.
+Zatem jak zdefiniujemy normalny wektor dla kazdego z 3 wierzcholkow.
+To te wektory zostana 3 przeslane oraz zapisane. 
+A nastepnie zinterpolowane dla kazdego fragmentu. 
+Dla tego mamy wplyw na kolor kazdego fragmentu :)
+Proste!!!
