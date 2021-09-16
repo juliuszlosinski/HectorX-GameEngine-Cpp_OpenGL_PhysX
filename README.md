@@ -541,7 +541,7 @@ We can achive it by using reciprocal of quadratic function, where the **x** is t
 
 ![Diagram_Game_Engine_v0 5](https://user-images.githubusercontent.com/72278818/133597952-b33aa571-60ee-4d9e-9fb0-99e1d7976a19.jpg)
 
-```cpp
+```GLSL
 #version 330
 
 in vec4 vCol;
@@ -648,6 +648,5 @@ void main()
 	
 	colour = texture(theTexture, TexCoord) * finalColour;
 }
-
 
 ```
