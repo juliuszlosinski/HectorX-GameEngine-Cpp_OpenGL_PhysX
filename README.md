@@ -688,3 +688,49 @@ void main()
 ![lights](https://user-images.githubusercontent.com/72278818/133621263-44df656d-09a7-4875-8f72-2ef5721cce1d.gif)
 
 ![lights02](https://user-images.githubusercontent.com/72278818/133622555-27691fab-093d-4ba0-b9d9-7b872eaacd48.gif)
+
+**Spot lights:**
+
+![image](https://user-images.githubusercontent.com/72278818/133805834-ed5600d3-7d54-4355-af16-f6fe7c4c814c.png)
+
+Works similar to point lights.
+
+**Has:**
+**- position** ~ position of light source.
+**- attenuation factor** ~ fading.
+**- direction** ~ front of the light source.
+**- cut-off angle** ~ describes edges of the light.
+
+![image](https://user-images.githubusercontent.com/72278818/133806568-5a6d27e0-e7f6-4cbc-8891-2157f93bfb7f.png)
+
+We need a way to compare "angle to fragment" with "cut off angle". We can do it by using **dot product**.
+
+**Equation:**
+
+![image](https://user-images.githubusercontent.com/72278818/133806839-87aca983-b749-49d0-b2aa-ad555b04324a.png)
+
+**Where:**
+**- lightVector** ~ vector from the light source to fragment.
+**- lightDirection** ~ front of the light source (the direction that light facing).
+
+Angle to fragment will have values between 0 and 1.
+
+**Fading edges:**
+
+We can fade the edges of the spot light by using scaling.
+
+**General equation for scaling:**
+
+![image](https://user-images.githubusercontent.com/72278818/133807325-5ff4ddff-daad-4e30-98aa-7fd2ed172e2f.png)
+
+**Our equation for scaling the values of edges/ fading:**
+
+![image](https://user-images.githubusercontent.com/72278818/133807389-05a3d7c5-8200-48fb-b623-7fbafdea31f9.png)
+
+**Summary:**
+
+![image](https://user-images.githubusercontent.com/72278818/133807470-34a4fb37-fbf5-45cd-9a6e-9e76a4492a13.png)
+
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 6](https://user-images.githubusercontent.com/72278818/133807506-81680654-2afd-43f2-98a7-9113df8fd83c.jpg)
