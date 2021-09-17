@@ -927,3 +927,6 @@ void main()
 	colour = texture(theTexture, TexCoord) * finalColour;
 }
 ```
+**Effect:**
+
+![Spot_Light](https://user-images.githubusercontent.com/72278818/133827578-494cd9f3-ffe8-478d-82e7-f31be9f5801d.gif)
