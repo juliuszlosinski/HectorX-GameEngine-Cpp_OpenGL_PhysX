@@ -13,10 +13,13 @@ public:
 	Texture();
 
 	/// Konstrutkor.
-	Texture(char* fileLoc);
+	Texture(const char* fileLoc);
 
-	/// £adowanie tekstury.
-	void LoadTexture();
+	/// £adowanie tekstury bez kana³u alpha.
+	bool LoadTexture();
+
+	/// £adowanie tekstury z kanalem alpha.
+	bool LoadTextureA();
 
 	/// U¿ywanie tekstury.
 	void UseTexture();
@@ -32,6 +35,6 @@ private:
 	int height; // Wysokosc tekstury.
 	int bitDepth; // Glebia.
 
-	char* fileLocation; // Lokalizacja pliku z tekstura.
+	const char* fileLocation; // Lokalizacja pliku z tekstura.
 };
 

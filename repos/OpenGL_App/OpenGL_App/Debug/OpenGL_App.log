@@ -1,7 +1,33 @@
-﻿  main.cpp
+﻿  Camera.cpp
+  DirectionalLight.cpp
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\DirectionalLight.cpp(23,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\DirectionalLight.cpp(26,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\DirectionalLight.cpp(29,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\DirectionalLight.cpp(32,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+  Light.cpp
+  main.cpp
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(26,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(32,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(237,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-  LINK : C:\Users\PC\source\repos\OpenGL_App\Debug\OpenGL_App.exe not found or not built by the last incremental link; performing full link
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  OpenGL_App.vcxproj -> C:\Users\PC\source\repos\OpenGL_App\Debug\OpenGL_App.exe
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(241,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+  Material.cpp
+  Mesh.cpp
+  PointLight.cpp
+  Shader.cpp
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Shader.cpp(22,75): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Shader.cpp(22,26): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Shader.cpp(21,91): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Shader.cpp(21,42): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+  SpotLight.cpp
+  Texture.cpp
+  Window.cpp
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(26,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(32,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(170,22): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(171,22): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(176,28): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(179,40): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(182,21): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(185,21): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+  Generating Code...
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(121): warning C4715: 'Window::Initialise': not all control paths return a value
+LINK : fatal error LNK1104: cannot open file 'assimp-vc140-mt.lib'

@@ -1,5 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
+#include <assimp/Importer.hpp>
+
 #include <stdio.h>
 
 // Za³¹czenie pliku nag³ówkowego z wektorem.
@@ -34,6 +36,11 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
+#include "Model.h"
+
+Model xwing;
+Model blackhawk;
+
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -179,48 +186,54 @@ int main(void)
 	/// * Inicjalizacja kamery.
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.5f);
 
-	brickTexture = Texture((char*)("Textures/brick.png"));
-	brickTexture.LoadTexture();
+	brickTexture = Texture((char*)("Textures/machine.png"));
+	brickTexture.LoadTextureA();
 
-	dirtTexture = Texture((char*)("Textures/dirt.png"));
-	dirtTexture.LoadTexture();
+	dirtTexture = Texture((char*)("Textures/window.png"));
+	dirtTexture.LoadTextureA();
 
-	plainTexture = Texture((char*)("Textures/plain.png"));
-	plainTexture.LoadTexture();
+	plainTexture = Texture((char*)("Textures/grass02.png"));
+	plainTexture.LoadTextureA();
 
 	shinyMaterial = Material(4.0f, 256);
 	dullMaterial = Material(0.3f, 4);
 
+	xwing = Model();
+	xwing.LoadModel("Models/x-wing.obj");
+
+	blackhawk = Model();
+	blackhawk.LoadModel("Models/uh60.obj");
+
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-								0.1f, 0.1f,
-								0.0f, 0.0f, -1.0f);
+		0.3f, 0.6f,
+		0.0f, 0.0f, -1.0f);
 
 	unsigned int pointLightCount = 0;
 	pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
-								0.0f, 0.1f,
-								0.0f, 0.0f, 0.0f,
-								0.3f, 0.2f, 0.1f);
-	//pointLightCount++;
+		0.0f, 0.1f,
+		0.0f, 0.0f, 0.0f,
+		0.3f, 0.2f, 0.1f);
+	pointLightCount++;
 	pointLights[1] = PointLight(0.0f, 1.0f, 0.0f,
-								0.0f, 0.1f,
-								-4.0f, 2.0f, 0.0f,
-								0.3f, 0.1f, 0.1f);
-	//pointLightCount++;
+		0.0f, 0.1f,
+		-4.0f, 2.0f, 0.0f,
+		0.3f, 0.1f, 0.1f);
+	pointLightCount++;
 
 	unsigned int spotLightCount = 0;
 	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-								0.0f, 2.0f,
-								0.0f, 0.0f, 0.0f,
-								0.0f, -1.0f, 0.0f,
-								1.0f, 0.0f, 0.0f,
-								20.0f);
+		0.0f, 2.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		20.0f);
 	spotLightCount++;
 	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
-								0.0f, 1.0f,
-								0.0f, -1.5f, 0.0f,
-								-100.0f, -1.0f, 0.0f,
-								1.0f, 0.0f, 0.0f,
-								20.0f);
+		0.0f, 1.0f,
+		0.0f, -1.5f, 0.0f,
+		-100.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		20.0f);
 	spotLightCount++;
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -260,7 +273,7 @@ int main(void)
 
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
@@ -293,10 +306,24 @@ int main(void)
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dirtTexture.UseTexture();
+		plainTexture.UseTexture();
 		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 10.0f));
+		model = glm::scale(model, glm::vec3(0.006f, 0.006f, 0.006f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		xwing.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-3.0f, 2.0f, 10.0f));
+		model = glm::rotate(model, -90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		blackhawk.RenderModel();
 
 		/// 7. Zwolnienie programu.
 		glUseProgram(0);
