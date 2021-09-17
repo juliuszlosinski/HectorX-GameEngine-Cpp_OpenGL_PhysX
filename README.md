@@ -696,9 +696,13 @@ void main()
 Works similar to point lights.
 
 **Has:**
+
 **- position** ~ position of light source.
+
 **- attenuation factor** ~ fading.
+
 **- direction** ~ front of the light source.
+
 **- cut-off angle** ~ describes edges of the light.
 
 ![image](https://user-images.githubusercontent.com/72278818/133806568-5a6d27e0-e7f6-4cbc-8891-2157f93bfb7f.png)
@@ -710,7 +714,9 @@ We need a way to compare "angle to fragment" with "cut off angle". We can do it 
 ![image](https://user-images.githubusercontent.com/72278818/133806839-87aca983-b749-49d0-b2aa-ad555b04324a.png)
 
 **Where:**
+
 **- lightVector** ~ vector from the light source to fragment.
+
 **- lightDirection** ~ front of the light source (the direction that light facing).
 
 Angle to fragment will have values between 0 and 1.
