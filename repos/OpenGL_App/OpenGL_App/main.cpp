@@ -32,6 +32,7 @@
 #include "Texture.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 #include "Material.h"
 
 Window mainWindow;
@@ -48,6 +49,7 @@ Material dullMaterial;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
+SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -64,7 +66,7 @@ static const char* fShader = "Shaders/shader.frag";
 /// Obliczanie normalnych wektorow.
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount, unsigned int vLength, unsigned normalOffset)
 {
-	for (size_t i = 0; i < indiceCount; i+=3)
+	for (size_t i = 0; i < indiceCount; i += 3)
 	{
 		// 1. Mnozymy przez vLength zeby uzyskac dostep do pierwszej wartosci wierzcholka.
 		unsigned int in0 = indices[i] * vLength;
@@ -75,7 +77,7 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 		// 2.1 Stworzenie takich dwoch krawedzi.
 		glm::vec3 v1(vertices[in1] - vertices[in0], vertices[in1 + 1] - vertices[in0 + 1], vertices[in1 + 2] - vertices[in0 + 2]);
 		glm::vec3 v2(vertices[in2] - vertices[in0], vertices[in2 + 1] - vertices[in0 + 1], vertices[in2 + 2] - vertices[in0 + 2]);
-		
+
 		// 2.2 Uzycie cross product na tych dwoch liniach zeby uzyskac normal.
 		glm::vec3 normal = glm::cross(v1, v2);
 		normal = glm::normalize(normal);
@@ -124,7 +126,7 @@ void CreateObjects()
 	};
 
 	GLfloat floorVertices[] = {
-		-10.0f, 0.0f, -10.0f,	0.0f, 0.0f,			0.0f, -1.0f, 0.0f,	
+		-10.0f, 0.0f, -10.0f,	0.0f, 0.0f,			0.0f, -1.0f, 0.0f,
 		10.0f, 0.0f, -10.0f,	10.0f, 0.0f,		0.0f, -1.0f, 0.0f,
 		-10.0f, 0.0f, 10.0f,	0.0f, 10.0f,		0.0f, -1.0f, 0.0f,
 		10.0f, 0.0f, 10.0f,		10.0f, 10.0f,		0.0f, -1.0f, 0.0f
@@ -189,25 +191,37 @@ int main(void)
 	shinyMaterial = Material(4.0f, 256);
 	dullMaterial = Material(0.3f, 4);
 
-	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 
-								0.0f, 0.0f,
+	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+								0.1f, 0.1f,
 								0.0f, 0.0f, -1.0f);
 
 	unsigned int pointLightCount = 0;
-
 	pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
-								0.0f, 1.0f,
+								0.0f, 0.1f,
 								0.0f, 0.0f, 0.0f,
 								0.3f, 0.2f, 0.1f);
-
-	pointLightCount++;
-
+	//pointLightCount++;
 	pointLights[1] = PointLight(0.0f, 1.0f, 0.0f,
-								0.0f, 1.0f,
+								0.0f, 0.1f,
 								-4.0f, 2.0f, 0.0f,
 								0.3f, 0.1f, 0.1f);
+	//pointLightCount++;
 
-	pointLightCount++;
+	unsigned int spotLightCount = 0;
+	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+								0.0f, 2.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, -1.0f, 0.0f,
+								1.0f, 0.0f, 0.0f,
+								20.0f);
+	spotLightCount++;
+	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+								0.0f, 1.0f,
+								0.0f, -1.5f, 0.0f,
+								-100.0f, -1.0f, 0.0f,
+								1.0f, 0.0f, 0.0f,
+								20.0f);
+	spotLightCount++;
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
@@ -244,8 +258,13 @@ int main(void)
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
+		glm::vec3 lowerLight = camera.getCameraPosition();
+		lowerLight.y -= 0.3f;
+		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
+		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
@@ -257,7 +276,7 @@ int main(void)
 		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		
+
 		brickTexture.UseTexture();
 		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[0]->RenderMesh();
@@ -274,7 +293,7 @@ int main(void)
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		plainTexture.UseTexture();
+		dirtTexture.UseTexture();
 		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 

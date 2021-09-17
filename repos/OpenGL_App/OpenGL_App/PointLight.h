@@ -13,14 +13,15 @@ public:
                GLfloat xPos, GLfloat yPos, GLfloat zPos, 
                GLfloat con, GLfloat lin, GLfloat exp);
 
-    void UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation,
-                  GLfloat diffuseIntensityLocation, GLfloat positionLocation,
-                  GLfloat constantLocation, GLfloat linearLocation, GLfloat exponentLocation);
-
+    /// Uzywanie swiatla.
+    void UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
+                  GLuint diffuseIntensityLocation, GLuint positionLocation,
+                  GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation);
+    
     /// Destruktor.
     ~PointLight();
 
-private:
+protected:
     glm::vec3 position; // Pozycja zrodla swiatla.
     
     // Wspó³czynniki odw. równania kwadratowego do obliczenia wsp³óczynnika t³umienia œwiat³a.
@@ -28,6 +29,5 @@ private:
     GLfloat constant; // Stala ~ c.
     GLfloat linear; // Liniowy ~ b.
     GLfloat exponent; // Eksponent ~ a.
-
 };
 

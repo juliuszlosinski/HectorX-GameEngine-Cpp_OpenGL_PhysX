@@ -26,6 +26,9 @@ public:
 	/// Uzyskanie pozycji kamery.
 	glm::vec3 getCameraPosition();
 
+	/// Uzyskanie frontu kamery (kierunku do, ktorego jest skierowana).
+	glm::vec3 getCameraDirection();
+
 	/// Obliczanie macierzy widoku, ¿ebyœmy mogli widzieæ rzeczy z perspektywy kamery.
 	glm::mat4 calculateViewMatrix();
 

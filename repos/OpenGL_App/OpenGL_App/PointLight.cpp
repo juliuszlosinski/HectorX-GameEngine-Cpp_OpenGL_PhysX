@@ -40,9 +40,9 @@ PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue,
 }
 
 /// Uzywanie swiatla.
-void PointLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation, 
-                          GLfloat diffuseIntensityLocation, GLfloat positionLocation, 
-                          GLfloat constantLocation, GLfloat linearLocation, GLfloat exponentLocation)
+void PointLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
+                          GLuint diffuseIntensityLocation, GLuint positionLocation,
+                          GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation)
 {
     // 1. Ustawienie uniformu dla koloru.
     glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);

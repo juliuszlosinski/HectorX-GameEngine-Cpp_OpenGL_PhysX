@@ -56,6 +56,12 @@ glm::vec3 Camera::getCameraPosition()
 	return position;
 }
 
+/// Uzyskanie frontu/ kierunku kamery.
+glm::vec3 Camera::getCameraDirection()
+{
+	return glm::normalize(front);
+}
+
 /// Aktualizowanie parametrow kamery (jest wykonywane tylko wtedy kiedy poruszymy myszka).
 void Camera::update()
 {

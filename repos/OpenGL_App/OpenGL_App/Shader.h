@@ -11,6 +11,7 @@
 
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 class Shader
 {
@@ -45,10 +46,12 @@ public:
 
 	void SetDirectionalLight(DirectionalLight* dLight); // Ustawienie swiatla kierunkowego.
 	void SetPointLights(PointLight* pLight, unsigned int lightCount); // Ustawienie swiatel miejscowych.
+	void SetSpotLights(SpotLight* sLight, unsigned int lightCount); // Ustawienie swiatel reflektorowych.
 
 	~Shader(); // Destruktor.
 private:
-	int pointLightCount;
+	int pointLightCount; // Ilosc swiatel punktowych.
+	int spotLightCount;  // Ilosc swiatel reflektorowych.
 
 	GLuint shaderID; // Identyfikator shader'a.
 	GLuint uniformProjection; // Identyfikator uniformu projekcji.
@@ -82,6 +85,24 @@ private:
 		GLuint uniformLinear;	// Liniowy ~ b.
 		GLuint uniformExponent; // Exponent ~ a.
 	} uniformPointLight[MAX_POINT_LIGHTS];
+
+	GLuint uniformSpotLightCount; // Identyfikator polozenia ilosci swiatel reflektorowych.
+
+	struct
+	{
+		GLuint uniformColour; // Kolor swiatla.
+		GLuint uniformAmbientIntensity; // Intensywnosc otoczenia.
+		GLuint uniformDiffuseIntensity; // Intensywnosc rozproszenia.
+
+		// 1/(ax^2+bx+c)
+		GLuint uniformPosition; // Pozycja swiatla.
+		GLuint uniformConstant; // Stala ~ c.
+		GLuint uniformLinear;	// Liniowy ~ b.
+		GLuint uniformExponent; // Exponent ~ a.
+
+		GLuint uniformDirection; // Kierunek swiecenia swiatla.
+		GLuint uniformEdge; // Kat swiecenia.
+	} uniformSpotLight[MAX_SPOT_LIGHTS];
 
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode); // Kompiluj shader.
