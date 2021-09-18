@@ -40,6 +40,7 @@
 
 Model xwing;
 Model blackhawk;
+Model tree;
 
 
 Window mainWindow;
@@ -204,6 +205,9 @@ int main(void)
 	blackhawk = Model();
 	blackhawk.LoadModel("Models/uh60.obj");
 
+	tree = Model();
+	tree.LoadModel("Models/cottage_obj.obj");
+
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.6f,
 		0.0f, 0.0f, -1.0f);
@@ -324,6 +328,13 @@ int main(void)
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		blackhawk.RenderModel();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 2.0f, 10.0f));
+		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		tree.RenderModel();
 
 		/// 7. Zwolnienie programu.
 		glUseProgram(0);

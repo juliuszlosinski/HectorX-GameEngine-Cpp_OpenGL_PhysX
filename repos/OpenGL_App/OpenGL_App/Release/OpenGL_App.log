@@ -1,10 +1,10 @@
 ﻿  main.cpp
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(26,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(32,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(250,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(254,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
   Generating code
-  1 of 833 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    8 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.cpp(121): warning C4715: 'Window::Initialise': not all control paths return a value
+  All 835 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   OpenGL_App.vcxproj -> C:\Users\PC\source\repos\OpenGL_App\Release\OpenGL_App.exe
