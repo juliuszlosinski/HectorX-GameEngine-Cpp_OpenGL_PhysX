@@ -964,3 +964,6 @@ Model importing will be done by using **Assimp** (Open Asset Import Library). It
 
 Goal: First load an object into a **Scene** object, recursively retrieve the correspoding indices of **Mesh** objects from each of the nodes (we recursively search each node's children), and process each **Mesh** object to retrieve the vertex data, indices and its material proporties (texture maps (diffuse and specular maps) or colors).
 
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 6](https://user-images.githubusercontent.com/72278818/133925057-62ed0d6c-dab7-4ad0-8214-22395cccb521.jpg)
