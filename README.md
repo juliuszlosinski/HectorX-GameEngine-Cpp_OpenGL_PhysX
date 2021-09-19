@@ -930,3 +930,44 @@ void main()
 **Effect:**
 
 ![Spot_Light](https://user-images.githubusercontent.com/72278818/133827578-494cd9f3-ffe8-478d-82e7-f31be9f5801d.gif)
+
+**10. Date: 19.09.2021**
+
+**Model importing:**
+
+Model importing will be done by using **Assimp** (Open Asset Import Library). It is a portable Open-Source library to import various well-known 3D model formats in a uniform manner. The most recent version also knows how to export 3d files and is therefore suitable as general-purpose 3D model converter. Also assimp aims to provide a full asset conversion pipeline for use in game engines/ realtime rendering systems of any kind.
+
+**Assimp features:**
+- Written in portable, ISO-complian C++ (C++ 11 supported).
+- Easily configurable and customizable build via cmake.
+- Core interface/ API is provided for both C++ and C.
+- Easy to configure Post-procssing pipeline.
+- Command-line interace to perform common operations (i.e. quick files stats, convert models, extract embedded textures) from the shell.
+- Imports bones, vertex weights and animations (i.e. skinning, skeletal animations).
+- Loads multiple UV and vertex color channels (current limit is 8).
+- Works well with UNICODE input files.
+- Supports complex multi-layer materials.
+- Supports embedded textures, both compressed (e.q. PNG) or just raw color data.
+- No external dependecies (zlib, zlib and irrxml are also needed, but they're included in the repository so you don't need to bother).
+- Due to its export interface, Assimp serves as general purpose 3D model converter.
+
+**Diagram of Assimp:**
+
+![image](https://user-images.githubusercontent.com/72278818/133923727-11af4453-685d-4813-9bfd-f05a13986094.png)
+
+**Assimp description:**
+- All the data of the scene/ model is contained in the **Scene** object like all the meshes and materials. It also contains reference to the **root node** of the scene.
+- **The root node** of the scene may contain children nodes (like all other nodes) and could have a set of indices that point to** the mesh data in the scene object's _mMeshes_ array. The scene's _mMeshes_ array contains the actual **Mesh** objects, the values in the _mMeshes_ array of node are only indices for the scene's meshes array.
+- A **Mesh** object itself contains all the relevant data required for rendering: vertex positions, texture cordinates, normal fectors, faces and the material of the object.
+- A mesh contains several faces. A **Face** represents a render primitive of the object (triangles, squares, points). A face contains the indices of the vertices that from a primitive. Because the vertices and the indices are seperated, this makes it easy for us to render via an index buffer.
+- Finally a mesh also links to a **Material** object that hosts several functions to retrieve the material proporties of an object. Think of texture maps (like diffuse and specular maps) or colors.
+
+Goal: First load an object into a **Scene** object, recursively retrieve the correspoding indices of **Mesh** objects from each of the nodes (we recursively search each node's children), and process each **Mesh** object to retrieve the vertex data, indices and its material proporties (texture maps (diffuse and specular maps) or colors).
+
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 6](https://user-images.githubusercontent.com/72278818/133925057-62ed0d6c-dab7-4ad0-8214-22395cccb521.jpg)
+
+**Effect:**
+
+![object](https://user-images.githubusercontent.com/72278818/133926288-4e423365-e646-48f2-b32f-8d8a6f064f91.gif)
