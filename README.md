@@ -930,3 +930,21 @@ void main()
 **Effect:**
 
 ![Spot_Light](https://user-images.githubusercontent.com/72278818/133827578-494cd9f3-ffe8-478d-82e7-f31be9f5801d.gif)
+
+**Model importing:**
+
+Model importing will be done by using **Assimp** (Open Asset Import Library). It is a portable Open-Source library to import various well-known 3D model formats in a uniform manner. The most recent version also knows how to export 3d files and is therefore suitable as general-purpose 3D model converter. Also assimp aims to provide a full asset conversion pipeline for use in game engines/ realtime rendering systems of any kind.
+
+**Assimp features:**
+- Written in portable, ISO-complian C++ (C++ 11 supported).
+- Easily configurable and customizable build via cmake.
+- Core interface/ API is provided for both C++ and C.
+- Easy to configure Post-procssing pipeline.
+- Command-line interace to perform common operations (i.e. quick files stats, convert models, extract embedded textures) from the shell.
+- Imports bones, vertex weights and animations (i.e. skinning, skeletal animations).
+- Loads multiple UV and vertex color channels (current limit is 8).
+- Works well with UNICODE input files.
+- Supports complex multi-layer materials.
+- Supports embedded textures, both compressed (e.q. PNG) or just raw color data.
+- No external dependecies (zlib, zlib and irrxml are also needed, but they're included in the repository so you don't need to bother).
+- Due to its export interface, Assimp serves as general purpose 3D model converter.
