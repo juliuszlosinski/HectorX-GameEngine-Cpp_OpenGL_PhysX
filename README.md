@@ -955,3 +955,12 @@ Model importing will be done by using **Assimp** (Open Asset Import Library). It
 
 ![image](https://user-images.githubusercontent.com/72278818/133923727-11af4453-685d-4813-9bfd-f05a13986094.png)
 
+**Assimp description:**
+- All the data of the scene/ model is contained in the **Scene** object like all the meshes and materials. It also contains reference to the **root node** of the scene.
+- **The root node** of the scene may contain children nodes (like all other nodes) and could have a set of indices that point to** the mesh data in the scene object's _mMeshes_ array. The scene's _mMeshes_ array contains the actual **Mesh** objects, the values in the _mMeshes_ array of node are only indices for the scene's meshes array.
+- A **Mesh** object itself contains all the relevant data required for rendering: vertex positions, texture cordinates, normal fectors, faces and the material of the object.
+- A mesh contains several faces. A **Face** represents a render primitive of the object (triangles, squares, points). A face contains the indices of the vertices that from a primitive. Because the vertices and the indices are seperated, this makes it easy for us to render via an index buffer.
+- Finally a mesh also links to a **Material** object that hosts several functions to retrieve the material proporties of an object. Think of texture maps (like diffuse and specular maps) or colors.
+
+Goal: First load an object into a **Scene** object, recursively retrieve the correspoding indices of **Mesh** objects from each of the nodes (we recursively search each node's children), and process each **Mesh** object to retrieve the vertex data, indices and its material proporties (texture maps (diffuse and specular maps) or colors).
+
