@@ -931,6 +931,8 @@ void main()
 
 ![Spot_Light](https://user-images.githubusercontent.com/72278818/133827578-494cd9f3-ffe8-478d-82e7-f31be9f5801d.gif)
 
+**10. Date: 19.09.2021**
+
 **Model importing:**
 
 Model importing will be done by using **Assimp** (Open Asset Import Library). It is a portable Open-Source library to import various well-known 3D model formats in a uniform manner. The most recent version also knows how to export 3d files and is therefore suitable as general-purpose 3D model converter. Also assimp aims to provide a full asset conversion pipeline for use in game engines/ realtime rendering systems of any kind.
@@ -948,3 +950,8 @@ Model importing will be done by using **Assimp** (Open Asset Import Library). It
 - Supports embedded textures, both compressed (e.q. PNG) or just raw color data.
 - No external dependecies (zlib, zlib and irrxml are also needed, but they're included in the repository so you don't need to bother).
 - Due to its export interface, Assimp serves as general purpose 3D model converter.
+
+**Diagram of Assimp:**
+
+![image](https://user-images.githubusercontent.com/72278818/133923727-11af4453-685d-4813-9bfd-f05a13986094.png)
+
