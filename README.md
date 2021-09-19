@@ -967,3 +967,7 @@ Goal: First load an object into a **Scene** object, recursively retrieve the cor
 **UML diagram:**
 
 ![Diagram_Game_Engine_v0 6](https://user-images.githubusercontent.com/72278818/133925057-62ed0d6c-dab7-4ad0-8214-22395cccb521.jpg)
+
+**Effect:**
+
+![object](https://user-images.githubusercontent.com/72278818/133926288-4e423365-e646-48f2-b32f-8d8a6f064f91.gif)
