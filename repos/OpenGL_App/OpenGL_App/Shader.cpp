@@ -67,6 +67,24 @@ void Shader::SetSpotLights(SpotLight* sLight, unsigned int lightCount)
 	}
 }
 
+// Ustawienie tekstury.
+void Shader::SetTexture(GLuint textureUnit)
+{
+	glUniform1i(uniformTexture, textureUnit);
+}
+
+// Ustawienie mapy cieniowania.
+void Shader::SetDirectionalShadowMap(GLuint textureUnit)
+{
+	glUniform1i(uniformDirectionalShadowMap, textureUnit);
+}
+
+// Ustawienie transformacji swiatla kierunkowego.
+void Shader::SetDirectionalLightTransform(glm::mat4* lTransform)
+{
+	glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lTransform));
+}
+
 /// Uzywaj shader'a.
 void Shader::UseShader()
 {
@@ -195,11 +213,11 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 	uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
 	uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
 	uniformEyePosition = glGetUniformLocation(shaderID, "eyePosition");
-	
+
 	uniformPointLightCount = glGetUniformLocation(shaderID, "pointLightCount");
 
 	// 7. Przeslanie danych.
-	for (size_t i=0; i< MAX_POINT_LIGHTS;i++)
+	for (size_t i = 0; i < MAX_POINT_LIGHTS; i++)
 	{
 		char locBuff[100] = { '\0' };
 		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.colour", i);
@@ -207,19 +225,19 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 
 		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.ambientIntensity", i);
 		uniformPointLight[i].uniformAmbientIntensity = glGetUniformLocation(shaderID, locBuff);
-	
+
 		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.diffuseIntensity", i);
-		uniformPointLight[i].uniformDiffuseIntensity= glGetUniformLocation(shaderID, locBuff);
-	
+		uniformPointLight[i].uniformDiffuseIntensity = glGetUniformLocation(shaderID, locBuff);
+
 		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].position", i);
 		uniformPointLight[i].uniformPosition = glGetUniformLocation(shaderID, locBuff);
-	
+
 		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].constant", i);
 		uniformPointLight[i].uniformConstant = glGetUniformLocation(shaderID, locBuff);
-	
+
 		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].linear", i);
 		uniformPointLight[i].uniformLinear = glGetUniformLocation(shaderID, locBuff);
-	
+
 		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].exponent", i);
 		uniformPointLight[i].uniformExponent = glGetUniformLocation(shaderID, locBuff);
 	}
@@ -257,7 +275,12 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 		snprintf(locBuff, sizeof(locBuff), "spotLights[%d].edge", i);
 		uniformSpotLight[i].uniformEdge = glGetUniformLocation(shaderID, locBuff);
 	}
+
+	uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightTransform");
+	uniformTexture = glGetUniformLocation(shaderID, "theTexture");
+	uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
 }
+
 
 /// Dodanie shader'a do programu z shader'ami.
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType) // Za³¹cz shader do programu.

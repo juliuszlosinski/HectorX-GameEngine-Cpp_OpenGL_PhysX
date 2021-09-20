@@ -7,6 +7,8 @@
 
 #include <GL\glew.h>
 
+#include <glm\gtc\type_ptr.hpp>
+#include <glm\gtc\matrix_transform.hpp>
 #include "CommonValues.h"
 
 #include "DirectionalLight.h"
@@ -47,6 +49,9 @@ public:
 	void SetDirectionalLight(DirectionalLight* dLight); // Ustawienie swiatla kierunkowego.
 	void SetPointLights(PointLight* pLight, unsigned int lightCount); // Ustawienie swiatel miejscowych.
 	void SetSpotLights(SpotLight* sLight, unsigned int lightCount); // Ustawienie swiatel reflektorowych.
+	void SetTexture(GLuint textureUnit); // Ustawienie tekstury.
+	void SetDirectionalShadowMap(GLuint textureUnit); // Ustawienie kierunkowej mapy cieniowania.
+	void SetDirectionalLightTransform(glm::mat4* lTransform); // Ustawienie macierzy patrzenia swiatla kierunkowego.
 
 	~Shader(); // Destruktor.
 private:
@@ -61,6 +66,10 @@ private:
 
 	GLuint uniformSpecularIntensity; // Identyfikator polozenia mocy oswietlenia.
 	GLuint uniformShininess; // Identyfikator uniformu mocy skupienia swiatla.
+
+	GLuint uniformTexture; // Identyfikator polozenia tekstury.
+	GLuint uniformDirectionalLightTransform; // Identyfikator macierzy swiatla kierunkowego.
+	GLuint uniformDirectionalShadowMap; // Identyfikator mapy cieniowania.
 
 	struct
 	{

@@ -14,9 +14,14 @@ Light::Light()
 }
 
 /// Konstruktor.
-Light::Light(GLfloat red, GLfloat green, GLfloat blue, 
+Light::Light(GLfloat shadowWidth, GLfloat shadowHeight,
+	GLfloat red, GLfloat green, GLfloat blue, 
 			 GLfloat aIntensity, GLfloat dIntensity)
 {
+	// 0. Utworzenie mapy cieniowania.
+	shadowMap = new ShadowMap();
+	shadowMap->Init(shadowWidth, shadowHeight);
+
 	// 1. Ustawienie koloru ~ jak duzo koloru kazdego piksela ma byc pokazane.
 	colour = glm::vec3(red, green, blue);
 

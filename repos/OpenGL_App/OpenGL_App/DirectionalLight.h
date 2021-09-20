@@ -8,12 +8,16 @@ public:
 	DirectionalLight();
 
 	/// Konstrutkor.
-	DirectionalLight(GLfloat red, GLfloat green, GLfloat blue, 
+	DirectionalLight(GLfloat shadowWidth, GLfloat shadowHeight,
+					GLfloat red, GLfloat green, GLfloat blue, 
 					 GLfloat aIntensity, GLfloat dIntensity, 
 					 GLfloat xDir, GLfloat yDir, GLfloat zDir);
 
 	/// Uzywanie swiatla.
 	void UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation, GLfloat diffuseIntensityLocation, GLfloat directionLocation);
+
+	/// Oblicz transformacje swiatla.
+	glm::mat4 CalculateLightTransform();
 
 	/// Destruktor.
 	~DirectionalLight();

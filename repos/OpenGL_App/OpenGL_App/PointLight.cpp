@@ -22,7 +22,7 @@ PointLight::PointLight(): Light()
 PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue,
                        GLfloat aIntensity, GLfloat dIntensity,
                        GLfloat xPos, GLfloat yPos, GLfloat zPos,
-                       GLfloat con, GLfloat lin, GLfloat exp) : Light(red, green, blue, aIntensity, dIntensity)
+                       GLfloat con, GLfloat lin, GLfloat exp) : Light(1024, 1024, red, green, blue, aIntensity, dIntensity)
 {
     // 1. Ustawienie pozycji zrodla swiatla.
     position = glm::vec3(xPos, yPos, zPos);
