@@ -981,5 +981,7 @@ Goal: First load an object into a **Scene** object, recursively retrieve the cor
 ![image](https://user-images.githubusercontent.com/72278818/134224638-dbcd26be-2c4c-48a6-adf1-79f35f8aa78a.png)
 
 **General idea:**
+
 We render scene the scene from the perspective of the light (light's point of view) and everything we see from the light's perspective is lit otherwise it must be in shadow. Blue fragments are seen by the light source, black are not seen. We want to get the poin the ray where it first hit an object and compare this closet point to other points on this ray. Then wee do test if a test point's ray position is further down the ray than closest point and if so, the test point must be in shadow. Doing if for every light source ray is a infficient!
+
 We can do something similar, but without casting light rays. Instead, we can use **the depth buffer**.
