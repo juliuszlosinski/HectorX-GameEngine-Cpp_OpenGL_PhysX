@@ -1018,3 +1018,43 @@ First pass needs different view and projections matrices than the second one (wi
 **b) View matrix:**
 
 In order to create a view matrix to transform each object to view space relative to the camera position (can be seen from the light's point of view), we can use **_glm::lookAt()_** with the light source's position looking at the scene's center. Position of the view space must have inverse direction of the direction light and the direction of the view matrix is just a direction of the light source.
+
+**SO: T = lightSpaceTransform = lightProjection * lightView**
+
+In the shaders we only care about depth values and not all the fragment (lighting) calculations!
+
+**Calucating the shadow:**
+
+We need to pass to our main **vertex shader** lightSpaceTransform via uniform and after this calculate the current position of the fragment relevant to the light source by using lightSpaceTransform. So **FragPosition_Rel_LightSpace = lightSpaceTransform * Frag_Pos**. Easy. And the we are passing FragPosition_Rel_LightSpace to fragment shader. Whitin the fragment shader we calculate a **shadow** value that is 1 when the fragment is in shadowm oraz 0.0 when it's not. The resulting diffuse and specular components are multiplied by this shadow component. Beacause shadows are rarely completly dark (due to light scattering) we leave the ambient component out the shadow multiplications.
+
+The first thing to check whether a fragment is in shadow, is transform the light-space fragment position in clip-space to normalized device coordinates. When we output a clip-space vertex position to gl_Position in vertex shader, OpenGL automatically does a perspective divide e.g. transform clip-space coordiante in the range [-w, w] to [-1, 1] by dividing the x, y and z component by the vectors's w component. As the clip-space FragPosition_Rel_LightSpace is not passed to the fragment shader through gl_Position, we have to do this **perspective divide** ourselves.
+
+**_vec3 projCoords = FragPosition_Rel_LightSpace.xyz / FragPosition_Rel_LightSpace.w;_**
+
+This will return our fragment's light-space position in the range [-1, 1].
+
+When using orthographic projection matrix the w component of vertex remains untouched so this step is actually quite meaningless. However, it is necessary when using perspective projection so keeping this line ensures it works with both projection matrices.
+
+**Because the depth map is in the range _[0, 1]_ and also want to use projCoords to sample from the depth/ shadow map, we transform the NDC coordinates to the range _[0, 1]_**
+
+**_projCoords = projCoords * 0.5 + 0.5;_**
+
+With these projected coordiantes we can sample the depth map as the resulting [0, 1] coordinates from projCoords directly correspond to the transformed NDC coordinates the first render pass! This gives us the closest depth from the light's point of view:
+
+**_clocestDepth = texture(shadowMap, projCoords.xy).r;_**
+
+In order to get the current depth at this fragment we simply retrive the projected vector's z coordinate which equals the depth of this fragment from the light's perpsective.
+
+**_currentDepth = projCoords.z;**
+
+The actual comparison is then simply a check whether currentDepth is higher than closetDepth and if so, the fragment is in shadow:
+
+**_shadow = currentDepth > closestDepth ? 1.0 : 0.0;_**
+
+**Together:**
+
+1. Perform perspective divide: **_projCoords = FragPos_Rel_LightSpace.xyz / FragPos_Rel_LightSpace.w;_**.
+2. Transform to [0, 1] range: **_projCoords = projCoords * 0.5 + 0.5;_** 
+3. Get Closet depth value from the light's perspective (using [0,1] range FragPos_Rel_LightSpace as coords): **_closestDepth=texture(shadowMap, projCoords.xy).r;_**
+4. Get depth of current fragment from light's perspective: **_currentDepth = projCoords.z;_**
+5. Check whether current frag pos is in shadow: **_shadow = currentDepth > closestDepth ? 1.0 : 0.0;_**
