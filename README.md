@@ -1000,6 +1000,21 @@ Shadow mapping therefore consists of two passes:
 
 **1. Rendering the depth map/ shadow map:**
 
-1. g
-2. g
+This pass requires to generate a depth map. That is a the depth texture as rendered from the light's perspective that we will be using for testing shadows. To do this we are going to need Frame buffer that will output depths values to the depth/shadow map.
 
+1. Generating the framebuffer object and getting the FBO id.
+2. Generating the empty texture and getting the tex id.
+3. Binding the empty texture and settin it's params and TexImage2D (GL_DEPTH_COMPONENT is required!).
+4. Binding the framebuffer with FBO id and passing to the glFramebufferTexture2D our depth/shadow map, and giving info to not to render any color data (glDrawBuffer(GL_NONE); glReadBuffer(GL_NONE).
+5. Unbinding the previous framebuffer.
+6. Binding the default framebuffer with our scene.
+
+**Light space transform:**
+
+**a) Projection matrix:**
+
+First pass needs different view and projections matrices than the second one (with final scene). It's need to be relevant to light source. Therefore we are modelling a directional light source so all its light rays are coming in parallel. So our **projection matrix = orthographic projection**. So we have to set the near plane, far plane, size of that camera to the left, right, up and down. After this will have lightProjectio = **_glm::ortho(left, right, bottom, top)_**. We have to be sure that the size of the projection frustum correctly contains the objects that we want to be in the depth map, otherwise our objects or fragments are not in the depth map they will not produce shadows.
+
+**b) View matrix:**
+
+In order to create a view matrix to transform each object to view space relative to the camera position (can be seen from the light's point of view), we can use **_glm::lookAt()_** with the light source's position looking at the scene's center. Position of the view space must have inverse direction of the direction light and the direction of the view matrix is just a direction of the light source.
