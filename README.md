@@ -993,3 +993,13 @@ Directional light source (all light rays are parallel) casting a shadow on the s
 In the right image we can see the directional light and the viewer. Firstly we render a fragment at point **_P_** for which we have to determine whether it is in shadow. To do this, we first transform point **_P_** to the **light's  coordinate space by using _T_**. Since point **_P_** is **now as seen from light's perspective**, its **z** coordinate **corresponds to its depth** which in this example is 0.9. Using point **_P_** we can also **index the depth/shadow map** to **obtain the closest visible depth from the light's perspective**, that is at point **_C_** with sampled depth of 0.4. Since indexing the dethp map** returns a depth smaller than depth at point** **_P_** we **canclude** that point **_P_** is in shadow.
 
 **SO: If z value (depth) of current transformed fragment position to light coordinate space is heigher than the value of the closet one = Current Fragment is in the shadow!**
+
+Shadow mapping therefore consists of two passes: 
+1. Rendering the depth map/ shadow map.
+2. Rendering as normal scene and use the generated depth map to calculate whether the current/s fragments are in shadow..
+
+**1. Rendering the depth map/ shadow map:**
+
+1. g
+2. g
+
