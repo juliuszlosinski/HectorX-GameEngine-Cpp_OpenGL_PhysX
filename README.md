@@ -1394,3 +1394,6 @@ void main()
 	colour = texture(theTexture, TexCoord) * finalColour;
 }
 ```
+**Effect:**
+
+
