@@ -1037,11 +1037,15 @@ When using orthographic projection matrix the w component of vertex remains unto
 
 **Because the depth map is in the range _[0, 1]_ and also want to use projCoords to sample from the depth/ shadow map, we transform the NDC coordinates to the range _[0, 1]_**
 
-**_projCoords = projCoords * 0.5 + 0.5;_**
+```GLSL
+projCoords = projCoords * 0.5 + 0.5;
+```
 
 With these projected coordiantes we can sample the depth map as the resulting [0, 1] coordinates from projCoords directly correspond to the transformed NDC coordinates the first render pass! This gives us the closest depth from the light's point of view:
 
-**_clocestDepth = texture(shadowMap, projCoords.xy).r;_**
+```GLSL
+clocestDepth = texture(shadowMap, projCoords.xy).r;
+```
 
 In order to get the current depth at this fragment we simply retrive the projected vector's z coordinate which equals the depth of this fragment from the light's perpsective.
 
@@ -1071,12 +1075,16 @@ It's caused by resolutions problem. Multiple fragments can sample the same value
 
 With the bias applied, **all the samples get a depth smaller than surface's depth** and thus the entire surface is correctly lit without widthout any shadows. We can do this by doing such a operation:
 
-**bias = 0.004;**
-**shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;**
+```GLSL
+bias = 0.004;**
+shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+```
 
 This bias of 0.004 solves an issue of our scene, but the bias is highly dependet on the angle between the light source and the surface. If the surface would have a steep angle to the light source, the shadows may still display shadow acne. A better aproach will be to change the **amount of bias based on the surface angle towards the light**: something we can solve with the **dot product**:
 
+```GLSL
 **bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);**
+```
 
 We have max. bias of 0.05  and minimum 0.005 based on the surface's normal and light direction. This way surface like the floor that are almost perpendicular to the light source get a small bias, while surfaces lik the cube's sidefaces get a much larger bias.
 
