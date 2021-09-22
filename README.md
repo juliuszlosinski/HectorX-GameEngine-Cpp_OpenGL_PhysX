@@ -1058,7 +1058,7 @@ currentDepth = projCoords.z;
 The actual comparison is then simply a check whether currentDepth is higher than closetDepth and if so, the fragment is in shadow:
 
 ```GLSL
-**_shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 ```
 
 **Together:**
