@@ -1029,7 +1029,9 @@ We need to pass to our main **vertex shader** lightSpaceTransform via uniform an
 
 The first thing to check whether a fragment is in shadow, is transform the light-space fragment position in clip-space to normalized device coordinates. When we output a clip-space vertex position to gl_Position in vertex shader, OpenGL automatically does a perspective divide e.g. transform clip-space coordiante in the range [-w, w] to [-1, 1] by dividing the x, y and z component by the vectors's w component. As the clip-space FragPosition_Rel_LightSpace is not passed to the fragment shader through gl_Position, we have to do this **perspective divide** ourselves.
 
-**_vec3 projCoords = FragPosition_Rel_LightSpace.xyz / FragPosition_Rel_LightSpace.w;_**
+```GLSL
+_vec3 projCoords = FragPosition_Rel_LightSpace.xyz / FragPosition_Rel_LightSpace.w;
+```
 
 This will return our fragment's light-space position in the range [-1, 1].
 
@@ -1049,11 +1051,15 @@ clocestDepth = texture(shadowMap, projCoords.xy).r;
 
 In order to get the current depth at this fragment we simply retrive the projected vector's z coordinate which equals the depth of this fragment from the light's perpsective.
 
-**_currentDepth = projCoords.z;**
+```GLSL
+currentDepth = projCoords.z;
+```
 
 The actual comparison is then simply a check whether currentDepth is higher than closetDepth and if so, the fragment is in shadow:
 
-**_shadow = currentDepth > closestDepth ? 1.0 : 0.0;_**
+```GLSL
+**_shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+```
 
 **Together:**
 
@@ -1083,7 +1089,7 @@ shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 This bias of 0.004 solves an issue of our scene, but the bias is highly dependet on the angle between the light source and the surface. If the surface would have a steep angle to the light source, the shadows may still display shadow acne. A better aproach will be to change the **amount of bias based on the surface angle towards the light**: something we can solve with the **dot product**:
 
 ```GLSL
-**bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);**
+bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 ```
 
 We have max. bias of 0.05  and minimum 0.005 based on the surface's normal and light direction. This way surface like the floor that are almost perpendicular to the light source get a small bias, while surfaces lik the cube's sidefaces get a much larger bias.
