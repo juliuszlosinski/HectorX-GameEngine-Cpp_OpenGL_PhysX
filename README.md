@@ -1396,4 +1396,4 @@ void main()
 ```
 **Effect:**
 
-
+![direct_light](https://user-images.githubusercontent.com/72278818/134367685-5df11f65-e0e9-4a7e-bf20-4de49357bcb5.gif)
