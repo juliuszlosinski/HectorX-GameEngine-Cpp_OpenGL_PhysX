@@ -1058,3 +1058,58 @@ The actual comparison is then simply a check whether currentDepth is higher than
 3. Get Closet depth value from the light's perspective (using [0,1] range FragPos_Rel_LightSpace as coords): **_closestDepth=texture(shadowMap, projCoords.xy).r;_**
 4. Get depth of current fragment from light's perspective: **_currentDepth = projCoords.z;_**
 5. Check whether current frag pos is in shadow: **_shadow = currentDepth > closestDepth ? 1.0 : 0.0;_**
+
+**Problems:**
+
+**1. Shadow Acne:**
+
+It's caused by resolutions problem. Multiple fragments can sample the same value from the depth map when they're relatively far away from the light source. Several fragments then access the same tilted depth texel while some are above and sombe below the floor: we get a shadow discrepancy. Because of this, same fragmetns are considered to be in shadow and some are not, giving the stripped pattern from the image. We can solve this issue with a trick called a **shadow bias** where we simply offset the depth of the source (or the shadow map) by a small amount such that the fragments are not incorrectly considered above the surface.
+
+![image](https://user-images.githubusercontent.com/72278818/134337707-adc9e4e7-864a-4ac1-8947-bd23b0a628b9.png)
+
+![image](https://user-images.githubusercontent.com/72278818/134339025-0749d8b0-5175-4526-a86d-a91c0f929f45.png)
+
+With the bias applied, **all the samples get a depth smaller than surface's depth** and thus the entire surface is correctly lit without widthout any shadows. We can do this by doing such a operation:
+
+**bias = 0.004;**
+**shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;**
+
+This bias of 0.004 solves an issue of our scene, but the bias is highly dependet on the angle between the light source and the surface. If the surface would have a steep angle to the light source, the shadows may still display shadow acne. A better aproach will be to change the **amount of bias based on the surface angle towards the light**: something we can solve with the **dot product**:
+
+**bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);**
+
+We have max. bias of 0.05  and minimum 0.005 based on the surface's normal and light direction. This way surface like the floor that are almost perpendicular to the light source get a small bias, while surfaces lik the cube's sidefaces get a much larger bias.
+
+**2. Peter Panning**
+
+Using bias offset can caused the peter panning effect, so we have to be carefull with that!
+
+![image](https://user-images.githubusercontent.com/72278818/134339042-a60a9242-83ce-4898-8fef-aabaa3f785bd.png)
+
+**3. Oversampling**
+
+What the surfaces behind the frustrum projection to create the shadow map? The values will be behin 0, 1 range and they will always create shadows. To eleminate this problem we have set the type of texture to use the edges with values considered from 0 (always the lowest depth value, so always lit). For values behind the far plane of and greater than 1 -> Initialize to 0.
+
+**4. PCF ~ Percanteage-Closer Filtering**
+
+Edges are limited by the resoultion of the shadow map in which is written. This causes unsightly pixeled edges. Because the depth map has a fixed resolution, the depth frequently usually spans more than one fragment per texel. As reseult, multiple fragments sample the same depth value from the depth map and to the same shadow conclusions which produces these bad edges. We can reduce these blocky shadows by increasing the depth map resolution, or by trying to fit light frustum as closely to the scene as possible.  Another (partial) solution to these jagged edges is called PCF, that is a term that host many differen filtering function that produce softer shadows, making them appear less blocky o hard. The idea is to sample more than once from the depth map, each time with slightly differen texture coordinates. For each individual sample we check wheter it is in shadow or not. All the sub-results are then combined and average and we get a nice soft looking shadow.
+One simple implemenatation of PCF is to simply sample the surrounding texels of the depth map and average the results.
+
+For example:
+
+```GLSL
+float shadow = 0.0;
+vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+for(int x = -1; x <= 1; ++x)
+{
+	for(int y = -1; y <= 1; ++y)
+	{
+		float pcf_depth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+		shadow += currentDepth - bias > pcf_Depth ? 1.0 : 0.0;
+	}
+}
+
+shadow = shadow / 9.0;
+```
+
+**TextureSize** returns a vec2 of the width and height of the given sampler texture at mipmap level 0.1 divided over this returns size of a single texel that we use to offset the texture coordinages, making sure each new sample samples a diffrent depth value. Here we sample 9 values around the projected coordinate's x and y value, test for shadow occlusion and finally average the results by the total numer of samples taken. By using more samples/or varying the texelSize variable you can increate the quality of the soft shadows.
