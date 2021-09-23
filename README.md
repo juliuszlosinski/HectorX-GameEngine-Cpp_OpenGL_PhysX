@@ -971,3 +971,429 @@ Goal: First load an object into a **Scene** object, recursively retrieve the cor
 **Effect:**
 
 ![object](https://user-images.githubusercontent.com/72278818/133926288-4e423365-e646-48f2-b32f-8d8a6f064f91.gif)
+
+**11. Date: 21.09.2021**
+
+**Directional Shadow Mapping:**
+
+![image](https://user-images.githubusercontent.com/72278818/134219434-a52eeee5-1019-46e7-97d4-8e05aaa22437.png)
+
+![image](https://user-images.githubusercontent.com/72278818/134224638-dbcd26be-2c4c-48a6-adf1-79f35f8aa78a.png)
+
+**General idea:**
+
+We render scene the scene from the perspective of the light (light's point of view) and everything we see from the light's perspective is lit otherwise it must be in shadow. Blue fragments are seen by the light source, black are not seen. We want to get the poin the ray where it first hit an object and compare this closet point to other points on this ray. Then wee do test if a test point's ray position is further down the ray than closest point and if so, the test point must be in shadow. Doing if for every light source ray is a infficient!
+
+We can do something similar, but without casting light rays. Instead, we can use **the depth buffer**. Value in the depth buffer corresponds to the depth of a fragment which is value in [0, 1] from the camera's point of view. We can **render the scene from the light's perspective** and **store the resulting depth values in a texture**. This way, we can sample the **clocest depth values as seen from the _lights' perspective_**. After all, the depth values show the first fragment visible from the light's perspective. We will store all of these depth values in a texture that is called **Shadow Map**.
+
+![image](https://user-images.githubusercontent.com/72278818/134227508-48366f3a-d9de-4f1b-8be2-5732e399ed27.png)
+
+Directional light source (all light rays are parallel) casting a shadow on the surface below the cube. By using the depth values in the depth map we find the closest point and use that to determine whether fragments are in shadow. We **create the depth map by rendering teh scene (from light's perspective) using view and projection matrix (orthogonal) specific to light source.** This project and view matrix together from a transformation **_T_** that transforms any 3D position to the light's (visible) coordinate space. So by applying the **_T_** to the fragment/ position from the viewer perspective, we can get this fragment relative to the light.
+
+In the right image we can see the directional light and the viewer. Firstly we render a fragment at point **_P_** for which we have to determine whether it is in shadow. To do this, we first transform point **_P_** to the **light's  coordinate space by using _T_**. Since point **_P_** is **now as seen from light's perspective**, its **z** coordinate **corresponds to its depth** which in this example is 0.9. Using point **_P_** we can also **index the depth/shadow map** to **obtain the closest visible depth from the light's perspective**, that is at point **_C_** with sampled depth of 0.4. Since indexing the dethp map** returns a depth smaller than depth at point** **_P_** we **canclude** that point **_P_** is in shadow.
+
+**SO: If z value (depth) of current transformed fragment position to light coordinate space is heigher than the value of the closet one = Current Fragment is in the shadow!**
+
+Shadow mapping therefore consists of two passes: 
+1. Rendering the depth map/ shadow map.
+2. Rendering as normal scene and use the generated depth map to calculate whether the current/s fragments are in shadow..
+
+**1. Rendering the depth map/ shadow map:**
+
+This pass requires to generate a depth map. That is a the depth texture as rendered from the light's perspective that we will be using for testing shadows. To do this we are going to need Frame buffer that will output depths values to the depth/shadow map.
+
+1. Generating the framebuffer object and getting the FBO id.
+2. Generating the empty texture and getting the tex id.
+3. Binding the empty texture and settin it's params and TexImage2D (GL_DEPTH_COMPONENT is required!).
+4. Binding the framebuffer with FBO id and passing to the glFramebufferTexture2D our depth/shadow map, and giving info to not to render any color data (glDrawBuffer(GL_NONE); glReadBuffer(GL_NONE).
+5. Unbinding the previous framebuffer.
+6. Binding the default framebuffer with our scene.
+
+**Light space transform:**
+
+**a) Projection matrix:**
+
+First pass needs different view and projections matrices than the second one (with final scene). It's need to be relevant to light source. Therefore we are modelling a directional light source so all its light rays are coming in parallel. So our **projection matrix = orthographic projection**. So we have to set the near plane, far plane, size of that camera to the left, right, up and down. After this will have lightProjectio = **_glm::ortho(left, right, bottom, top)_**. We have to be sure that the size of the projection frustum correctly contains the objects that we want to be in the depth map, otherwise our objects or fragments are not in the depth map they will not produce shadows.
+
+**b) View matrix:**
+
+In order to create a view matrix to transform each object to view space relative to the camera position (can be seen from the light's point of view), we can use **_glm::lookAt()_** with the light source's position looking at the scene's center. Position of the view space must have inverse direction of the direction light and the direction of the view matrix is just a direction of the light source.
+
+**SO: T = lightSpaceTransform = lightProjection * lightView**
+
+In the shaders we only care about depth values and not all the fragment (lighting) calculations!
+
+**Calucating the shadow:**
+
+We need to pass to our main **vertex shader** lightSpaceTransform via uniform and after this calculate the current position of the fragment relevant to the light source by using lightSpaceTransform. So **FragPosition_Rel_LightSpace = lightSpaceTransform * Frag_Pos**. Easy. And the we are passing FragPosition_Rel_LightSpace to fragment shader. Whitin the fragment shader we calculate a **shadow** value that is 1 when the fragment is in shadowm oraz 0.0 when it's not. The resulting diffuse and specular components are multiplied by this shadow component. Beacause shadows are rarely completly dark (due to light scattering) we leave the ambient component out the shadow multiplications.
+
+The first thing to check whether a fragment is in shadow, is transform the light-space fragment position in clip-space to normalized device coordinates. When we output a clip-space vertex position to gl_Position in vertex shader, OpenGL automatically does a perspective divide e.g. transform clip-space coordiante in the range [-w, w] to [-1, 1] by dividing the x, y and z component by the vectors's w component. As the clip-space FragPosition_Rel_LightSpace is not passed to the fragment shader through gl_Position, we have to do this **perspective divide** ourselves.
+
+```GLSL
+_vec3 projCoords = FragPosition_Rel_LightSpace.xyz / FragPosition_Rel_LightSpace.w;
+```
+
+This will return our fragment's light-space position in the range [-1, 1].
+
+When using orthographic projection matrix the w component of vertex remains untouched so this step is actually quite meaningless. However, it is necessary when using perspective projection so keeping this line ensures it works with both projection matrices.
+
+**Because the depth map is in the range _[0, 1]_ and also want to use projCoords to sample from the depth/ shadow map, we transform the NDC coordinates to the range _[0, 1]_**
+
+```GLSL
+projCoords = projCoords * 0.5 + 0.5;
+```
+
+With these projected coordiantes we can sample the depth map as the resulting [0, 1] coordinates from projCoords directly correspond to the transformed NDC coordinates the first render pass! This gives us the closest depth from the light's point of view:
+
+```GLSL
+clocestDepth = texture(shadowMap, projCoords.xy).r;
+```
+
+In order to get the current depth at this fragment we simply retrive the projected vector's z coordinate which equals the depth of this fragment from the light's perpsective.
+
+```GLSL
+currentDepth = projCoords.z;
+```
+
+The actual comparison is then simply a check whether currentDepth is higher than closetDepth and if so, the fragment is in shadow:
+
+```GLSL
+shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+```
+
+**Together:**
+
+1. Perform perspective divide: **_projCoords = FragPos_Rel_LightSpace.xyz / FragPos_Rel_LightSpace.w;_**.
+2. Transform to [0, 1] range: **_projCoords = projCoords * 0.5 + 0.5;_** 
+3. Get Closet depth value from the light's perspective (using [0,1] range FragPos_Rel_LightSpace as coords): **_closestDepth=texture(shadowMap, projCoords.xy).r;_**
+4. Get depth of current fragment from light's perspective: **_currentDepth = projCoords.z;_**
+5. Check whether current frag pos is in shadow: **_shadow = currentDepth > closestDepth ? 1.0 : 0.0;_**
+
+**Problems:**
+
+**1. Shadow Acne:**
+
+It's caused by resolutions problem. Multiple fragments can sample the same value from the depth map when they're relatively far away from the light source. Several fragments then access the same tilted depth texel while some are above and sombe below the floor: we get a shadow discrepancy. Because of this, same fragmetns are considered to be in shadow and some are not, giving the stripped pattern from the image. We can solve this issue with a trick called a **shadow bias** where we simply offset the depth of the source (or the shadow map) by a small amount such that the fragments are not incorrectly considered above the surface.
+
+![image](https://user-images.githubusercontent.com/72278818/134337707-adc9e4e7-864a-4ac1-8947-bd23b0a628b9.png)
+
+![image](https://user-images.githubusercontent.com/72278818/134339025-0749d8b0-5175-4526-a86d-a91c0f929f45.png)
+
+With the bias applied, **all the samples get a depth smaller than surface's depth** and thus the entire surface is correctly lit without widthout any shadows. We can do this by doing such a operation:
+
+```GLSL
+bias = 0.004;**
+shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+```
+
+This bias of 0.004 solves an issue of our scene, but the bias is highly dependet on the angle between the light source and the surface. If the surface would have a steep angle to the light source, the shadows may still display shadow acne. A better aproach will be to change the **amount of bias based on the surface angle towards the light**: something we can solve with the **dot product**:
+
+```GLSL
+bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+```
+
+We have max. bias of 0.05  and minimum 0.005 based on the surface's normal and light direction. This way surface like the floor that are almost perpendicular to the light source get a small bias, while surfaces lik the cube's sidefaces get a much larger bias.
+
+**2. Peter Panning**
+
+Using bias offset can caused the peter panning effect, so we have to be carefull with that!
+
+![image](https://user-images.githubusercontent.com/72278818/134339042-a60a9242-83ce-4898-8fef-aabaa3f785bd.png)
+
+**3. Oversampling**
+
+What the surfaces behind the frustrum projection to create the shadow map? The values will be behin 0, 1 range and they will always create shadows. To eleminate this problem we have set the type of texture to use the edges with values considered from 0 (always the lowest depth value, so always lit). For values behind the far plane of and greater than 1 -> Initialize to 0.
+
+**4. PCF ~ Percanteage-Closer Filtering**
+
+Edges are limited by the resoultion of the shadow map in which is written. This causes unsightly pixeled edges. Because the depth map has a fixed resolution, the depth frequently usually spans more than one fragment per texel. As reseult, multiple fragments sample the same depth value from the depth map and to the same shadow conclusions which produces these bad edges. We can reduce these blocky shadows by increasing the depth map resolution, or by trying to fit light frustum as closely to the scene as possible.  Another (partial) solution to these jagged edges is called PCF, that is a term that host many differen filtering function that produce softer shadows, making them appear less blocky o hard. The idea is to sample more than once from the depth map, each time with slightly differen texture coordinates. For each individual sample we check wheter it is in shadow or not. All the sub-results are then combined and average and we get a nice soft looking shadow.
+One simple implemenatation of PCF is to simply sample the surrounding texels of the depth map and average the results.
+
+For example:
+
+```GLSL
+float shadow = 0.0;
+vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+for(int x = -1; x <= 1; ++x)
+{
+	for(int y = -1; y <= 1; ++y)
+	{
+		float pcf_depth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+		shadow += currentDepth - bias > pcf_Depth ? 1.0 : 0.0;
+	}
+}
+
+shadow = shadow / 9.0;
+```
+
+**TextureSize** returns a vec2 of the width and height of the given sampler texture at mipmap level 0.1 divided over this returns size of a single texel that we use to offset the texture coordinages, making sure each new sample samples a diffrent depth value. Here we sample 9 values around the projected coordinate's x and y value, test for shadow occlusion and finally average the results by the total numer of samples taken. By using more samples/or varying the texelSize variable you can increate the quality of the soft shadows.
+
+**Diagram UML:**
+
+![Diagram_Game_Engine_v0 7](https://user-images.githubusercontent.com/72278818/134350863-a2c225db-8e31-49bf-9c96-85593826af78.jpg)
+
+**Shaders:**
+
+**a) For Rendering Shadow/Depth Pass:**
+
+**Vertex Shader:**
+
+```GLSL
+#version 330
+
+layout (location = 0) in vec3 pos;
+
+uniform mat4 model;
+uniform mat4 directionalLightTransform; // projection * view
+
+void main()
+{
+	gl_Position = directionalLightTransform * model * vec4(pos, 1.0); // projection * view * model * origin
+}
+```
+
+**Fragment Shader:**
+
+``` GLSL
+#version 330
+
+void main()
+{
+
+}
+
+```
+
+**b) For rendering normal scene and use generated shadow map:**
+
+**Vertex Shader:**
+
+``` GLSL
+#version 330
+
+layout (location = 0) in vec3 pos;
+layout (location = 1) in vec2 tex;
+layout (location = 2) in vec3 norm;
+
+out vec4 vCol;
+out vec2 TexCoord;
+out vec3 Normal;
+out vec3 FragPos;
+out vec4 DirectionalLightSpacePos;
+
+uniform mat4 model;
+uniform mat4 projection;
+uniform mat4 view;
+
+uniform mat4 directionalLightTransform;
+
+void main()
+{
+	gl_Position = projection * view * model * vec4(pos, 1.0);
+	vCol = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);
+	
+	DirectionalLightSpacePos = directionalLightTransform * model * vec4(pos, 1.0);
+	
+	TexCoord = tex;
+	
+	Normal = mat3(transpose(inverse(model))) * norm;
+	
+	FragPos = (model * vec4(pos, 1.0)).xyz; 
+}
+```
+
+**Fragment Shader:**
+
+``` GLSL
+#version 330
+
+in vec4 vCol;
+in vec2 TexCoord;
+in vec3 Normal;
+in vec3 FragPos;
+in vec4 DirectionalLightSpacePos;
+
+out vec4 colour;
+
+const int MAX_POINT_LIGHTS = 3;
+const int MAX_SPOT_LIGHTS = 3;
+
+struct Light
+{
+	vec3 colour;
+	float ambientIntensity;
+	float diffuseIntensity;
+};
+
+struct DirectionalLight 
+{
+	Light base;
+	vec3 direction;
+};
+
+struct PointLight
+{
+	Light base;
+	vec3 position;
+	float constant;
+	float linear;
+	float exponent;
+};
+
+struct SpotLight
+{
+	PointLight base;
+	vec3 direction;
+	float edge;
+};
+
+struct Material
+{
+	float specularIntensity;
+	float shininess;
+};
+
+uniform int pointLightCount;
+uniform int spotLightCount;
+
+uniform DirectionalLight directionalLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
+
+uniform sampler2D theTexture;
+uniform sampler2D directionalShadowMap;
+
+uniform Material material;
+
+uniform vec3 eyePosition;
+
+float CalcDirectionalShadowFactor(DirectionalLight light)
+{
+	vec3 projCoords = DirectionalLightSpacePos.xyz / DirectionalLightSpacePos.w;
+	projCoords = (projCoords * 0.5) + 0.5;
+	
+	float current = projCoords.z;
+	
+	vec3 normal = normalize(Normal);
+	vec3 lightDir = normalize(light.direction);
+	
+	float bias = max(0.05 * (1 - dot(normal, lightDir)), 0.005);
+	
+	float shadow = 0.0;
+	
+	vec2 texelSize = 1.0 / textureSize(directionalShadowMap, 0);
+	
+	for(int x = -1 ; x <= 1; ++x)
+	{
+		for(int y = -1 ; y <= 1 ; ++y)
+		{
+			float pcfDepth= texture(directionalShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+			shadow += current - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+	
+	shadow /= 9;
+	
+	if(projCoords.z > 1.0)
+	{
+		shadow = 0.0f;
+	}
+	
+	return shadow;
+}
+
+vec4 CalcLightByDirection(Light light, vec3 direction, float shadowFactor)
+{
+	vec4 ambientColour = vec4(light.colour, 1.0f) * light.ambientIntensity;
+	
+	float diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f);
+	vec4 diffuseColour = vec4(light.colour * light.diffuseIntensity * diffuseFactor, 1.0f);
+	
+	vec4 specularColour = vec4(0, 0, 0, 0);
+	
+	if(diffuseFactor > 0.0f)
+	{
+		vec3 fragToEye = normalize(eyePosition - FragPos);
+		vec3 reflectedVertex = normalize(reflect(direction, normalize(Normal)));
+		
+		float specularFactor = dot(fragToEye, reflectedVertex);
+		if(specularFactor > 0.0f)
+		{
+			specularFactor = pow(specularFactor, material.shininess);
+			specularColour = vec4(light.colour * material.specularIntensity * specularFactor, 1.0f);
+		}
+	}
+	
+	return (ambientColour + (1.0 - shadowFactor) * (diffuseColour + specularColour));
+}
+
+vec4 CalcDirectionalLight()
+{
+	float shadowFactor = CalcDirectionalShadowFactor(directionalLight);
+	return CalcLightByDirection(directionalLight.base, directionalLight.direction, shadowFactor);
+}
+
+vec4 CalcPointLight(PointLight pLight)
+{
+	vec3 direction = FragPos - pLight.position;
+	float distance = length(direction);
+	direction = normalize(direction);
+	
+	vec4 colour = CalcLightByDirection(pLight.base, direction, 0.0f);
+	float attenuation = pLight.exponent * distance * distance +
+						pLight.linear * distance +
+						pLight.constant;
+	
+	return (colour / attenuation);
+}
+
+vec4 CalcSpotLight(SpotLight sLight)
+{
+	vec3 rayDirection = normalize(FragPos - sLight.base.position);
+	float slFactor = dot(rayDirection, sLight.direction);
+	
+	if(slFactor > sLight.edge)
+	{
+		vec4 colour = CalcPointLight(sLight.base);
+		
+		return colour * (1.0f - (1.0f - slFactor)*(1.0f/(1.0f - sLight.edge)));
+		
+	} else {
+		return vec4(0, 0, 0, 0);
+	}
+}
+
+vec4 CalcPointLights()
+{
+	vec4 totalColour = vec4(0, 0, 0, 0);
+	for(int i = 0; i < pointLightCount; i++)
+	{		
+		totalColour += CalcPointLight(pointLights[i]);
+	}
+	
+	return totalColour;
+}
+
+vec4 CalcSpotLights()
+{
+	vec4 totalColour = vec4(0, 0, 0, 0);
+	for(int i = 0; i < spotLightCount; i++)
+	{		
+		totalColour += CalcSpotLight(spotLights[i]);
+	}
+	
+	return totalColour;
+}
+
+void main()
+{
+	vec4 finalColour = CalcDirectionalLight();
+	finalColour += CalcPointLights();
+	finalColour += CalcSpotLights();
+	
+	colour = texture(theTexture, TexCoord) * finalColour;
+}
+```
+**Effect:**
+
+![direct_light](https://user-images.githubusercontent.com/72278818/134367685-5df11f65-e0e9-4a7e-bf20-4de49357bcb5.gif)
