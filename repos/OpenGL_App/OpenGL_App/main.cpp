@@ -39,7 +39,7 @@
 #include "Model.h"
 
 GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-uniformSpecularIntensity = 0, uniformShininess = 0;
+uniformSpecularIntensity = 0, uniformShininess = 0, uniformOmniLightPos = 0, uniformFarPlane = 0;
 
 Model xwing;
 Model blackhawk;
@@ -50,6 +50,7 @@ std::vector<Mesh*> meshList;
 std::vector<Shader>shaderList;
 Camera camera;
 Shader directionalShadowShader;
+Shader omniShadowShader;
 
 Texture brickTexture;
 Texture dirtTexture;
@@ -179,6 +180,9 @@ void CreateShaders()
 
 	directionalShadowShader = Shader();
 	directionalShadowShader.CreateFromFiles("Shaders/directional_shadow_map.vert", "Shaders/directional_shadow_map.frag");
+
+	omniShadowShader = Shader();
+	omniShadowShader.CreateFromFiles("Shaders/omni_shadow_map.vert", "Shaders/omni_shadow_map.geom", "Shaders/omni_shadow_map.frag");
 }
 
 void RenderScene()
@@ -244,7 +248,7 @@ void DirectionalShadowMapPass(DirectionalLight* light)
 
 	// 5. Zdobycie pozycji.
 	uniformModel = directionalShadowShader.GetModelLocation();
-	
+
 	// 6. Przeslanie widoku oraz projekcji z punktu widzenia kierunukowego swiatla.
 	glm::mat4 res = light->CalculateLightTransform();
 	directionalShadowShader.SetDirectionalLightTransform(&res);
@@ -253,6 +257,46 @@ void DirectionalShadowMapPass(DirectionalLight* light)
 	RenderScene();
 
 	// 8. Zdjecie bufora.
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void OmniShadowMapPass(PointLight* light)
+{
+	// 1. Uzycie shadera.
+	omniShadowShader.UseShader();
+
+	// 2. Ustawienie parametrow portu widoku.
+	glViewport(0, 0, light->GetShadowMap()->GetShadowWidth(), light->GetShadowMap()->GetShadowHeight());
+
+	// 3. Zapisanie.
+	light->GetShadowMap()->Write();
+
+	// 4. Czyszczenie bufora.
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	// 5. Zdobycie pozycji.
+	uniformModel = omniShadowShader.GetModelLocation();
+
+	// 6. Uzyskanie lokalizacji polozenia swiatla.
+	uniformOmniLightPos = omniShadowShader.GetOmniLightPosLocation();
+
+	// 7. Uzyskanie lokalizajci odleglosci na jaka moze patrzec kamera.
+	uniformFarPlane = omniShadowShader.GetFarPlaneLocation();
+
+	// 8. Przeslanie polozenia kamery do shadera.
+	glUniform3f(uniformOmniLightPos, light->GetPosition().x, light->GetPosition().y, light->GetPosition().z);
+
+	// 9. Przeslanie odleglosci na jaka moze patrzec kamera do shadera.
+	glUniform1f(uniformFarPlane, light->GetFarPlane());
+
+	// 10. Przeslanie macierzy transformacji (6 stron: lewa, prawa, gora, dol, przod, tyl) ~ pozniej w shaderze uzyskamy pozycje fragmentu relatywnie do punktu widzenia (relative to praticular view).
+	std::vector<glm::mat4> lightTransform = light->CalculateLightTransform();
+	omniShadowShader.SetLightMatrices(lightTransform);
+
+	// 11. Renderowanie sceny.
+	RenderScene();
+
+	// 12. Zdjecie bufora oraz ustywienie domyslnego czyli finalnej sceny.
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -290,7 +334,7 @@ void RenderPass(glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
 
 	glm::vec3 lowerLight = camera.getCameraPosition();
 	lowerLight.y -= 0.3f;
-	//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+	spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 	RenderScene();
 }
@@ -329,40 +373,51 @@ int main(void)
 	blackhawk.LoadModel("Models/uh60.obj");
 
 	mainLight = DirectionalLight(2048, 2048,
-									1.0f, 1.0f, 1.0f,
-									0.1f, 0.3f,
-									0.0f, -15.0f, -10.0f);
+		1.0f, 1.0f, 1.0f,
+		0.1f, 0.3f,
+		0.0f, -15.0f, -10.0f);
 
 
-	pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
-		0.0f, 0.1f,
-		0.0f, 0.0f, 0.0f,
-		0.3f, 0.2f, 0.1f);
+	pointLights[0] = PointLight(1024, 1024,
+								0.01f, 100.0f,
+								0.0f, 0.0f, 1.0f,
+								0.0f, 0.1f,
+								0.0f, 0.0f, 0.0f,
+								0.3f, 0.2f, 0.1f);
 	pointLightCount++;
-	pointLights[1] = PointLight(0.0f, 1.0f, 0.0f,
-		0.0f, 0.1f,
-		-4.0f, 2.0f, 0.0f,
-		0.3f, 0.1f, 0.1f);
+	pointLights[1] = PointLight(
+								1024, 1024,
+								0.01f, 100.0f, 
+								0.0f, 1.0f, 0.0f,
+								0.0f, 0.1f,
+								-4.0f, 2.0f, 0.0f,
+								0.3f, 0.1f, 0.1f);
 	pointLightCount++;
 
-	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		20.0f);
+	spotLights[0] = SpotLight(
+								1024, 1024,
+								0.01f, 100.0f,
+								1.0f, 1.0f, 1.0f,
+								0.0f, 2.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, -1.0f, 0.0f,
+								1.0f, 0.0f, 0.0f,
+								20.0f);
 	spotLightCount++;
-	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 1.0f,
-		0.0f, -1.5f, 0.0f,
-		-100.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		20.0f);
+	spotLights[1] = SpotLight(
+								1024, 1024,
+								0.01f, 100.0f,
+								1.0f, 1.0f, 1.0f,
+								0.0f, 1.0f,
+								0.0f, -1.5f, 0.0f,
+								-100.0f, -1.0f, 0.0f,
+								1.0f, 0.0f, 0.0f,
+								20.0f);
 	spotLightCount++;
 
 
 	/// * Ustawianie projekcji kamery (sposobu widzenia).
-	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / (GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(60.0f), (GLfloat)mainWindow.getBufferWidth() / (GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 	// kat widzenia,		wspó³czynnik proporcji,		z k¹d widzimy,  do k¹d
 
 	// 9. Pêtla dzia³ania okna.
@@ -379,7 +434,16 @@ int main(void)
 		camera.keyControl(mainWindow.getKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
+		// Ustawienie wszystkich map cieniowania, do których zosta³y zapisane wyniki.
 		DirectionalShadowMapPass(&mainLight);
+		for (size_t i = 0; i < pointLightCount; i++)
+		{
+			OmniShadowMapPass(&pointLights[i]);
+		}
+		for (size_t i = 0; i < spotLightCount; i++)
+		{
+			OmniShadowMapPass(&spotLights[i]);
+		}
 		RenderPass(projection, camera.calculateViewMatrix());
 
 		/// 7. Zwolnienie programu.

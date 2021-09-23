@@ -25,6 +25,8 @@ public:
 
 	void CreateFromString(const char* vertexCode, const char* fragmentCode); // Utworz shader z ³¹ñcucha znaków.
 	void CreateFromFiles(const char* vertexLocation, const char* fragmentLcation); // Utworzenie shadera z plików.
+	void CreateFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLcation); // Utworzenie shadera z plików.
+
 
 	std::string ReadFile(const char* fileLocation); // Czytanie z pliku.
 
@@ -43,6 +45,9 @@ public:
 	
 	GLuint GetEyePosition(); // Uzyskaj lokalizacje uniformu dla polozenia kamery.
 
+	GLuint GetOmniLightPosLocation(); // Uzyskaj lokalizacje pozycji swiatla.
+	GLuint GetFarPlaneLocation(); // Uzyskaj lokalizacje odleglosci na jaka moze patrzec kamera.
+
 	void UseShader(); // U¿yj shader'a.
 	void ClearShader(); // Wyczyœæ shader.
 
@@ -52,6 +57,7 @@ public:
 	void SetTexture(GLuint textureUnit); // Ustawienie tekstury.
 	void SetDirectionalShadowMap(GLuint textureUnit); // Ustawienie kierunkowej mapy cieniowania.
 	void SetDirectionalLightTransform(glm::mat4* lTransform); // Ustawienie macierzy patrzenia swiatla kierunkowego.
+	void SetLightMatrices(std::vector<glm::mat4> lightMatrices); // Ustaw macierze transformacji swiatla.
 
 	~Shader(); // Destruktor.
 private:
@@ -70,6 +76,11 @@ private:
 	GLuint uniformTexture; // Identyfikator polozenia tekstury.
 	GLuint uniformDirectionalLightTransform; // Identyfikator macierzy swiatla kierunkowego.
 	GLuint uniformDirectionalShadowMap; // Identyfikator mapy cieniowania.
+
+	GLuint uniformOmniLightPos; // Identyfikator pozycji pozycji wielokierunkwego swiatla.
+	GLuint uniformFarPlane; // Identyfikator polozenia odleglosci na ja widzi kamera.
+
+	GLuint uniformLightMatrices[6]; // Identyfikator polozenia macierzy transformacji swiatla (6 stron: lewa, prawa, gora, dol, przod, tyl).
 
 	struct
 	{
@@ -113,8 +124,10 @@ private:
 		GLuint uniformEdge; // Kat swiecenia.
 	} uniformSpotLight[MAX_SPOT_LIGHTS];
 
-
+	void CompileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode); // Kompiluj shader.
 	void CompileShader(const char* vertexCode, const char* fragmentCode); // Kompiluj shader.
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType); // Za³¹cz shader do programu.
+
+	void CompileProgram(); // Kompilacja programu.
 };
 

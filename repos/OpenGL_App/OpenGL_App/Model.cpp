@@ -35,6 +35,7 @@ void Model::LoadModel(const std::string& fileName)
 
 	// 2. Utworzenie sceny.
 	const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
+	//const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
 	// 3. Importowanie sceny.
 	if (!scene)

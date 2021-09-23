@@ -85,6 +85,15 @@ void Shader::SetDirectionalLightTransform(glm::mat4* lTransform)
 	glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lTransform));
 }
 
+// Ustawienie macierzy transformacji swiatla (prawa, lewa, gora, dol, przod, tyl).
+void Shader::SetLightMatrices(std::vector<glm::mat4> lightMatrices)
+{
+	for(size_t i =0; i< 6;i++)
+	{
+		glUniformMatrix4fv(uniformLightMatrices[i], 1, GL_FALSE, glm::value_ptr(lightMatrices[i]));
+	}
+}
+
 /// Uzywaj shader'a.
 void Shader::UseShader()
 {
@@ -159,6 +168,28 @@ void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLoc
 	CompileShader(vertexCode, fragmentCode);
 }
 
+/// Utworzenie shadera z plików.
+void Shader::CreateFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLocation)
+{
+	/// 1. Uzyskanie kodu zrodlowego shadera wierzcholkow.
+	std::string vertexString = ReadFile(vertexLocation);
+	const char* vertexCode = vertexString.c_str();
+
+	/// 2. Uzyskanie kodu zrodlowego shadera geometrycznego.
+	std::string geometryString = ReadFile(geometryLocation);
+	const char* geometryCode = geometryString.c_str();
+
+	/// 3. Uzyskanie kodu zrodlowego shader fragmentow.
+	std::string fragmentString = ReadFile(fragmentLocation);
+	const char* fragmentCode = fragmentString.c_str();
+
+	//std::cout << vertexString << "\n" << fragmentString;
+
+	/// 4. Utworzenie programu z Shaderami.
+	CompileShader(vertexCode, geometryCode, fragmentCode);
+}
+
+
 /// Kompilacja oraz utworzenie programu z shader'ami.
 void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // Kompiluj shader.
 {
@@ -178,6 +209,39 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 	// 3. Za³¹czenie Fragment Shader do programu.
 	AddShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
 
+	// 4. Kompilacja programu.
+	CompileProgram();
+}
+
+/// Kompilacja oraz utworzenie programu z shader'ami.
+void Shader::CompileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode) // Kompiluj shader.
+{
+	// 1. Utworzenie pustego programu.
+	shaderID = glCreateProgram();
+
+	// 1.1 Sprawdzenie czy zosta³ dobrze stworzony.
+	if (!shaderID)
+	{
+		printf("Error creating shader program!\n");
+		return;
+	}
+
+	// 2. Za³¹czenie Vertex Shader do programu.
+	AddShader(shaderID, vertexCode, GL_VERTEX_SHADER);
+
+	// 3. Za³¹czenie Geometry Shader do programu.
+	AddShader(shaderID, geometryCode, GL_GEOMETRY_SHADER);
+
+	// 4. Za³¹czenie Fragment Shader do programu.
+	AddShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
+
+	// 5. Kompilacja programu.
+	CompileProgram();
+}
+
+/// Kompilacja programu.
+void Shader::CompileProgram()
+{
 	// 4. Powi¹zanie ze sob¹ wszystkich shaderów oraz stworzenie z nich pliku wykonywalnego dla karty graficznej (poniewa¿ programy s¹ na karcie a my tylko zmieniamy ich treœæ).
 	glLinkProgram(shaderID);
 
@@ -279,6 +343,17 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode) // 
 	uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightTransform");
 	uniformTexture = glGetUniformLocation(shaderID, "theTexture");
 	uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
+
+	uniformOmniLightPos = glGetUniformLocation(shaderID, "lightPos");
+	uniformFarPlane = glGetUniformLocation(shaderID, "farPlane");
+
+	for (size_t i = 0; i < 6; i++)
+	{
+		char locBuff[100] = { '\0' };
+
+		snprintf(locBuff, sizeof(locBuff), "lightMatrices[%d]", i);
+		uniformLightMatrices[i] = glGetUniformLocation(shaderID, locBuff);
+	}
 }
 
 
@@ -374,6 +449,18 @@ GLuint Shader::GetShininessLocation() // Uzyskaj lokalizacje wspolczynnika skupi
 GLuint Shader::GetEyePosition() // Uzyskaj lokalizacje uniformu dla polozenia kamery.
 {
 	return uniformEyePosition;
+}
+
+/// Zwrocenie lokalizacji pozycji swiatla.
+GLuint Shader::GetOmniLightPosLocation()
+{
+	return uniformOmniLightPos;
+}
+
+/// Zwrocenie lokalizacji odleglosci na jakas moze patrzec kamera.
+GLuint Shader::GetFarPlaneLocation()
+{
+	return uniformFarPlane;
 }
 
 /// Destruktor.

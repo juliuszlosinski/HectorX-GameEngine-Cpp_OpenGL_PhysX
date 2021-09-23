@@ -1,10 +1,10 @@
 ﻿  main.cpp
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(26,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
 C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\Window.h(32,10): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
-C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(372,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\PC\source\repos\OpenGL_App\OpenGL_App\main.cpp(427,15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
   Generating code
-  2 of 854 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  4 of 936 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+    8 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   OpenGL_App.vcxproj -> C:\Users\PC\source\repos\OpenGL_App\Release\OpenGL_App.exe

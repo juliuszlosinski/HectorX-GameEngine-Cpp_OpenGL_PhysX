@@ -34,8 +34,8 @@ bool ShadowMap::Init(GLuint width, GLuint height)
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, bColour);
 
 	// 7. Ustawianie filtrow (jak ma sie zachowywac tekstura w kontekscie odleglosci).
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// 8. Ustawienie bufora ramki roboczej.
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
