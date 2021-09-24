@@ -11,6 +11,9 @@ SpotLight::SpotLight() : PointLight()
 
 	// 3. Ustawienie wartosci sprocesowanego kata.
 	procEdge = cos(glm::radians(edge));
+
+	// 4. Ustawienie czy jest wlaczone.
+	isOn = true;
 }
 
 /// Konstruktor.
@@ -42,11 +45,23 @@ void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLo
 	// 1. Ustawienie uniformu dla koloru.
 	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
 
-	// 2. Ustawienie uniformu dla intesywnosci swiatla otoczenia.
-	glUniform1f(ambientIntensityLocation, ambientIntensity);
+	if (isOn)
+	{
 
-	// 3. Ustawienie uniformu dla intensywnosci swiatla rozproszenia.
-	glUniform1f(diffuseIntensityLocation, diffuseIntensity);
+		// 2. Ustawienie uniformu dla intesywnosci swiatla otoczenia.
+		glUniform1f(ambientIntensityLocation, ambientIntensity);
+
+		// 3. Ustawienie uniformu dla intensywnosci swiatla rozproszenia.
+		glUniform1f(diffuseIntensityLocation, diffuseIntensity);
+	}
+	else
+	{
+		// 2. Ustawienie uniformu dla intesywnosci swiatla otoczenia.
+		glUniform1f(ambientIntensityLocation, 0.0f);
+
+		// 3. Ustawienie uniformu dla intensywnosci swiatla rozproszenia.
+		glUniform1f(diffuseIntensityLocation, 0.0f);
+	}
 
 	// 4. Ustawienie uniformu dla pozycji zrodla swiatla.
 	glUniform3f(positionLocation, position.x, position.y, position.z);

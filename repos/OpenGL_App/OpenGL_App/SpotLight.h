@@ -25,6 +25,9 @@ public:
 	/// Ustawienie swiatla.
 	void SetFlash(glm::vec3 pos, glm::vec3 dir);
 
+	// Prze³¹czenie œwiat³a.
+	void Toggle() { isOn = !isOn; }
+	
 	/// Destruktor.
 	~SpotLight();
 
@@ -33,5 +36,7 @@ private:
 	
 	GLfloat edge; // Kat.
 	GLfloat procEdge; // Sprocesowany kat.
+
+	bool isOn;
 };
 

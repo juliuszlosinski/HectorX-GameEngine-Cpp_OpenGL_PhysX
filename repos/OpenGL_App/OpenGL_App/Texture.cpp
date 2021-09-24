@@ -107,7 +107,7 @@ bool Texture::LoadTextureA()
 void Texture::UseTexture()
 {
 	// 1. Aktywowanie tekstury (samplera).
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
 
 	// 2. Aktywowanie tekstury z danym identyfikatorem.
 	glBindTexture(GL_TEXTURE_2D, textureID);

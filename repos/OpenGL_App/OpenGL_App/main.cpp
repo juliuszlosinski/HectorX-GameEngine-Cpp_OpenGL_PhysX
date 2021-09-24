@@ -253,10 +253,13 @@ void DirectionalShadowMapPass(DirectionalLight* light)
 	glm::mat4 res = light->CalculateLightTransform();
 	directionalShadowShader.SetDirectionalLightTransform(&res);
 
-	// 7. Renderowanie sceny.
+	// 7. Walidacja programu.
+	directionalShadowShader.Validate();
+
+	// 8. Renderowanie sceny.
 	RenderScene();
 
-	// 8. Zdjecie bufora.
+	// 9. Zdjecie bufora.
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -293,6 +296,9 @@ void OmniShadowMapPass(PointLight* light)
 	std::vector<glm::mat4> lightTransform = light->CalculateLightTransform();
 	omniShadowShader.SetLightMatrices(lightTransform);
 
+	// 11. Walidacja programu.
+	omniShadowShader.Validate();
+
 	// 11. Renderowanie sceny.
 	RenderScene();
 
@@ -323,18 +329,20 @@ void RenderPass(glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
 	glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
 	shaderList[0].SetDirectionalLight(&mainLight);
-	shaderList[0].SetPointLights(pointLights, pointLightCount);
-	shaderList[0].SetSpotLights(spotLights, spotLightCount);
+	shaderList[0].SetPointLights(pointLights, pointLightCount, 3, 0);
+	shaderList[0].SetSpotLights(spotLights, spotLightCount, 3 + pointLightCount, pointLightCount);
 	glm::mat4 trans = mainLight.CalculateLightTransform();
 	shaderList[0].SetDirectionalLightTransform(&trans);
 
-	mainLight.GetShadowMap()->Read(GL_TEXTURE1);
-	shaderList[0].SetTexture(0);
-	shaderList[0].SetDirectionalShadowMap(1);
+	mainLight.GetShadowMap()->Read(GL_TEXTURE2);
+	shaderList[0].SetTexture(1);
+	shaderList[0].SetDirectionalShadowMap(2);
 
 	glm::vec3 lowerLight = camera.getCameraPosition();
 	lowerLight.y -= 0.3f;
 	spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+
+	shaderList[0].Validate();
 
 	RenderScene();
 }
@@ -374,23 +382,23 @@ int main(void)
 
 	mainLight = DirectionalLight(2048, 2048,
 		1.0f, 1.0f, 1.0f,
-		0.1f, 0.3f,
+		0.0f, 0.1f,
 		0.0f, -15.0f, -10.0f);
 
 
 	pointLights[0] = PointLight(1024, 1024,
 								0.01f, 100.0f,
 								0.0f, 0.0f, 1.0f,
-								0.0f, 0.1f,
-								0.0f, 0.0f, 0.0f,
-								0.3f, 0.2f, 0.1f);
+								0.0f, 1.0f,
+								1.0f, 2.0f, 0.0f,
+								0.3f, 0.01f, 0.01f);
 	pointLightCount++;
 	pointLights[1] = PointLight(
 								1024, 1024,
 								0.01f, 100.0f, 
 								0.0f, 1.0f, 0.0f,
-								0.0f, 0.1f,
-								-4.0f, 2.0f, 0.0f,
+								0.0f, 1.0f,
+								-4.0f, 3.0f, 0.0f,
 								0.3f, 0.1f, 0.1f);
 	pointLightCount++;
 
@@ -433,6 +441,12 @@ int main(void)
 
 		camera.keyControl(mainWindow.getKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		if (mainWindow.getKeys()[GLFW_KEY_L])
+		{
+			spotLights[0].Toggle();
+			mainWindow.getKeys()[GLFW_KEY_L] = false;
+		}
 
 		// Ustawienie wszystkich map cieniowania, do których zosta³y zapisane wyniki.
 		DirectionalShadowMapPass(&mainLight);

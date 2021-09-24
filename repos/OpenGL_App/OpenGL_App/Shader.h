@@ -26,7 +26,7 @@ public:
 	void CreateFromString(const char* vertexCode, const char* fragmentCode); // Utworz shader z ³¹ñcucha znaków.
 	void CreateFromFiles(const char* vertexLocation, const char* fragmentLcation); // Utworzenie shadera z plików.
 	void CreateFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLcation); // Utworzenie shadera z plików.
-
+	void Validate(); // Walidacja programu.
 
 	std::string ReadFile(const char* fileLocation); // Czytanie z pliku.
 
@@ -52,8 +52,8 @@ public:
 	void ClearShader(); // Wyczyœæ shader.
 
 	void SetDirectionalLight(DirectionalLight* dLight); // Ustawienie swiatla kierunkowego.
-	void SetPointLights(PointLight* pLight, unsigned int lightCount); // Ustawienie swiatel miejscowych.
-	void SetSpotLights(SpotLight* sLight, unsigned int lightCount); // Ustawienie swiatel reflektorowych.
+	void SetPointLights(PointLight* pLight, unsigned int lightCount, unsigned textureUnit, unsigned int offset); // Ustawienie swiatel miejscowych.
+	void SetSpotLights(SpotLight* sLight, unsigned int lightCount, unsigned textureUnit, unsigned int offset); // Ustawienie swiatel reflektorowych.
 	void SetTexture(GLuint textureUnit); // Ustawienie tekstury.
 	void SetDirectionalShadowMap(GLuint textureUnit); // Ustawienie kierunkowej mapy cieniowania.
 	void SetDirectionalLightTransform(glm::mat4* lTransform); // Ustawienie macierzy patrzenia swiatla kierunkowego.
@@ -123,6 +123,12 @@ private:
 		GLuint uniformDirection; // Kierunek swiecenia swiatla.
 		GLuint uniformEdge; // Kat swiecenia.
 	} uniformSpotLight[MAX_SPOT_LIGHTS];
+
+	struct
+	{
+		GLuint shadowMap; // Identyfikator mapy cieniowania.
+		GLuint farPlane;  // Identyfikator odleglosci na jak daleko moze patrzec kamera.
+	} uniformOmniShadowMap[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
 
 	void CompileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode); // Kompiluj shader.
 	void CompileShader(const char* vertexCode, const char* fragmentCode); // Kompiluj shader.
