@@ -1453,6 +1453,11 @@ Create six different light's transform matrices and use them the same way like i
 
 Use the geometry shader and multiply the primitive with light's transform. Do this 6 times in the loop, with every direction/ perspective of the light (projection x view_i) and results of these save in the specific **gl_Layer** and by this will get 6 textures (cubemap) combined in one. And the final shader, we only use direction vector from the light source to the current fragment and this direction will be crossing the cubemap box (the texture) and this point will be the closest depth and the lenght of the direction vector the light source to the fragment will be current depth. In another words, we will have a cubemap that is a texture that will have combined 6 different to create one big one, and by achived this texture we can later use the vector between the light soure and fragment, that will cross the specific face of cube map, and that crossed point texel on the cubemap will have the closest depth value and the length of the vector from the light source to the fragment will be current depth value.
 
+**Needed passes:**
+
+1. Render to the depth shadow map/ cubemap.
+2. Render scene as normal with shadow mapping by using depth cubemap.
+
 **Plan:**
 **Generating the depth cubemap:**
 
@@ -1462,5 +1467,41 @@ Use the geometry shader and multiply the primitive with light's transform. Do th
 usigned int id_depthCubeMap;
 glGenTextures(1, &id_depthCubeMap);
 ```
+
+2. Assigning each of the single cubemap faces as 2D deph-valued texture-image:
+
+```GLSL
+int SHADOW_WIDTH = 1024;
+int SHADOW_HEIGHT = 1024;
+glBindTexture(GL_TEXTURE_CUBE_MAP, id_depthCubeMap);
+for(size_t i =0; i < 6; i++)
+{
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+}
+```
+
+3. Setting the texture parameters:
+
+```GLSL
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+```
+
+4. Connection the frame buffer with the texture:
+
+```GLSL
+glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id_depthCubemap, 0);
+glDrawBuffer(GL_NONE);
+glReadBuffer(GL_NONE);
+glBindFramebuffer(GL_FRAMEBUFFER_0);
+```
+
+Process is similar to the default shadow mapping but this time we are rendering to and use a cubemap depth texture, not to 2D depth texture.
+
+5. Setting the light space transform:
 
 
