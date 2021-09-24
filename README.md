@@ -1504,4 +1504,105 @@ Process is similar to the default shadow mapping but this time we are rendering 
 
 5. Setting the light space transform:
 
+```GLSL
+float nearPlane = 0.0f;
+float farPlane = 1.0f;
+float aspectRatio = SHADOW_WIDTH / SHADOW_HEIGHT;
+glm::mat4 shadowProjection = glm::perspective(glm:: radians(90.0f), aspectRation, nearPlane, farPlane);
+```
+By setting to 90 degress we make sure that the viewing field is exaclty large enough to fill a single face of the cubemap such that all faces align correctly to each other at the edges. So the projection matrix doesn't change per direction but the view, yes! We need to create 6 transformation matrices, a different view matrix per direction. By using glm::lookAt we can create 6 view directions, each looking at one face direction of the cubemap in the order: right, left, top, bottom, near and far.
 
+```GLSL
+std::vector<glm::mat4> shadowTransformationMatrices;
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -l.0, 0.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -l.0, 0.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0);
+```
+
+So we are creating 6 transform matrices by using the same projection matrix and 6 different views directions, each looking at one face of the cubemap in the specific order (right, left, top, bottom, forward, back).
+
+There transformations matrices are sent to the shaders that render the depth into the cubemap.
+
+**Shaders: **
+
+To render depth values to a depth cubemap we will have three shaders: vertex, geometry and fragment.
+Geometry shader will be responsible for transforming all world-space vertices to the 6 different light spaces. So, the vertex shader simply transforms vertices to the world-space and give these values to geometry shader.
+
+**Vertex Shader:**
+
+```GLSL
+#version 330
+
+layout (location = 0) in vec3 pos;
+
+uniform mat4 model;
+
+void main()
+{
+    gl_Position = model * vec4(pos, 1.0);
+}
+```
+After this, geometry shader will tatke as input 3 vertices (triangle vertices) and an uniform array of light space transformation matrices. The geometry shader has a built-in variable called **gl_Layer** that spacifies which cubemap face to emit a primitive to. When left alone, the geometry shader just sends its primitives further down to the pipeline as usual, but when we update this variable we can control to which cubemap face we render to for each primitive. This **only works when we have a cubemap texture attached to teh active framebuffer!!!** Easy.
+
+**Geometry Shader:**
+
+```GLSL
+#version 330
+
+layout (triangles) in;
+layout (triangle_strip, max_vertices=18) out;
+
+uniform mat4 lightMatrices[6];
+
+out vec4 FragPos;
+
+void main()
+{
+    for(int face = 0 ; face < 6 ; face++)
+    {
+        gl_Layer = face;
+        for(int i = 0 ; i < 3 ; i++)
+        {
+            FragPos = gl_in[i].gl_Position;
+            gl_Position = lightMatrices[face] * FragPos;
+            EmitVertex();
+        }
+        EndPrimitive();
+    }
+}
+```
+
+To the geometry shader is simple. We taka as input a triangle, and output a total of 6 triangles (6 * 3 = 18 vertices). In the main function we iterate over 6 cubemap face where we specify earch face as the output face by stroring the face integer into gl_Layer. After this we generate the output triangles by transforming each world-space input vertex to the relevant light space by multiplying FragPos with the face's light-space transformation matrix. We also sent the result FragPos variable to the fragment shader that we will need to calculate the depth value.
+
+This time we have to calculate depth as the linear distance between each closest fragment position and the light source's position. 
+
+**Fragment Shader:**
+
+``` GLSL
+#version 330
+
+in vec4 FragPos;
+
+uniform vec3 lightPos;
+uniform float farPlane;
+
+void main()
+{
+    float distance = length(FragPos.xyz - lightPos);
+    distance = distance/farPlane;
+    gl_FragDepth = distance;
+}
+```
+
+So the fragment shader takes as input the position of current fragment (FragPos) from the geometry shader, the light's position vector, and te frustum's far plane value. Here we take the distance between the current fragment position and the light source, and later map it to the [0, 1] range (depth value) and write it as the fragment's depth value.
+
+Rendering the scene with these shaders and the cubemap-attached to the framebuffer object active will give us a completly filled depth cubemap for the second pass that is going be our finaln pass.
+
+**Mapping shadows:**
+
+The procedure is similar to the directional shadow mapping, but this tme we **bind a cubemap texture** instead of a 2D texture also pass **light projections' far plane** variable to the shaders.
+
+The vertex and fragment shaders are similar to the orignal shadow mapping shaders but the difference is that the fragment shader no longer requires a fragment position in light space as we can now sample the depth values from the direction vector. Because of this, the vertex shader doesn't needs to transfrom its position vectors to the light space. 
