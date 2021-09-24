@@ -1453,6 +1453,15 @@ Create six different light's transform matrices and use them the same way like i
 
 Use the geometry shader and multiply the primitive with light's transform. Do this 6 times in the loop, with every direction/ perspective of the light (projection x view_i) and results of these save in the specific **gl_Layer** and by this will get 6 textures (cubemap) combined in one. And the final shader, we only use direction vector from the light source to the current fragment and this direction will be crossing the cubemap box (the texture) and this point will be the closest depth and the lenght of the direction vector the light source to the fragment will be current depth. In another words, we will have a cubemap that is a texture that will have combined 6 different to create one big one, and by achived this texture we can later use the vector between the light soure and fragment, that will cross the specific face of cube map, and that crossed point texel on the cubemap will have the closest depth value and the length of the vector from the light source to the fragment will be current depth value.
 
+Geometry shader handle primitives and it is between the vertex shader and fragment shader.
+
+Basic structure:
+
+![image](https://user-images.githubusercontent.com/72278818/134727059-d92c817a-e374-49fe-b87f-e9b5267c17c9.png)
+
+**EmitVertex()** ~ Creates a vertex in the position stored in **gl_Position**
+**EndPrimitive()** ~ Saves the primitive that is created by the last call of EmitVertex() and then creates a new primitive. 
+
 **Needed passes:**
 
 1. Render to the depth shadow map/ cubemap.
