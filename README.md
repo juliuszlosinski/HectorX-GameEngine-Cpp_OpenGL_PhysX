@@ -1679,3 +1679,39 @@ Example from the Internet:
 
 ![maxresdefault](https://user-images.githubusercontent.com/72278818/134728998-ce448a03-1426-47b2-a42b-f930be401346.jpg)
 
+**PCF ~ Percantage-Closer Filtering**
+
+- Basically the same concept but with the third dimension,
+- Pre-defined user values offset directions vectors.
+- We can create these 20 or more.
+
+Optimisation: Pre-define user values offset directions vectors are not relative positions but directions. So we can scale how far the sample is based on the distance from the viewer. 
+
+If the user is closer: Sample closer to the original vector. 
+
+If the user is far: Sample more far from the original vector.
+
+**Code:**
+
+```GLSL
+vec3 fragToLight = FragPos - light.position;
+	float currentDepth = length(fragToLight);
+	
+	float shadow = 0.0;
+	float bias   = 0.15;
+	int samples  = 20;
+	float viewDistance = length(eyePosition - FragPos);
+	float diskRadius = (1.0 + (viewDistance / omniShadowMaps[shadowIndex].farPlane)) / 25.0;
+	for(int i = 0; i < samples; ++i)
+	{
+		float closestDepth = texture(omniShadowMaps[shadowIndex].shadowMap, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
+		closestDepth *= omniShadowMaps[shadowIndex].farPlane;   // Undo mapping [0;1]
+		if(currentDepth - bias > closestDepth)
+        {
+			shadow += 1.0;
+        }
+	}
+	shadow /= float(samples);  
+	
+	return shadow;
+```
