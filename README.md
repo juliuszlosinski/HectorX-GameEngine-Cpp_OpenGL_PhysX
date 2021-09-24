@@ -1717,3 +1717,5 @@ return shadow;
 ```
 
 **UML diagram:**
+
+![Diagram_Game_Engine_v0 8](https://user-images.githubusercontent.com/72278818/134735928-62f038d4-5e33-4ce9-9b96-bdf48d806268.jpg)
