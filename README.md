@@ -1606,3 +1606,49 @@ Rendering the scene with these shaders and the cubemap-attached to the framebuff
 The procedure is similar to the directional shadow mapping, but this tme we **bind a cubemap texture** instead of a 2D texture also pass **light projections' far plane** variable to the shaders.
 
 The vertex and fragment shaders are similar to the orignal shadow mapping shaders but the difference is that the fragment shader no longer requires a fragment position in light space as we can now sample the depth values from the direction vector. Because of this, the vertex shader doesn't needs to transfrom its position vectors to the light space. 
+
+The biggest difference is that we are going sample depth values from the cubemap instead of a 2D texture.
+
+Plan:
+
+1. We have to retrieve the depth of the cubemap. In the previous fragment shader we stored the depth as the linear distance between the fragment and the light position. So we are going to take the similar approach:
+
+``` GLSL
+vec3 fragToLight = fragPos - lightPos;
+float closestDepth = texture(depthMap, fragToLight).r;
+```
+
+Here we taking the differenc vetor between the fragment's position and the light's position and use that vector as a direction to sample the cubemap. The direction vector does not need to be a unit verctor to sample from cubemap. The resulting **closestDetph** value is the normalized depth value between the light source and its closest visible fragment. The **closestDetph** value is currently in the range [0, 1] so we first transform it back to [0, far_plane] by multiplying it with far_plane.
+
+```GLSL
+closestDepth = closestDeph * far_plane;
+```
+
+The next step is to retrieve the depth value between the current fragment and the light source, which we can easily obtain by taking the length of **fragToLight** due to we calculated depth values in the cubemap:
+
+```GLSL
+currentDepth = lenght(fragToLight);
+```
+This will return a depth value in the same range as closestDepth. Now we can compare both depth values to see which is closer than the other and determine wheter the current fragment is in shadow. We will also include a shadow bias so we don't get shadow acne.
+
+```GLSL
+bias = 0.05;
+shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+```
+
+**Final plan:**
+
+```GLSL
+// 1. Getting the vector between current fragment position and light position.
+vec3 fragToLight = fragPos - lightPos;
+// 2. Using the light to fragment vector to sample from the depth map.
+float closestDepth = texture(depthMap, fragToLight).r;
+// 3. It is currently in linear range between [0, 1], so we have to re-transform back this to original value.
+closestDepth = closestDepth * far_plane;
+// 4. Getting the linear depth as the lenght between the fragment and light position.
+float currentDepth = length(fragToLight);
+// 5. Determining which values is closer than other. Testing.
+float bias = 0.05;
+float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+```
+So with these shaders we get shadows in all surrounding directions from a point light and spot light. 
