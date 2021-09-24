@@ -1410,6 +1410,8 @@ void main()
 
 ![image](https://user-images.githubusercontent.com/72278818/134707212-26f38a25-0182-4b71-b1d2-b37f3ed61a08.png)
 
+![image](https://user-images.githubusercontent.com/72278818/134730670-1db6dde4-8d86-4dbe-92ea-96042e712cfe.png)
+
 - Kind of texture in OpenGL,
 - Technically it's 6 textures (for one for each side) combined in one, can be referenced by one in GLSL.
 
@@ -1460,6 +1462,7 @@ Basic structure:
 ![image](https://user-images.githubusercontent.com/72278818/134727059-d92c817a-e374-49fe-b87f-e9b5267c17c9.png)
 
 **EmitVertex()** ~ Creates a vertex in the position stored in **gl_Position**
+
 **EndPrimitive()** ~ Saves the primitive that is created by the last call of EmitVertex() and then creates a new primitive. 
 
 **Needed passes:**
@@ -1661,3 +1664,18 @@ float bias = 0.05;
 float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 ```
 So with these shaders we get shadows in all surrounding directions from a point light and spot light. 
+
+**Visualizing cubemap depth buffer:**
+
+With one of the obvious checks beoing validating whether the depth map was built correctly. A simple trcik to visualize the depth buffer is to take the closestDetph variable and display that variable as:
+
+```GLSL
+FragColor = vec4(vec3(closestDepth/ far_plane), 1.0);
+```
+
+And the result is a grayoud out scene where each color represents the linear depth values of the scene. We can also see shadowed regions on the outside wall. If it looks somewhat similar, we know that the depth cubemap was properly generated.
+
+Example from the Internet:
+
+![maxresdefault](https://user-images.githubusercontent.com/72278818/134728998-ce448a03-1426-47b2-a42b-f930be401346.jpg)
+
