@@ -1397,3 +1397,61 @@ void main()
 **Effect:**
 
 ![direct_light](https://user-images.githubusercontent.com/72278818/134367685-5df11f65-e0e9-4a7e-bf20-4de49357bcb5.gif)
+
+**12. Date: 24.09.2021**
+
+**Omindirectional Shadow Mapping:**
+- Used for point lights and spot lights,
+- Basic theory is just like for Directional Shadow Mapping but this time we have to handle **shadows in every direction**.
+- We can't use only one texture but a lot of these to handle every direction.
+- To create this we have to use **a Cubemap**
+
+**Cubemap:**
+
+![image](https://user-images.githubusercontent.com/72278818/134707212-26f38a25-0182-4b71-b1d2-b37f3ed61a08.png)
+
+- Kind of texture in OpenGL,
+- Technically it's 6 textures (for one for each side) combined in one, can be referenced by one in GLSL.
+
+**_glBindTexture(GL_TEXTURE_CUBE_MAP, dethpCubemap);_**
+**_glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, ...);_**
+**GL_TEXTURE_CUBE_MAP_POSITIVE_X;**
+**GL_TEXTURE_CUBE_MAP_NEGATIVE_X;**
+**GL_TEXTURE_CUBE_MAP_POSITIVE_Y;**
+**GL_TEXTURE_CUBE_MAP_NEGATIVE_Y**
+**GL_TEXTURE_CUBE_MAP_POSITIVE_Z;**
+**GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;**
+
+- Every enum is by one incremented, so we can creat an easy loop.
+- We don't need to use textures coordinates (u and v).
+- We can get a point on the cubemap by using **direction vector**, that is directed on specific texel from the center of cubemap.
+- We don't light matrix transfrom like it was needed in Directional Shadow Mapping!
+
+**We need 6 versions of the lights transform (projection x view), for each direction (right: +x, left: -x, up: +y, down: -y, front: +z, back: -z).**
+
+![image](https://user-images.githubusercontent.com/72278818/134708496-a75a4b83-467a-4939-b916-ac75d519101f.png)
+
+![image](https://user-images.githubusercontent.com/72278818/134708776-b1c9ed37-8231-462c-bb8f-823d83c95923.png)
+
+Also we have to use perspective projection for lights transform: **_glm::perspective(gl::radians(90.0f), aspect (width/height), near_plane, far_plane);_**
+
+This 90 degrees perspective will ensure us that all angles about axis are covered, like a box. Width and height must be equal, because this a box and it must have aspect ration that equals 1. Near plane decide about starting point of the camera and the far plane decides how far away camer can see.
+
+We are creating the view matrix of the light by using position and direction of the light.
+
+![image](https://user-images.githubusercontent.com/72278818/134708906-39364521-9f35-4b00-864a-2aca71a7545d.png)
+
+Direction is "lightPos + vec3(1.0, 0.0, 0.0)", beacuse that light is directed to the right. In another words, it's in positive x direction.
+
+**TARGET: Create and fill Cubemap with 6 textures (left, right, up, down, front, back) that will show the world from diffrent perspective of the light.**
+
+**First Approach:**
+
+Create six different light's transform matrices and use them the same way like in Directional Shadow Mapping. In another words, do 6 shadow passes with each time diffrent perspective (projection x view_i) and store it them in the specifcs frame buffers. When we get 6 different results (filled textures as result of frame buffer) then we will handle it final render pass and set up the finals fragment's of the objects relative to the achived results. **This not the best approach, not efficient!**
+
+**Second Approcach:**
+
+Use the geometry shader and multiply the primitive with light's transform. Do this 6 times in the loop, with every direction/ perspective of the light (projection x view_i) and results of these save in the specific **gl_Layer** and by this will get 6 textures (cubemap) combined in one. And the final shader, we only use direction vector from the light source to the current fragment and this direction will be crossing the cubemap box (the texture) and this point will be the closest depth and the lenght of the direction vector the light source to the fragment will be current depth. In another words, we will have a cubemap that is a texture that will have combined 6 different to create one big one, and by achived this texture we can later use the vector between the light soure and fragment, that will cross the specific face of cube map, and that crossed point texel on the cubemap will have the closest depth value and the length of the vector from the light source to the fragment will be current depth value.
+
+
+
