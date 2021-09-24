@@ -1695,23 +1695,25 @@ If the user is far: Sample more far from the original vector.
 
 ```GLSL
 vec3 fragToLight = FragPos - light.position;
-	float currentDepth = length(fragToLight);
+float currentDepth = length(fragToLight);
 	
-	float shadow = 0.0;
-	float bias   = 0.15;
-	int samples  = 20;
-	float viewDistance = length(eyePosition - FragPos);
-	float diskRadius = (1.0 + (viewDistance / omniShadowMaps[shadowIndex].farPlane)) / 25.0;
-	for(int i = 0; i < samples; ++i)
-	{
-		float closestDepth = texture(omniShadowMaps[shadowIndex].shadowMap, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
-		closestDepth *= omniShadowMaps[shadowIndex].farPlane;   // Undo mapping [0;1]
-		if(currentDepth - bias > closestDepth)
+float shadow = 0.0;
+float bias   = 0.15;
+int samples  = 20;
+float viewDistance = length(eyePosition - FragPos);
+float diskRadius = (1.0 + (viewDistance / omniShadowMaps[shadowIndex].farPlane)) / 25.0;
+for(int i = 0; i < samples; ++i)
+{
+	float closestDepth = texture(omniShadowMaps[shadowIndex].shadowMap, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
+	closestDepth *= omniShadowMaps[shadowIndex].farPlane;   // Undo mapping [0;1]
+	if(currentDepth - bias > closestDepth)
         {
-			shadow += 1.0;
+		shadow += 1.0;
         }
-	}
-	shadow /= float(samples);  
+}
+shadow /= float(samples);  
 	
-	return shadow;
+return shadow;
 ```
+
+**UML diagram:**
