@@ -1526,7 +1526,7 @@ So we are creating 6 transform matrices by using the same projection matrix and 
 
 There transformations matrices are sent to the shaders that render the depth into the cubemap.
 
-**Shaders: **
+**Shaders:**
 
 To render depth values to a depth cubemap we will have three shaders: vertex, geometry and fragment.
 Geometry shader will be responsible for transforming all world-space vertices to the 6 different light spaces. So, the vertex shader simply transforms vertices to the world-space and give these values to geometry shader.
