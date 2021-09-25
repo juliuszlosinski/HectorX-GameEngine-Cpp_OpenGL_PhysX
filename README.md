@@ -1999,7 +1999,7 @@ void main()
 
 **Skybox:**
 
-![download (2)](https://user-images.githubusercontent.com/72278818/134777341-9847cbf9-9641-4f85-bcb1-8d995560ec72.png)
+![image](https://user-images.githubusercontent.com/72278818/134778138-5201e108-365f-49b3-8233-a77fb0ba0882.png)
 
 - Cubemap that is creating an illusion of bigger world.
 - We are using cubemap to texture cube.
@@ -2029,6 +2029,10 @@ void main()
 The drawned cubemap will have the inifite value of depth so everything will in front of us, that's the trick!
 
 ![image](https://user-images.githubusercontent.com/72278818/134777898-bc726248-8e66-42cf-bf31-94e1772946bb.png)
+
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 9](https://user-images.githubusercontent.com/72278818/134778316-5988bbd5-834b-4ae9-9965-615bd132792f.jpg)
 
 **Shaders for cubemap:**
 
@@ -2074,3 +2078,7 @@ void main()
     colour = texture(skybox, TexCoords);
 }
 ```
+Main shaders are ok!
+
+**Effect:**
+
