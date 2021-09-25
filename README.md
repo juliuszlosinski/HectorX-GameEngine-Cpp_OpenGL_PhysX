@@ -1994,3 +1994,83 @@ void main()
 **Effect:**
 
 ![gf](https://user-images.githubusercontent.com/72278818/134738864-f0830d05-e048-4659-a462-8b4f2f9cb123.gif)
+
+**13. Date: 25.09.2021**
+
+**Skybox:**
+
+![download (2)](https://user-images.githubusercontent.com/72278818/134777341-9847cbf9-9641-4f85-bcb1-8d995560ec72.png)
+
+- Cubemap that is creating an illusion of bigger world.
+- We are using cubemap to texture cube.
+- Needs seperate shader to be done before the main.
+- Small 1x1x1 cube around the camera.
+
+**General idea:**
+1. Create shader program (vertex shader, fragment shader) and get the locations of uniform projection and view, save these locations.
+1. Create the cubemap texture filled with 6 images (right: +x, left: -x, up: +y, down: -y, back: +z, front: -z).
+2. Create the cube mesh (VAO, VBO, IBO).
+
+**Drawing cubemap:**
+1. Disable depth mask (glDepthMask(GL_FLASE)).
+2. Use shader (glUseProgram(shaderID)).
+3. Attach values to uniforms (uniformProjection, uniformView) from shader (projection matrix and view matrix (without column with translations) (glUniformMatrix4fv(...))
+4. Active and bind texture (glActiveTexture(GL_TEXTURE0) -> glBindTexture(GL_TEXTURE_CUBE_MAP, textureId)).
+5. Render mesh (glBindVertexArray(VAO) -> glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO) -> glDrawElements(GL_TRIANGLES)).
+6. Enable depth mask (glDepthMask(GL_TRUE)).
+
+**In another words:**
+1. Initializing shader to use.
+2. Binding the VAO of the skybox cubemap.
+3. Binding/ attaching the texture of skybox.
+4. Rendering skybox.
+5. Rendering normal scene.
+
+The drawned cubemap will have the inifite value of depth so everything will in front of us, that's the trick!
+
+![image](https://user-images.githubusercontent.com/72278818/134777898-bc726248-8e66-42cf-bf31-94e1772946bb.png)
+
+**Shaders for cubemap:**
+
+We are going to send gl_Position with projection and view matrix but without model matrix. We want to have skybox to be static around camera. 
+
+```GLSL
+TexCoords = aPos;
+```
+Texture's coordinates can use position of fragment. Skybox doesn't move, so it's basically in the origin sa every fragment's position vector is his direction vector. SamplerCube uses vector to find texel so it uses TexCoords vector from vertex vector.
+
+**Vertex Shader:**
+
+```GLSL
+#version 330
+
+layout(location = 0) in vec3 pos;
+
+out vec3 TexCoords;
+
+uniform mat4 projection;
+uniform mat4 view;
+
+void main()
+{
+    TexCoords = pos;
+    gl_Position = projection * view * vec4(pos, 1.0);
+}
+```
+
+**Fragment Shader:**
+
+```GLSL
+#version 330
+
+in vec3 TexCoords;
+
+out vec4 colour;
+
+uniform samplerCube skybox;
+
+void main()
+{
+    colour = texture(skybox, TexCoords);
+}
+```
