@@ -114,7 +114,7 @@ GLfloat PointLight::GetFarPlane()
 {
     return farPlane;
 }
-
+    
 /// Zwrocenie pozycji swiatla.
 glm::vec3 PointLight::GetPosition()
 {

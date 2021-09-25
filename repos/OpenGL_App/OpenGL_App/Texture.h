@@ -3,8 +3,8 @@
 // Zaladowanie GLEW.
 #include <GL\glew.h>
 
-// Zaladowanie pliku do ladowania tekstur/ obrazkow.
-#include "stb_image.h"
+// Za³adowanie nag³ówka z powszechnie u¿ywanymi wartoœciami.
+#include "CommonValues.h"
 
 class Texture
 {
