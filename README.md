@@ -1397,3 +1397,600 @@ void main()
 **Effect:**
 
 ![direct_light](https://user-images.githubusercontent.com/72278818/134367685-5df11f65-e0e9-4a7e-bf20-4de49357bcb5.gif)
+
+**12. Date: 24.09.2021**
+
+**Omindirectional Shadow Mapping:**
+- Used for point lights and spot lights,
+- Basic theory is just like for Directional Shadow Mapping but this time we have to handle **shadows in every direction**.
+- We can't use only one texture but a lot of these to handle every direction.
+- To create this we have to use **a Cubemap**
+
+**Cubemap:**
+
+![image](https://user-images.githubusercontent.com/72278818/134707212-26f38a25-0182-4b71-b1d2-b37f3ed61a08.png)
+
+![image](https://user-images.githubusercontent.com/72278818/134730670-1db6dde4-8d86-4dbe-92ea-96042e712cfe.png)
+
+- Kind of texture in OpenGL,
+- Technically it's 6 textures (for one for each side) combined in one, can be referenced by one in GLSL.
+
+**_glBindTexture(GL_TEXTURE_CUBE_MAP, dethpCubemap);_**
+**_glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, ...);_**
+**GL_TEXTURE_CUBE_MAP_POSITIVE_X;**
+**GL_TEXTURE_CUBE_MAP_NEGATIVE_X;**
+**GL_TEXTURE_CUBE_MAP_POSITIVE_Y;**
+**GL_TEXTURE_CUBE_MAP_NEGATIVE_Y**
+**GL_TEXTURE_CUBE_MAP_POSITIVE_Z;**
+**GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;**
+
+- Every enum is by one incremented, so we can creat an easy loop.
+- We don't need to use textures coordinates (u and v).
+- We can get a point on the cubemap by using **direction vector**, that is directed on specific texel from the center of cubemap.
+- We don't light matrix transfrom like it was needed in Directional Shadow Mapping!
+
+**We need 6 versions of the lights transform (projection x view), for each direction (right: +x, left: -x, up: +y, down: -y, front: +z, back: -z).**
+
+![image](https://user-images.githubusercontent.com/72278818/134708496-a75a4b83-467a-4939-b916-ac75d519101f.png)
+
+![image](https://user-images.githubusercontent.com/72278818/134708776-b1c9ed37-8231-462c-bb8f-823d83c95923.png)
+
+Also we have to use perspective projection for lights transform: **_glm::perspective(gl::radians(90.0f), aspect (width/height), near_plane, far_plane);_**
+
+This 90 degrees perspective will ensure us that all angles about axis are covered, like a box. Width and height must be equal, because this a box and it must have aspect ration that equals 1. Near plane decide about starting point of the camera and the far plane decides how far away camer can see.
+
+We are creating the view matrix of the light by using position and direction of the light.
+
+![image](https://user-images.githubusercontent.com/72278818/134708906-39364521-9f35-4b00-864a-2aca71a7545d.png)
+
+Direction is "lightPos + vec3(1.0, 0.0, 0.0)", beacuse that light is directed to the right. In another words, it's in positive x direction.
+
+**TARGET: Create and fill Cubemap with 6 textures (left, right, up, down, front, back) that will show the world from diffrent perspective of the light.**
+
+**First Approach:**
+
+Create six different light's transform matrices and use them the same way like in Directional Shadow Mapping. In another words, do 6 shadow passes with each time diffrent perspective (projection x view_i) and store it them in the specifcs frame buffers. When we get 6 different results (filled textures as result of frame buffer) then we will handle it final render pass and set up the finals fragment's of the objects relative to the achived results. **This not the best approach, not efficient!**
+
+**Second Approcach:**
+
+Use the geometry shader and multiply the primitive with light's transform. Do this 6 times in the loop, with every direction/ perspective of the light (projection x view_i) and results of these save in the specific **gl_Layer** and by this will get 6 textures (cubemap) combined in one. And the final shader, we only use direction vector from the light source to the current fragment and this direction will be crossing the cubemap box (the texture) and this point will be the closest depth and the lenght of the direction vector the light source to the fragment will be current depth. In another words, we will have a cubemap that is a texture that will have combined 6 different to create one big one, and by achived this texture we can later use the vector between the light soure and fragment, that will cross the specific face of cube map, and that crossed point texel on the cubemap will have the closest depth value and the length of the vector from the light source to the fragment will be current depth value.
+
+Geometry shader handle primitives and it is between the vertex shader and fragment shader.
+
+Basic structure:
+
+![image](https://user-images.githubusercontent.com/72278818/134727059-d92c817a-e374-49fe-b87f-e9b5267c17c9.png)
+
+**EmitVertex()** ~ Creates a vertex in the position stored in **gl_Position**
+
+**EndPrimitive()** ~ Saves the primitive that is created by the last call of EmitVertex() and then creates a new primitive. 
+
+**Needed passes:**
+
+1. Render to the depth shadow map/ cubemap.
+2. Render scene as normal with shadow mapping by using depth cubemap.
+
+**Plan:**
+**Generating the depth cubemap:**
+
+1. Creating the cubemap:
+
+```GLSL
+usigned int id_depthCubeMap;
+glGenTextures(1, &id_depthCubeMap);
+```
+
+2. Assigning each of the single cubemap faces as 2D deph-valued texture-image:
+
+```GLSL
+int SHADOW_WIDTH = 1024;
+int SHADOW_HEIGHT = 1024;
+glBindTexture(GL_TEXTURE_CUBE_MAP, id_depthCubeMap);
+for(size_t i =0; i < 6; i++)
+{
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+}
+```
+
+3. Setting the texture parameters:
+
+```GLSL
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+```
+
+4. Connection the frame buffer with the texture:
+
+```GLSL
+glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, id_depthCubemap, 0);
+glDrawBuffer(GL_NONE);
+glReadBuffer(GL_NONE);
+glBindFramebuffer(GL_FRAMEBUFFER_0);
+```
+
+Process is similar to the default shadow mapping but this time we are rendering to and use a cubemap depth texture, not to 2D depth texture.
+
+5. Setting the light space transform:
+
+```GLSL
+float nearPlane = 0.0f;
+float farPlane = 1.0f;
+float aspectRatio = SHADOW_WIDTH / SHADOW_HEIGHT;
+glm::mat4 shadowProjection = glm::perspective(glm:: radians(90.0f), aspectRation, nearPlane, farPlane);
+```
+By setting to 90 degress we make sure that the viewing field is exaclty large enough to fill a single face of the cubemap such that all faces align correctly to each other at the edges. So the projection matrix doesn't change per direction but the view, yes! We need to create 6 transformation matrices, a different view matrix per direction. By using glm::lookAt we can create 6 view directions, each looking at one face direction of the cubemap in the order: right, left, top, bottom, near and far.
+
+```GLSL
+std::vector<glm::mat4> shadowTransformationMatrices;
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -l.0, 0.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -l.0, 0.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0);
+shadowTransformationMatrices.push_back(shadowProjection * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0);
+```
+
+So we are creating 6 transform matrices by using the same projection matrix and 6 different views directions, each looking at one face of the cubemap in the specific order (right, left, top, bottom, forward, back).
+
+There transformations matrices are sent to the shaders that render the depth into the cubemap.
+
+**Shaders:**
+
+To render depth values to a depth cubemap we will have three shaders: vertex, geometry and fragment.
+Geometry shader will be responsible for transforming all world-space vertices to the 6 different light spaces. So, the vertex shader simply transforms vertices to the world-space and give these values to geometry shader.
+
+**Vertex Shader:**
+
+```GLSL
+#version 330
+
+layout (location = 0) in vec3 pos;
+
+uniform mat4 model;
+
+void main()
+{
+    gl_Position = model * vec4(pos, 1.0);
+}
+```
+After this, geometry shader will tatke as input 3 vertices (triangle vertices) and an uniform array of light space transformation matrices. The geometry shader has a built-in variable called **gl_Layer** that spacifies which cubemap face to emit a primitive to. When left alone, the geometry shader just sends its primitives further down to the pipeline as usual, but when we update this variable we can control to which cubemap face we render to for each primitive. This **only works when we have a cubemap texture attached to teh active framebuffer!!!** Easy.
+
+**Geometry Shader:**
+
+```GLSL
+#version 330
+
+layout (triangles) in;
+layout (triangle_strip, max_vertices=18) out;
+
+uniform mat4 lightMatrices[6];
+
+out vec4 FragPos;
+
+void main()
+{
+    for(int face = 0 ; face < 6 ; face++)
+    {
+        gl_Layer = face;
+        for(int i = 0 ; i < 3 ; i++)
+        {
+            FragPos = gl_in[i].gl_Position;
+            gl_Position = lightMatrices[face] * FragPos;
+            EmitVertex();
+        }
+        EndPrimitive();
+    }
+}
+```
+
+To the geometry shader is simple. We taka as input a triangle, and output a total of 6 triangles (6 * 3 = 18 vertices). In the main function we iterate over 6 cubemap face where we specify earch face as the output face by stroring the face integer into gl_Layer. After this we generate the output triangles by transforming each world-space input vertex to the relevant light space by multiplying FragPos with the face's light-space transformation matrix. We also sent the result FragPos variable to the fragment shader that we will need to calculate the depth value.
+
+This time we have to calculate depth as the linear distance between each closest fragment position and the light source's position. 
+
+**Fragment Shader:**
+
+``` GLSL
+#version 330
+
+in vec4 FragPos;
+
+uniform vec3 lightPos;
+uniform float farPlane;
+
+void main()
+{
+    float distance = length(FragPos.xyz - lightPos);
+    distance = distance/farPlane;
+    gl_FragDepth = distance;
+}
+```
+
+So the fragment shader takes as input the position of current fragment (FragPos) from the geometry shader, the light's position vector, and te frustum's far plane value. Here we take the distance between the current fragment position and the light source, and later map it to the [0, 1] range (depth value) and write it as the fragment's depth value.
+
+Rendering the scene with these shaders and the cubemap-attached to the framebuffer object active will give us a completly filled depth cubemap for the second pass that is going be our finaln pass.
+
+**Mapping shadows:**
+
+The procedure is similar to the directional shadow mapping, but this tme we **bind a cubemap texture** instead of a 2D texture also pass **light projections' far plane** variable to the shaders.
+
+The vertex and fragment shaders are similar to the orignal shadow mapping shaders but the difference is that the fragment shader no longer requires a fragment position in light space as we can now sample the depth values from the direction vector. Because of this, the vertex shader doesn't needs to transfrom its position vectors to the light space. 
+
+The biggest difference is that we are going sample depth values from the cubemap instead of a 2D texture.
+
+Plan:
+
+1. We have to retrieve the depth of the cubemap. In the previous fragment shader we stored the depth as the linear distance between the fragment and the light position. So we are going to take the similar approach:
+
+``` GLSL
+vec3 fragToLight = fragPos - lightPos;
+float closestDepth = texture(depthMap, fragToLight).r;
+```
+
+Here we taking the differenc vetor between the fragment's position and the light's position and use that vector as a direction to sample the cubemap. The direction vector does not need to be a unit verctor to sample from cubemap. The resulting **closestDetph** value is the normalized depth value between the light source and its closest visible fragment. The **closestDetph** value is currently in the range [0, 1] so we first transform it back to [0, far_plane] by multiplying it with far_plane.
+
+```GLSL
+closestDepth = closestDeph * far_plane;
+```
+
+The next step is to retrieve the depth value between the current fragment and the light source, which we can easily obtain by taking the length of **fragToLight** due to we calculated depth values in the cubemap:
+
+```GLSL
+currentDepth = lenght(fragToLight);
+```
+This will return a depth value in the same range as closestDepth. Now we can compare both depth values to see which is closer than the other and determine wheter the current fragment is in shadow. We will also include a shadow bias so we don't get shadow acne.
+
+```GLSL
+bias = 0.05;
+shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+```
+
+**Final plan:**
+
+```GLSL
+// 1. Getting the vector between current fragment position and light position.
+vec3 fragToLight = fragPos - lightPos;
+// 2. Using the light to fragment vector to sample from the depth map.
+float closestDepth = texture(depthMap, fragToLight).r;
+// 3. It is currently in linear range between [0, 1], so we have to re-transform back this to original value.
+closestDepth = closestDepth * far_plane;
+// 4. Getting the linear depth as the lenght between the fragment and light position.
+float currentDepth = length(fragToLight);
+// 5. Determining which values is closer than other. Testing.
+float bias = 0.05;
+float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+```
+So with these shaders we get shadows in all surrounding directions from a point light and spot light. 
+
+**Visualizing cubemap depth buffer:**
+
+With one of the obvious checks beoing validating whether the depth map was built correctly. A simple trcik to visualize the depth buffer is to take the closestDetph variable and display that variable as:
+
+```GLSL
+FragColor = vec4(vec3(closestDepth/ far_plane), 1.0);
+```
+
+And the result is a grayoud out scene where each color represents the linear depth values of the scene. We can also see shadowed regions on the outside wall. If it looks somewhat similar, we know that the depth cubemap was properly generated.
+
+Example from the Internet:
+
+![maxresdefault](https://user-images.githubusercontent.com/72278818/134728998-ce448a03-1426-47b2-a42b-f930be401346.jpg)
+
+**PCF ~ Percantage-Closer Filtering**
+
+- Basically the same concept but with the third dimension,
+- Pre-defined user values offset directions vectors.
+- We can create these 20 or more.
+
+Optimisation: Pre-define user values offset directions vectors are not relative positions but directions. So we can scale how far the sample is based on the distance from the viewer. 
+
+If the user is closer: Sample closer to the original vector. 
+
+If the user is far: Sample more far from the original vector.
+
+**Code:**
+
+```GLSL
+vec3 fragToLight = FragPos - light.position;
+float currentDepth = length(fragToLight);
+	
+float shadow = 0.0;
+float bias   = 0.15;
+int samples  = 20;
+float viewDistance = length(eyePosition - FragPos);
+float diskRadius = (1.0 + (viewDistance / omniShadowMaps[shadowIndex].farPlane)) / 25.0;
+for(int i = 0; i < samples; ++i)
+{
+	float closestDepth = texture(omniShadowMaps[shadowIndex].shadowMap, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
+	closestDepth *= omniShadowMaps[shadowIndex].farPlane;   // Undo mapping [0;1]
+	if(currentDepth - bias > closestDepth)
+        {
+		shadow += 1.0;
+        }
+}
+shadow /= float(samples);  
+	
+return shadow;
+```
+
+**UML diagram:**
+
+![Diagram_Game_Engine_v0 8](https://user-images.githubusercontent.com/72278818/134735928-62f038d4-5e33-4ce9-9b96-bdf48d806268.jpg)
+
+**Shaders for final rendering:**
+
+**Vertex Shader:**
+
+```GLSL
+#version 330
+
+layout (location = 0) in vec3 pos;
+layout (location = 1) in vec2 tex;
+layout (location = 2) in vec3 norm;
+
+out vec4 vCol;
+out vec2 TexCoord;
+out vec3 Normal;
+out vec3 FragPos;
+out vec4 DirectionalLightSpacePos;
+
+uniform mat4 model;
+uniform mat4 projection;
+uniform mat4 view;
+
+uniform mat4 directionalLightTransform;
+
+void main()
+{
+	gl_Position = projection * view * model * vec4(pos, 1.0);
+	vCol = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);
+	
+	DirectionalLightSpacePos = directionalLightTransform * model * vec4(pos, 1.0);
+	
+	TexCoord = tex;
+	
+	Normal = mat3(transpose(inverse(model))) * norm;
+	
+	FragPos = (model * vec4(pos, 1.0)).xyz; 
+}
+```
+**Fragment Shader:**
+
+```GLSL
+#version 330
+
+in vec4 vCol;
+in vec2 TexCoord;
+in vec3 Normal;
+in vec3 FragPos;
+in vec4 DirectionalLightSpacePos;
+
+out vec4 colour;
+
+const int MAX_POINT_LIGHTS = 3;
+const int MAX_SPOT_LIGHTS = 3;
+
+struct Light
+{
+	vec3 colour;
+	float ambientIntensity;
+	float diffuseIntensity;
+};
+
+struct DirectionalLight 
+{
+	Light base;
+	vec3 direction;
+};
+
+struct PointLight
+{
+	Light base;
+	
+	vec3 position;
+	float constant;
+	float linear;
+	float exponent;
+};
+
+struct SpotLight
+{
+	PointLight base;
+	vec3 direction;
+	float edge;
+};
+
+struct OmniShadowMap
+{
+	samplerCube shadowMap;
+	float farPlane;
+};
+
+struct Material
+{
+	float specularIntensity;
+	float shininess;
+};
+
+uniform int pointLightCount;
+uniform int spotLightCount;
+
+uniform DirectionalLight directionalLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
+
+uniform OmniShadowMap omniShadowMaps[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
+
+uniform sampler2D theTexture;
+uniform sampler2D directionalShadowMap;
+
+uniform Material material;
+
+uniform vec3 eyePosition;
+
+vec3 sampleOffsetDirections[20] = vec3[]
+(
+   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
+   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
+   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
+   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+);
+
+vec4 CalcLightByDirection(Light light, vec3 direction, float shadowFactor)
+{
+	vec4 ambientColour = vec4(light.colour, 1.0f) * light.ambientIntensity;
+	
+	float diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f);
+	vec4 diffuseColour = vec4(light.colour * light.diffuseIntensity * diffuseFactor, 1.0f);
+	
+	vec4 specularColour = vec4(0, 0, 0, 0);
+	
+	if(diffuseFactor > 0.0f)
+	{
+		vec3 fragToEye = normalize(eyePosition - FragPos);
+		vec3 reflectedVertex = normalize(reflect(direction, normalize(Normal)));
+		
+		float specularFactor = dot(fragToEye, reflectedVertex);
+		if(specularFactor > 0.0f)
+		{
+			specularFactor = pow(specularFactor, material.shininess);
+			specularColour = vec4(light.colour * material.specularIntensity * specularFactor, 1.0f);
+		}
+	}
+
+	return (ambientColour + (1.0 - shadowFactor) * (diffuseColour + specularColour));
+}
+
+float CalcPointShadowFactor(PointLight light, int shadowIndex)
+{
+	vec3 fragToLight = FragPos - light.position;
+	float currentDepth = length(fragToLight);
+	
+	float shadow = 0.0;
+	float bias   = 0.15;
+	int samples  = 20;
+	float viewDistance = length(eyePosition - FragPos);
+	float diskRadius = (1.0 + (viewDistance / omniShadowMaps[shadowIndex].farPlane)) / 25.0;
+	for(int i = 0; i < samples; ++i)
+	{
+		float closestDepth = texture(omniShadowMaps[shadowIndex].shadowMap, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
+		closestDepth *= omniShadowMaps[shadowIndex].farPlane;   // Undo mapping [0;1]
+		if(currentDepth - bias > closestDepth)
+        {
+			shadow += 1.0;
+        }
+	}
+	shadow /= float(samples);  
+	
+	return shadow;
+}
+
+float CalcShadowFactor(vec4 DirectionalLightSpacePos)
+{
+	vec3 projCoords = DirectionalLightSpacePos.xyz / DirectionalLightSpacePos.w;
+	projCoords = projCoords * 0.5 + 0.5;
+	
+	float closestDepth = texture(directionalShadowMap, projCoords.xy).r;
+	float currentDepth = projCoords.z;
+	
+	vec3 normal = normalize(Normal);
+	vec3 lightDir = normalize(directionalLight.direction);
+	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.0005);
+	
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(directionalShadowMap, 0);
+	for(int x = -1; x <= 1; ++x)
+	{
+		for(int y = -1; y <= 1; ++y)
+		{
+			float pcfDepth = texture(directionalShadowMap, projCoords.xy + vec2(x,y) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+	
+	shadow /= 9.0;
+	if(projCoords.z > 1.0)
+	{
+		shadow = 0.0;
+	}
+	
+	return shadow;
+}
+
+vec4 CalcDirectionalLight(vec4 DirectionalLightSpacePos)
+{
+	float ShadowFactor = CalcShadowFactor(DirectionalLightSpacePos);
+	return CalcLightByDirection(directionalLight.base, directionalLight.direction, ShadowFactor);
+}
+
+vec4 CalcPointLight(PointLight pLight, int shadowIndex)
+{
+	vec3 direction = FragPos - pLight.position;
+	float distance = length(direction);
+	direction = normalize(direction);
+	
+	float shadowFactor = CalcPointShadowFactor(pLight, shadowIndex);
+	
+	vec4 colour = CalcLightByDirection(pLight.base, direction, shadowFactor);
+	float attenuation = pLight.exponent * distance * distance +
+						pLight.linear * distance +
+						pLight.constant;
+	
+	return (colour / attenuation);
+}
+
+vec4 CalcSpotLight(SpotLight sLight, int shadowIndex)
+{
+	vec3 rayDirection = normalize(FragPos - sLight.base.position);
+	float slFactor = dot(rayDirection, sLight.direction);
+	
+	if(slFactor > sLight.edge)
+	{
+		vec4 colour = CalcPointLight(sLight.base, shadowIndex);
+		
+		return colour * (1.0f - (1.0f - slFactor)*(1.0f/(1.0f - sLight.edge)));
+		
+	} else {
+		return vec4(0, 0, 0, 0);
+	}
+}
+
+vec4 CalcPointLights()
+{
+	vec4 totalColour = vec4(0, 0, 0, 0);
+	for(int i = 0; i < pointLightCount; i++)
+	{		
+		totalColour += CalcPointLight(pointLights[i], i);
+	}
+	
+	return totalColour;
+}
+
+vec4 CalcSpotLights()
+{
+	vec4 totalColour = vec4(0, 0, 0, 0);
+	for(int i = 0; i < spotLightCount; i++)
+	{		
+		totalColour += CalcSpotLight(spotLights[i], i + pointLightCount);
+	}
+	
+	return totalColour;
+}
+
+void main()
+{
+	vec4 finalColour = CalcDirectionalLight(DirectionalLightSpacePos);
+	finalColour += CalcPointLights();
+	finalColour += CalcSpotLights();
+	
+	colour = texture(theTexture, TexCoord) * finalColour;
+}
+```
+
+**Effect:**
+
+![gf](https://user-images.githubusercontent.com/72278818/134738864-f0830d05-e048-4659-a462-8b4f2f9cb123.gif)
